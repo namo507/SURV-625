@@ -1,0 +1,31 @@
+---
+title: "Homework 1: Namit Shrivastava"
+format: pdf
+editor: visual
+---
+## 1. Select a simple random sample (SRS) of size n = 20 from this frame. Each student will select a different simple random sample, using the R code set.seed(the last four digits of your UM/UMD student ID). Note that we are simulating the notion of hypothetical repeated random sampling using the same SRS design! The class has 30 enrolled students and would generate 30 samples.
+
+```{r}
+library(readxl)
+data <- read_excel("fem1524_admin.xlsx")
+set.seed(5570)
+n <- 20
+SRS <- data[sample(nrow(data), n), ]
+SRS
+```
+
+## 2. Give, in selection order, the list of the 20 four-digit selection number (IDs) and the values of AGE for the women in your sample.
+
+```{r}
+SRS_list <- SRS[, c("ID", "AGER")]
+SRS_list
+```
+
+## 3. Compute the sample estimate of the mean age. What else would we need to compute (be specific) to make inference about the mean age of the population?
+
+```{r}
+mean_age <- mean(SRS_list$AGER)
+mean_age
+```
+So to make inference, we also need the variance (specifically the standard error) of the sample mean.
+
