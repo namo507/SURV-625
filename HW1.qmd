@@ -34,3 +34,113 @@ So to make inference, we also need the variance (specifically the standard error
 Alright so if everyone in the class repeats this selection procedure, we will get 30 different sample means of age. The collection of those means is called the sampling distribution of the sample mean and its standard deviation will be called the standard error of the mean.
 
 
+## 5a) Look up the number of male sexual partners in the past year (PARTS1YR) that were reported in a survey by each of your 20 selections in the Excel file. Estimate the mean number of partners in the past year for the population.
+
+```{r}
+library(readxl)
+hw_data <- read_excel("SM 625 HW 1.xlsx")
+
+# Filtering the rows that match SRS_list ID values
+merged_data <- hw_data[hw_data$ID %in% SRS_list$ID, ]
+
+# Computing the mean number of partners
+mean_partners <- mean(merged_data$PARTS1YR, na.rm = TRUE)
+mean_partners
+```
+
+## 5b) Estimate the population element variance
+
+```{r}
+variance_partners <- var(merged_data$PARTS1YR, na.rm = TRUE)
+variance_partners
+```
+
+## 5c) Estimate the sampling variance of the mean and the standard error
+
+```{r}
+n <- 20
+N <- 2920
+f <- n / N # the finite population correction factor
+var_mean <- (1 - f) * variance_partners / n
+std_error <- sqrt(var_mean)
+var_mean
+std_error
+```
+
+## 5d) Compute a 95% confidence interval for the sample mean
+
+So the degrees of freedom here will be 20-1 = 19
+```{r}
+t_value <- qt(0.975, df = n - 1)
+lower_bound <- mean_partners - t_value * std_error
+upper_bound <- mean_partners + t_value * std_error
+c(lower_bound, upper_bound)
+```
+
+## 5e) Explain why the mean computed in a) will generally not be equal to the population mean.
+
+Ok so the mean computed in a) i.e. 0.8 will generally not be equal to the population mean because we only observe a subset of the population and the sample mean will differ from the true population mean due to randomness in the selection of the sample (i.e., sampling variation).
+
+## 5f) Estimate the coefficient of variation of the mean
+
+```{r}
+cv_mean <- std_error / mean_partners
+cv_mean
+```
+
+## 5g) What difference would it make for the sampling variance of the mean if the sample size were increased to n = 60?
+
+```{r}
+n_new <- 60
+N <- 2920
+f_new <- n_new / N
+var_mean_new <- (1 - f_new) * variance_partners / n_new
+var_mean_new
+
+# Comparing with original
+var_mean # original with n=20
+var_mean_new # new with n=60
+```
+
+## 5h) What sample size is needed to obtain SE = 0.05 ? What about CV = 0.10 ? What about a 95% confidence interval with width 0.40 (using 2 for the t-value)?
+```{r}
+# For SE = 0.05
+s2 <- variance_partners
+N <- 2920
+
+# For SE(ȳ) = 0.05
+n_SE <- s2/(0.05^2 + (s2/N))
+n_SE <- ceiling(n_SE)
+
+# For CV(ȳ) = 0.10
+n_CV <- s2/((0.10*mean_partners)^2 + (s2/N))
+n_CV <- ceiling(n_CV)
+
+# For CI width = 0.40 (using t ≈ 2)
+n_CI <- 4*s2/((0.40^2) + (4*s2/N))
+n_CI <- ceiling(n_CI)
+
+# Results
+c(n_SE, n_CV, n_CI)
+```
+
+## 5i) Estimate the mean number of male sexual partners in the past year (and its standard error) for the subclass of teenagers (age 15-19) in the sample. Ignore the finite population correction in the calculation of the standard error. How does this standard error compare to the standard error for the full sample? Would you expect such a difference? If so, why?
+
+```{r}
+# Filtering for teenagers
+teens_data <- merged_data[merged_data$AGER >= 15 & merged_data$AGER <= 19, ]
+
+# Calculating mean and SE for teens
+teens_mean <- mean(teens_data$PARTS1YR, na.rm=TRUE)
+teens_var <- var(teens_data$PARTS1YR, na.rm=TRUE)
+teens_n <- nrow(teens_data)
+teens_se <- sqrt(teens_var/teens_n)
+
+c(teens_mean, teens_se)
+
+# Now comparing with full sample SE (ignoring FPC)
+full_se_no_fpc <- sqrt(variance_partners/n)
+c(full_se_no_fpc, teens_se)
+```
+
+Ok so the SE for teenagers should be larger because of smaller sample size (subset) and more homogeneous groups may have different variance.
