@@ -94,18 +94,14 @@ cv_mean
 n_new <- 60
 N <- 2920
 f_new <- n_new / N
-var_mean_new <- (1 - f_new) * variance_partners / n_new
-var_mean_new
-
-# Comparing with original
-var_mean # original with n=20
-var_mean_new # new with n=60
+f_new
 ```
+Increasing the sample size reduces the sampling variance because the formula (1 - f) x s^2 / n shrinks as n grows. Specifically, with n = 60, one would expect a smaller sampling variance and hence a smaller standard error compared to n = 20.
 
 ## 5h) What sample size is needed to obtain SE = 0.05 ? What about CV = 0.10 ? What about a 95% confidence interval with width 0.40 (using 2 for the t-value)?
 ```{r}
 # For SE = 0.05
-s2 <- variance_partners
+s2 <- var_mean
 N <- 2920
 
 # For SE(ȳ) = 0.05
