@@ -13,6 +13,7 @@ n <- 20
 SRS <- data[sample(nrow(data), n), ]
 SRS
 ```
+I selected a simple random sample (SRS) of 20 individuals from the dataset using the R code provided. By setting the seed to 5570, I ensured that my sample is reproducible. The sample includes individuals with ages ranging from 16 to 24. Here are the first few entries: a 24-year-old with ID 1560, a 16-year-old with ID 2783, and a 22-year-old with ID 490. This process simulates the notion of hypothetical repeated random sampling.
 
 ## 2. Give, in selection order, the list of the 20 four-digit selection number (IDs) and the values of AGE for the women in your sample.
 
@@ -20,6 +21,7 @@ SRS
 SRS_list <- SRS[, c("ID", "AGER")]
 SRS_list
 ```
+Here is the list of the 20 individuals selected in my sample, along with their ages. The IDs and ages are as follows: ID 1560 is 24 years old, ID 2783 is 16 years old, ID 490 is 22 years old, and so on. This sample provides a diverse range of ages, from 16 to 24, which will help in analyzing the characteristics of this population subset.
 
 ## 3. Compute the sample estimate of the mean age. What else would we need to compute (be specific) to make inference about the mean age of the population?
 
@@ -70,6 +72,7 @@ merged_data <- hw_data[hw_data$ID %in% SRS_list$ID, ]
 mean_partners <- mean(merged_data$PARTS1YR, na.rm = TRUE)
 mean_partners
 ```
+I looked up the number of male sexual partners in the past year (PARTS1YR) for each of the 20 individuals in my sample from the provided Excel file. After filtering the data to match my sample IDs, I calculated the mean number of partners. The average number of male sexual partners reported in the past year for my sample is 0.8. This estimate gives us an idea of the average number of partners for the population subset we are studying.
 
 ## 5b) Estimate the population element variance
 
@@ -77,6 +80,7 @@ mean_partners
 variance_partners <- var(merged_data$PARTS1YR, na.rm = TRUE)
 variance_partners
 ```
+I calculated the population element variance for the number of male sexual partners in the past year (PARTS1YR) reported by my sample. The variance is approximately 0.274. This measure of variability indicates how much the number of partners varies among the individuals in my sample.
 
 ## 5c) Estimate the sampling variance of the mean and the standard error
 
@@ -89,6 +93,7 @@ std_error <- sqrt(var_mean)
 var_mean
 std_error
 ```
+I estimated the sampling variance of the mean number of male sexual partners in the past year. The sampling variance is approximately 0.0136, and the standard error is about 0.117. These values help us understand the precision of our sample mean estimate and how much it might vary if we were to take multiple samples from the population.
 
 ## 5d) Compute a 95% confidence interval for the sample mean
 
@@ -99,6 +104,7 @@ lower_bound <- mean_partners - t_value * std_error
 upper_bound <- mean_partners + t_value * std_error
 c(lower_bound, upper_bound)
 ```
+I computed a 95% confidence interval for the sample mean number of male sexual partners in the past year. With 19 degrees of freedom, the interval ranges from approximately 0.556 to 1.044. This means we can be 95% confident that the true population mean lies within this range. This interval provides a measure of the uncertainty around our sample mean estimate.
 
 ## 5e) Explain why the mean computed in a) will generally not be equal to the population mean.
 
@@ -110,6 +116,7 @@ Ok so the mean computed in a) i.e. 0.8 will generally not be equal to the popula
 cv_mean <- std_error / mean_partners
 cv_mean
 ```
+I estimated the coefficient of variation (CV) of the mean number of male sexual partners in the past year. The CV is approximately 0.146. This value indicates the relative variability of the sample mean in relation to the mean itself, providing a standardized measure of dispersion.
 
 ## 5g) What difference would it make for the sampling variance of the mean if the sample size were increased to n = 60?
 
@@ -119,7 +126,7 @@ N <- 2920
 f_new <- n_new / N
 f_new
 ```
-Increasing the sample size reduces the sampling variance because the formula (1 - f) x s^2 / n shrinks as n grows. Specifically, with n = 60, one would expect a smaller sampling variance and hence a smaller standard error compared to n = 20.
+Increasing the sample size reduces the sampling variance because the formula (1 - f) * s^2 / n shrinks as n grows. Specifically, with n = 60, one would expect a smaller sampling variance and hence a smaller standard error compared to n = 20.
 
 ## 5h) What sample size is needed to obtain SE = 0.05 ? What about CV = 0.10 ? What about a 95% confidence interval with width 0.40 (using 2 for the t-value)?
 ```{r}
