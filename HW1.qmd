@@ -163,4 +163,4 @@ full_se_no_fpc <- sqrt(variance_partners/n)
 c(full_se_no_fpc, teens_se)
 ```
 
-Ok so the SE for teenagers should be larger because of smaller sample size (subset) and more homogeneous groups may have different variance.
+Ok so the SE for teenagers should be larger because of smaller sample size (subset), which generally leads to a larger standard error. Additionally, the variance within the teenage group may differ from the variance in the full sample, contributing to the difference in standard errors. Smaller, more homogeneous groups can exhibit different variances, which affects the standard error calculation.
