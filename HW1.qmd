@@ -101,7 +101,7 @@ Increasing the sample size reduces the sampling variance because the formula (1 
 ## 5h) What sample size is needed to obtain SE = 0.05 ? What about CV = 0.10 ? What about a 95% confidence interval with width 0.40 (using 2 for the t-value)?
 ```{r}
 # For SE = 0.05
-s2 <- var_mean
+s2 <- variance_partners
 N <- 2920
 
 # For SE(ȳ) = 0.05
@@ -119,6 +119,7 @@ n_CI <- ceiling(n_CI)
 # Results
 c(n_SE, n_CV, n_CI)
 ```
+Ok, for estimating the sample sizes for different conditions, I used the population variance, which is variance_partners here, rather than var_mean because it represents the population element variance, s^2, which measures the variability of individual elements in the population. Whereas, using var_mean, which is the sampling variance of the mean adjusted for sample size, would lead to incorrect results since it already incorporates factors like the finite population correction.
 
 ## 5i) Estimate the mean number of male sexual partners in the past year (and its standard error) for the subclass of teenagers (age 15-19) in the sample. Ignore the finite population correction in the calculation of the standard error. How does this standard error compare to the standard error for the full sample? Would you expect such a difference? If so, why?
 
