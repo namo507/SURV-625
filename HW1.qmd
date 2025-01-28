@@ -135,16 +135,19 @@ s2 <- variance_partners
 N <- 2920
 
 # For SE(ȳ) = 0.05
-n_SE <- s2/(0.05^2 + (s2/N))
+n_SE <- s2/(0.05^2)
 n_SE <- ceiling(n_SE)
+cat("The required sample size for SE(y) to be 0.05 is:\t", n_SE, "\n")
 
 # For CV(ȳ) = 0.10
-n_CV <- s2/((0.10*mean_partners)^2 + (s2/N))
+n_CV <- s2 / ((0.10 * mean_partners)^2)
 n_CV <- ceiling(n_CV)
+cat("The required sample size for CV(y) to be 0.10 is:\t", n_CV, "\n")
 
 # For CI width = 0.40 (using t ≈ 2)
-n_CI <- 4*s2/((0.40^2) + (4*s2/N))
+n_CI <- (4 * s2 / 0.40^2)
 n_CI <- ceiling(n_CI)
+cat("The sample size for width of 0.4 with t = 2 is:\t", n_CI, "\n")
 
 # Results
 c(n_SE, n_CV, n_CI)
