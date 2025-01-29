@@ -289,3 +289,43 @@ Ok so both the proportionate and Neyman allocations have design effects less tha
 
 This suggests that for this particular population structure, the simpler proportionate allocation method is actually more effective at improving precision than the more complex Neyman allocation. It's a good reminder that sometimes, simpler methods can outperform more sophisticated ones depending on the specific characteristics of the data we're working with (Occam's Razor!)
 
+## h) Suppose that the cost-per-element was not the same in each stratum: $$C_1 = C_2 = C_3 = $30, and 𝐶_4 = 𝐶_5 = $40$$.
+
+## 1) The client requesting a stratified sample design has indicated that the total available data collection budget is $$C = $5,000$$, with the stratum- specific costs per element listed above. What allocation will minimize the sampling variance of the mean under these cost constraints?
+
+The optimal allocation formula with cost constraints is:
+
+$$n_h = \frac{N_h S_h/\sqrt{C_h}}{\sum_{i=1}^H N_i S_i/\sqrt{C_i}} \times \frac{C}{C_h}$$
+
+```{r}
+# Given data
+Nh <- c(20, 90, 120, 140, 200)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+Ch <- c(30, 30, 30, 40, 40)
+C <- 5000
+
+# Calculating optimal allocation
+Nh_Sh_sqrtCh <- Nh * Sh / sqrt(Ch)
+n <- C / sum(Ch * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh))
+n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
+
+# Print results
+print(round(n_opt, 2))
+
+```
+
+
+## 2) Estimate the expected sampling variance and design effect of the mean starting salary under this allocation. (Hint: Think carefully about the definition of a design effect)
+
+The variance formula for optimal allocation with cost constraints is:
+
+$$V(\bar{y}_{opt}) = \frac{(\sum_{h=1}^H N_h S_h \sqrt{C_h})^2}{N^2 C}$$
+
+And the design effect is:
+
+$$DEFF_{opt} = \frac{V(\bar{y}_{opt})}{V(\bar{y}_{srs})} = \frac{V(\bar{y}_{opt})}{(S^2/n_{tot})(1-f_{tot})}$$
+
+where $n_{tot} = \sum_{h=1}^H n_h$ and $f_{tot} = n_{tot}/N$
+
+```{r}
+```
