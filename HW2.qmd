@@ -3,3 +3,51 @@ title: "Homework 2: Namit Shrivastava"
 format: pdf
 editor: visual
 ---
+
+## 1. A stratified random sample of graduates from the academic departments at a small university is to be selected to estimate the mean starting salary of graduates from that university. The university has five academic departments, and preliminary data are obtained from an attempted census in a recent year:
+
+| Stratum | Department | $N_h$ | $\bar{Y}_h$ | $S_h$ |
+|:--------|:-----------|:-----:|------------:|------:|
+| 1 | Humanities | 20 | 46,800 | 81,200 |
+| 2 | Social Sciences | 90 | 61,500 | 101,700 |
+| 3 | Natural Sciences | 120 | 76,100 | 130,900 |
+| 4 | Engineering | 140 | 89,500 | 170,100 |
+| 5 | Business | 200 | 95,500 | 216,400 |
+
+## a) Now what is What is the mean starting salary per graduate across all departments in the $\bar{Y}_h$ population, based on the data collected from this previous attempted census?
+
+The overall mean salary $\bar{Y}$ is calculated as:
+
+$$\bar{Y} = \frac{\sum_{h=1}^{H} N_h\bar{Y}_h}{\sum_{h=1}^{H} N_h}$$
+
+$$\begin{aligned}
+\bar{Y} &= \frac{(20 \times 46,800) + (90 \times 61,500) + (120 \times 76,100) + (140 \times 89,500) + (200 \times 95,500)}{20 + 90 + 120 + 140 + 200} \\
+&= \frac{936,000 + 5,535,000 + 9,132,000 + 12,530,000 + 19,100,000}{570} \\
+&= \frac{47,233,000}{570}
+\end{aligned}$$
+
+The R code for this:
+
+```{r}
+# Define the data
+strata <- c(1, 2, 3, 4, 5)
+departments <- c("Humanities", "Social Sciences", "Natural Sciences", "Engineering", "Business")
+Nh <- c(20, 90, 120, 140, 200)
+Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
+
+# Calculate Nh * Yh_bar for each stratum
+Nh_Yh_bar <- Nh * Yh_bar
+
+# Calculate the overall mean
+Y_bar <- sum(Nh_Yh_bar) / sum(Nh)
+
+# Print the result
+cat("The mean starting salary per graduate across all departments is $", round(Y_bar, 2), "\n")
+```
+
+
+
+
+
+
+
