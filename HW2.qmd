@@ -311,9 +311,16 @@ n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
 
 # Print results
 print(round(n_opt, 2))
-
 ```
+Based on the optimal allocation calculation that accounts for both the stratum variability and cost constraints, I found that the sample should be distributed as:
 
+3 participants from Humanities
+15 from Social Sciences
+25 from Natural Sciences
+33 from Engineering
+60 from Business
+
+This allocation minimizes the sampling variance of the mean starting salary while staying within the $5,000 budget, taking into account that sampling from Engineering and Business costs more per participant ($40) compared to the other departments ($30).
 
 ## 2) Estimate the expected sampling variance and design effect of the mean starting salary under this allocation. (Hint: Think carefully about the definition of a design effect)
 
@@ -328,4 +335,34 @@ $$DEFF_{opt} = \frac{V(\bar{y}_{opt})}{V(\bar{y}_{srs})} = \frac{V(\bar{y}_{opt}
 where $n_{tot} = \sum_{h=1}^H n_h$ and $f_{tot} = n_{tot}/N$
 
 ```{r}
+# Given data
+Nh <- c(20, 90, 120, 140, 200)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+Ch <- c(30, 30, 30, 40, 40)
+C <- 5000
+N <- sum(Nh)
+
+# Calculating optimal allocation
+Nh_Sh_sqrtCh <- Nh * Sh * sqrt(Ch)
+n <- C / sum(Ch * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh))
+n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
+
+# Calculating expected sampling variance
+V_opt <- sum(Nh_Sh_sqrtCh)^2 / (N^2 * C)
+
+# Now calculating total element variance (S^2)
+Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
+Wh <- Nh / N
+Y_bar <- sum(Wh * Yh_bar)
+S2 <- sum(Wh * Sh^2) + sum(Wh * (Yh_bar - Y_bar)^2)
+
+# Calculating variance of SRS
+V_SRS <- S2 / sum(n_opt)
+
+# Calculating design effect
+DEFF <- V_opt / V_SRS
+
+# Print results
+cat("Expected sampling variance:", V_opt, "\n")
+cat("Design effect:", DEFF, "\n")
 ```
