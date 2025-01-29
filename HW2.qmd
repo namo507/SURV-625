@@ -106,6 +106,7 @@ N <- sum(Nh)
 
 # Calculating proportionate allocation
 n_prop <- n * (Nh / N)
+
 print(round(n_prop, 2))
 ```
 Hence, the proportionate allocation for n = 100 is:
@@ -117,5 +118,34 @@ Business: 35.09
 
 ## d) For a sample of n = 100, what is the Neyman allocation?
 
+The Neyman allocation is given by:
+
+$$n_h = n \times \frac{N_h S_h}{\sum_{h=1}^{H} N_h S_h}$$
+
+where:
+- $n_h$ is the sample size for stratum $h$
+- $n = 100$ is the total sample size
+- $N_h$ is the population size of stratum $h$
+- $S_h$ is the standard deviation of stratum $h$
+- $H = 5$ is the number of strata
+
+```{r}
+# Defining the data
+Nh <- c(20, 90, 120, 140, 200)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+n <- 100
+
+# Calculating Neyman allocation
+Nh_Sh <- Nh * Sh
+n_neyman <- n * (Nh_Sh / sum(Nh_Sh))
+
+print(round(n_neyman, 2))
+```
+Hence, the Neyman allocation for n = 100 is:
+Humanities: 1.74
+Social Sciences: 9.78
+Natural Sciences: 16.79
+Engineering: 25.45
+Business: 46.25
 
 
