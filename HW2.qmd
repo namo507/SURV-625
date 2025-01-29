@@ -24,30 +24,66 @@ $$\begin{aligned}
 \bar{Y} &= \frac{(20 \times 46,800) + (90 \times 61,500) + (120 \times 76,100) + (140 \times 89,500) + (200 \times 95,500)}{20 + 90 + 120 + 140 + 200} \\
 &= \frac{936,000 + 5,535,000 + 9,132,000 + 12,530,000 + 19,100,000}{570} \\
 &= \frac{47,233,000}{570}
-\end{aligned}$$
-
+\end{aligned}
+\bar{Y} = 82864.91
+$$
 The R code for this:
 
 ```{r}
-# Define the data
+# Defining the data
 strata <- c(1, 2, 3, 4, 5)
 departments <- c("Humanities", "Social Sciences", "Natural Sciences", "Engineering", "Business")
 Nh <- c(20, 90, 120, 140, 200)
 Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
 
-# Calculate Nh * Yh_bar for each stratum
+# Calculating Nh * Yh_bar for each stratum
 Nh_Yh_bar <- Nh * Yh_bar
 
-# Calculate the overall mean
+# Calculating the overall mean
 Y_bar <- sum(Nh_Yh_bar) / sum(Nh)
 
-# Print the result
 cat("The mean starting salary per graduate across all departments is $", round(Y_bar, 2), "\n")
 ```
 
+## b) What is the average within-stratum element variance ?
 
+The average within-stratum element variance $S^2_w$ is calculated as:
 
+$$S^2_w = \sum_{h=1}^{H} W_h S^2_h$$
 
+where:
+- $W_h = N_h/N$ is the stratum weight
+- $S^2_h$ is the element variance in stratum $h$
+- $H = 5$ departments
+
+$$\begin{aligned}
+S^2_w &= \sum_{h=1}^{5} \frac{N_h}{N} S^2_h \\
+&= \frac{20}{570}(81,200)^2 + \frac{90}{570}(101,700)^2 + \frac{120}{570}(130,900)^2 + \frac{140}{570}(170,100)^2 + \frac{200}{570}(216,400)^2
+\end{aligned}
+$$
+
+Now The R code for this will be:
+```{r}
+# Defining the data
+Nh <- c(20, 90, 120, 140, 200)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+
+# Calculating total population size
+N <- sum(Nh)
+
+# Calculating stratum weights
+Wh <- Nh / N
+
+# Calculating S^2_h
+S2h <- Sh^2
+
+# Calculating S^2_w
+S2w <- sum(Wh * S2h)
+
+cat("The average within-stratum element variance (S^2_w) is:", S2w, "\n")
+```
+
+So this value represents the weighted average of the variances within each stratum, giving us an overall measure of the variability within the strata of the population.
 
 
 
