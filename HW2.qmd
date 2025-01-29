@@ -85,5 +85,37 @@ cat("The average within-stratum element variance (S^2_w) is:", S2w, "\n")
 
 So this value represents the weighted average of the variances within each stratum, giving us an overall measure of the variability within the strata of the population.
 
+## c) For a sample of n = 100, what is the proportionate allocation?
+For $n = 100$, the proportionate allocation is given by:
+
+$$n_h = n \times \frac{N_h}{N}$$
+
+where:
+- $n_h$ is the sample size for stratum $h$
+- $n = 100$ is the total sample size
+- $N_h$ is the population size of stratum $h$
+- $N$ is the total population size
+
+```{r}
+# Defining the data
+Nh <- c(20, 90, 120, 140, 200)
+n <- 100
+
+# Calculating total population size
+N <- sum(Nh)
+
+# Calculating proportionate allocation
+n_prop <- n * (Nh / N)
+print(round(n_prop, 2))
+```
+Hence, the proportionate allocation for n = 100 is:
+Humanities: 3.51
+Social Sciences: 15.79
+Natural Sciences: 21.05
+Engineering: 24.56
+Business: 35.09
+
+## d) For a sample of n = 100, what is the Neyman allocation?
+
 
 
