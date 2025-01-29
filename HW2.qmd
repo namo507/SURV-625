@@ -148,4 +148,90 @@ Natural Sciences: 16.79
 Engineering: 25.45
 Business: 46.25
 
+## e) Estimate the sampling variance of the mean for the proportionate c) and Neyman d) allocations.
 
+The sampling variance of the mean for stratified random sampling is:
+
+$$V(\bar{y}_{st}) = \sum_{h=1}^{H} (\frac{N_h}{N})^2 (\frac{1}{n_h} - \frac{1}{N_h}) S_h^2$$
+
+For Proportionate Allocation:
+
+$$\begin{aligned}
+V(\bar{y}_{prop}) &= \sum_{h=1}^{H} W_h^2 (\frac{1}{n_h} - \frac{1}{N_h}) S_h^2 \\
+&= \frac{1}{n}(1-f)\sum_{h=1}^{H} W_h S_h^2
+\end{aligned}$$
+
+$$\begin{aligned}
+V(\bar{y}_{prop}) &= \frac{1}{100}(1-\frac{100}{570})\sum_{h=1}^{5} W_h S_h^2 \\
+&= \frac{1}{100}(0.825)\sum_{h=1}^{5} \frac{N_h}{570} S_h^2 \\
+&= 0.00825 \times [(20/570)(81,200)^2 + (90/570)(101,700)^2 + \\
+&\quad (120/570)(130,900)^2 + (140/570)(170,100)^2 + (200/570)(216,400)^2]
+\end{aligned}$$
+
+For Neyman Allocation:
+$$V(\bar{y}_{neyman}) = \frac{(\sum_{h=1}^{H} N_h S_h)^2}{n N^2}(1-f)$$
+$$\begin{aligned}
+V(\bar{y}_{neyman}) &= \frac{(20 \times 81,200 + 90 \times 101,700 + 120 \times 130,900 + 140 \times 170,100 + 200 \times 216,400)^2}{100 \times 570^2}(0.825)
+\end{aligned}
+$$
+
+```{r}
+# Data
+Nh <- c(20, 90, 120, 140, 200)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+n <- 100
+N <- sum(Nh)
+
+# Calculating weights
+Wh <- Nh / N
+
+# Calculating variance for proportionate allocation
+V_prop <- sum(Wh * Sh^2) / n
+
+cat("Sampling variance for proportionate allocation:", V_prop, "\n")
+```
+
+```{r}
+# Calculate variance for Neyman allocation
+V_neyman <- (sum(Wh * Sh))^2 / n
+
+cat("Sampling variance for Neyman allocation:", V_neyman, "\n")
+```
+
+```{r}
+efficiency_ratio <- V_neyman / V_prop
+
+cat("Efficiency ratio (Neyman / Proportionate):", efficiency_ratio, "\n")
+```
+
+## f) Estimate the total element variance S^2
+The total element variance $S^2$ is the sum of within-stratum and between-stratum variance:
+
+$$S^2 = \sum_{h=1}^{H} W_h S^2_h + \sum_{h=1}^{H} W_h(\bar{Y}_h - \bar{Y})^2$$
+
+Where:
+- Within-stratum: $\sum_{h=1}^{H} W_h S^2_h$
+- Between-stratum: $\sum_{h=1}^{H} W_h(\bar{Y}_h - \bar{Y})^2$
+```{r}
+# Data
+Nh <- c(20, 90, 120, 140, 200)
+Yh <- c(46800, 61500, 76100, 89500, 95500)
+Sh <- c(81200, 101700, 130900, 170100, 216400)
+N <- sum(Nh)
+Wh <- Nh/N
+
+# Calculate overall mean
+Y_bar <- sum(Wh * Yh)
+
+# Within-stratum variance
+S2_within <- sum(Wh * Sh^2)
+
+# Between-stratum variance
+S2_between <- sum(Wh * (Yh - Y_bar)^2)
+
+# Total element variance
+S2_total <- S2_within + S2_between
+
+# Results
+c(S2_within, S2_between, S2_total)
+```
