@@ -89,6 +89,8 @@ cat("The average within-stratum element variance (S^2_w) is:", S2w, "\n")
 ```
 
 So this value represents the weighted average of the variances within each stratum, giving us an overall measure of the variability within the strata of the population.
+Now doing a sqrt of the S^2_w will give sqrt(29009578070) = $170,321, which shows the average standard deviation across strata is about $170,321.
+
 
 ## c) For a sample of n = 100, what is the proportionate allocation?
 For $n = 100$, the proportionate allocation is given by:
