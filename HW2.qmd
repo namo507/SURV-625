@@ -378,3 +378,4 @@ DEFF <- V_opt / V_SRS
 cat("Expected sampling variance:", V_opt, "\n")
 cat("Design effect:", DEFF, "\n")
 ```
+So looking at the results from my analysis of the cost-constrained stratified sampling design, I found that the sampling variance is approx 199,581,997 and the design effect is about 0.91. This design effect being less than 1 tells me that the stratified sampling approach, even with different costs per stratum, is more efficient than simple random sampling. Specifically, the design reduces the variance by about 9% compared to what we would get with simple random sampling. This shows that even when one has to work with budget constraints and varying costs across departments, one can still achieve better precision than a simple random sample would provide.
