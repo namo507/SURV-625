@@ -325,7 +325,7 @@ n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
 print(round(n_opt, 2))
 ```
 Based on the optimal allocation calculation that accounts for both the stratum variability and cost constraints, I found that the sample should be distributed as:
-
+(Rounded off)
 3 participants from Humanities
 15 from Social Sciences
 25 from Natural Sciences
