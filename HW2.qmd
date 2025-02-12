@@ -301,9 +301,9 @@ Ok so both the proportionate and Neyman allocations have design effects less tha
 
 This suggests that for this particular population structure, the simpler proportionate allocation method is actually more effective at improving precision than the more complex Neyman allocation. It's a good reminder that sometimes, simpler methods can outperform more sophisticated ones depending on the specific characteristics of the data we're working with (Occam's Razor!)
 
-## h) Suppose that the cost-per-element was not the same in each stratum: $$C_1 = C_2 = C_3 = $30, and 𝐶_4 = 𝐶_5 = $40$$.
+## h) Suppose that the cost-per-element was not the same in each stratum: $$C_1 = C_2 = C_3 = \$30, \text{ and } C_4 = C_5 = \$40$$
 
-## 1) The client requesting a stratified sample design has indicated that the total available data collection budget is $$C = $5,000$$, with the stratum- specific costs per element listed above. What allocation will minimize the sampling variance of the mean under these cost constraints?
+## 1) The client requesting a stratified sample design has indicated that the total available data collection budget is $$C = \$5,000$$, with the stratum- specific costs per element listed above. What allocation will minimize the sampling variance of the mean under these cost constraints?
 
 The optimal allocation formula with cost constraints is:
 
