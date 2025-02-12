@@ -271,56 +271,33 @@ cat("S^2 = ", format(S2, scientific = TRUE))
 
 ## g) What are the design effects of the proportionate and Neyman allocations? based on the results?
 
-So the design effect (DEFF) is the ratio of the variance of a stratified design to that of simple random sampling:
+The design effect (DEFF) is calculated as:
 
-$$DEFF = \frac{V(\bar{y}_{st})}{V(\bar{y}_{srs})}$$
+$$deff = \frac{var(\bar{y})}{var_{SRS}(\bar{y})} = \frac{s_w^2}{s^2}$$
 
-where:
-- $V(\bar{y}_{st})$ is the variance under stratified sampling
-- $V(\bar{y}_{srs}) = (\frac{S^2}{n})(1-f)$ is the variance under SRS
-- $S^2$ is the total element variance 
-- $f = n/N$ is the sampling fraction
+For Proportionate Allocation: $$deff_{prop} = \frac{237,958,239}{2,905,852,006} = 0.08188932$$
+
+For Neyman Allocation: $$deff_{neyman} = \frac{218,775,808}{2,905,852,006} = 0.07528801$$
 
 ```{r}
-# Given data
-Nh <- c(20, 90, 120, 140, 200)
-Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
-Sh <- c(81200, 101700, 130900, 170100, 216400)
-n <- 100
+# Previously calculated variances from part e
+prop_var <- 237958239    # Proportionate variance
+neyman_var <- 218775808  # Neyman variance
 
-# Calculate weights
-N <- sum(Nh)
-Wh <- Nh / N
+# Total element variance from part f
+S2 <- 2905852006        # S^2 calculated earlier
 
-# Calculate overall mean
-Y_bar <- sum(Wh * Yh_bar)
+# Calculating design effects
+deff_prop <- prop_var/S2
+deff_neyman <- neyman_var/S2
 
-# Calculate total element variance (S^2)
-S2 <- sum(Wh * Sh^2) + sum(Wh * (Yh_bar - Y_bar)^2)
-
-# Variance of SRS
-V_SRS <- S2 / n
-
-# Proportionate allocation
-n_prop <- n * (Nh / N)
-V_prop <- sum(Wh^2 * (Sh^2 / n_prop - Sh^2 / Nh))
-
-# Neyman allocation
-n_neyman <- n * (Nh * Sh) / sum(Nh * Sh)
-V_neyman <- (sum(Wh * Sh))^2 / n
-
-# Calculate DEFF
-DEFF_prop <- V_prop / V_SRS
-DEFF_neyman <- V_neyman / V_SRS
-
-# Print results
-cat("DEFF for proportionate allocation:", DEFF_prop, "\n")
-cat("DEFF for Neyman allocation:", DEFF_neyman, "\n")
+cat('Design Effect of Proportion Allocation:\t', deff_prop,
+    '\nDesign Effect of Neyman Allocation:\t', deff_neyman)
 ```
+Ok so the design effects for both allocations are substantially less than 1, indicating that both stratified designs are much more efficient than simple random sampling. The proportionate allocation has a design effect of about 0.082, while the Neyman allocation's design effect is about 0.075.
 
-Ok so both the proportionate and Neyman allocations have design effects less than 1. It means they're both more efficient than simple random sampling. The proportionate allocation has a DEFF of about 0.82, while the Neyman allocation's DEFF is around 0.92. In simpler terms, the proportionate allocation is reducing the variance by about 18% compared to simple random sampling, while the Neyman allocation is reducing it by about 8%.
+In essence, these low numbers indicate that the variability or error in the estimates is greatly reduced, so the study becomes more powerful and resource-efficient, with the small difference suggesting that the Neyman allocation might offer a slight advantage.
 
-This suggests that for this particular population structure, the simpler proportionate allocation method is actually more effective at improving precision than the more complex Neyman allocation. It's a good reminder that sometimes, simpler methods can outperform more sophisticated ones depending on the specific characteristics of the data we're working with (Occam's Razor!)
 
 ## h) Suppose that the cost-per-element was not the same in each stratum: $$C_1 = C_2 = C_3 = \$30, \text{ and } C_4 = C_5 = \$40$$
 
