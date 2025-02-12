@@ -334,46 +334,35 @@ This allocation minimizes the sampling variance of the mean starting salary whil
 
 ## 2) Estimate the expected sampling variance and design effect of the mean starting salary under this allocation. (Hint: Think carefully about the definition of a design effect)
 
-The variance formula for optimal allocation with cost constraints is:
+The sampling variance for stratified sampling with cost constraints is:
 
-$$V(\bar{y}_{opt}) = \frac{(\sum_{h=1}^H N_h S_h \sqrt{C_h})^2}{N^2 C}$$
+$$var(\bar{y}_w) = \sum_h W_h^2\frac{1-f_h}{n_h}s_h^2\text{ where }f_h=\frac{n_h}{N_h}$$
 
-And the design effect is:
+$$\begin{aligned} var(\bar{y}_w) &= \sum_h W_h^2\frac{1-f_h}{n_h}s_h^2 \ &= \sum_h (\frac{N_h}{N})^2(1-\frac{n_h}{N_h})\frac{s_h^2}{n_h} \ &= 148,362,056 \end{aligned}$$
 
-$$DEFF_{opt} = \frac{V(\bar{y}_{opt})}{V(\bar{y}_{srs})} = \frac{V(\bar{y}_{opt})}{(S^2/n_{tot})(1-f_{tot})}$$
-
-where $n_{tot} = \sum_{h=1}^H n_h$ and $f_{tot} = n_{tot}/N$
+Design Effect: $$\text{Design Effect} = \frac{var(\bar{y})}{var_{SRS}(\bar{y})} = \frac{148,362,056}{2,905,852,006} = 0.051$$
 
 ```{r}
-# Given data
+# Data setup
 Nh <- c(20, 90, 120, 140, 200)
-Sh <- c(81200, 101700, 130900, 170100, 216400)
-Ch <- c(30, 30, 30, 40, 40)
-C <- 5000
 N <- sum(Nh)
+Wh <- Nh/N
+Sh2 <- c(81200^2, 101700^2, 130900^2, 170100^2, 216400^2)
 
-# Calculating optimal allocation
-Nh_Sh_sqrtCh <- Nh * Sh * sqrt(Ch)
-n <- C / sum(Ch * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh))
-n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
+# Cost allocation (from previous calculation)
+n_cost <- c(3, 15, 25, 33, 60)
 
-# Calculating expected sampling variance
-V_opt <- sum(Nh_Sh_sqrtCh)^2 / (N^2 * C)
-
-# Now calculating total element variance (S^2)
-Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
-Wh <- Nh / N
-Y_bar <- sum(Wh * Yh_bar)
-S2 <- sum(Wh * Sh^2) + sum(Wh * (Yh_bar - Y_bar)^2)
-
-# Calculating variance of SRS
-V_SRS <- S2 / sum(n_opt)
+# Calculating variance for cost allocation
+cost_var <- sum(Wh^2 * (1 - n_cost/Nh) * Sh2/n_cost)
 
 # Calculating design effect
-DEFF <- V_opt / V_SRS
+S2 <- 2905852006  # total element variance from part f
+deff_cost <- cost_var/S2
 
-# Print results
-cat("Expected sampling variance:", V_opt, "\n")
-cat("Design effect:", DEFF, "\n")
+cat("Cost Allocation Variance:", cost_var, "\n")
+cat("Design Effect:", deff_cost, "\n")
 ```
-So looking at the results from my analysis of the cost-constrained stratified sampling design, I found that the sampling variance is approx 199,581,997 and the design effect is about 0.91. This design effect being less than 1 tells me that the stratified sampling approach, even with different costs per stratum, is more efficient than simple random sampling. Specifically, the design reduces the variance by about 9% compared to what we would get with simple random sampling. This shows that even when one has to work with budget constraints and varying costs across departments, one can still achieve better precision than a simple random sample would provide.
+
+So, the results show that the cost-constrained stratified sampling design is extremely efficient, with a design effect of 0.051. This means it reduces the variance by about 95% compared to simple random sampling, which is a substantial improvement in precision. 
+
+Even with different costs per stratum and budget constraints, this allocation achieves much better precision than simple random sampling would provide.
