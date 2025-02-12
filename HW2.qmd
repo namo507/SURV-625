@@ -231,35 +231,42 @@ cat("Neyman Variance:", neyman_var, "\n")
 
 
 ## f) Estimate the total element variance S^2
-The total element variance $S^2$ is the sum of within-stratum and between-stratum variance:
 
-$$S^2 = \sum_{h=1}^{H} W_h S^2_h + \sum_{h=1}^{H} W_h(\bar{Y}_h - \bar{Y})^2$$
+The total element variance is calculated as:
 
-Where:
-- Within-stratum: $\sum_{h=1}^{H} W_h S^2_h$
-- Between-stratum: $\sum_{h=1}^{H} W_h(\bar{Y}_h - \bar{Y})^2$
+$$S^2 = \sum_h \frac{N_h-1}{N-1}S_h^2+\sum_h \frac{N_h-1}{N-1}(\bar{Y}_h-\bar{Y})^2$$
+
+Step-by-step calculation:
+
+For Within-stratum component:
+$$\begin{aligned}
+\sum_h \frac{N_h-1}{569}S_h^2 &= \frac{19}{569}(81,200)^2 + \frac{89}{569}(101,700)^2 + \frac{119}{569}(130,900)^2 + \\
+&\quad \frac{139}{569}(170,100)^2 + \frac{199}{569}(216,400)^2
+\end{aligned}
+$$
+
+For Between-stratum component:
+$$\begin{aligned}
+\sum_h \frac{N_h-1}{569}(\bar{Y}_h-82,864.91)^2 &= \frac{19}{569}(46,800-82,864.91)^2 + \frac{89}{569}(61,500-82,864.91)^2 + \\
+&\quad \frac{119}{569}(76,100-82,864.91)^2 + \frac{139}{569}(89,500-82,864.91)^2 + \\
+&\quad \frac{199}{569}(95,500-82,864.91)^2
+\end{aligned}
+$$
+
+
 ```{r}
-# Data
+# Data setup
 Nh <- c(20, 90, 120, 140, 200)
-Yh <- c(46800, 61500, 76100, 89500, 95500)
-Sh <- c(81200, 101700, 130900, 170100, 216400)
+Yh_bar <- c(46800, 61500, 76100, 89500, 95500)
+Sh2 <- c(81200^2, 101700^2, 130900^2, 170100^2, 216400^2)
+Y_bar <- 82864.91
 N <- sum(Nh)
-Wh <- Nh/N
 
-# Calculate overall mean
-Y_bar <- sum(Wh * Yh)
+# Calculating total element variance
+S2 <- sum((Nh-1)/(N-1) * (Sh2 + (Yh_bar - Y_bar)^2))
 
-# Within-stratum variance
-S2_within <- sum(Wh * Sh^2)
-
-# Between-stratum variance
-S2_between <- sum(Wh * (Yh - Y_bar)^2)
-
-# Total element variance
-S2_total <- S2_within + S2_between
-
-# Results
-c(S2_within, S2_between, S2_total)
+cat("Total element variance (S^2):", S2, "\n")
+cat("S^2 = ", format(S2, scientific = TRUE))
 ```
 
 ## g) What are the design effects of the proportionate and Neyman allocations? based on the results?
@@ -336,7 +343,7 @@ n <- C / sum(Ch * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh))
 n_opt <- n * Nh_Sh_sqrtCh / sum(Nh_Sh_sqrtCh)
 
 # Print results
-print(round(n_opt, 2))
+print(round(n_opt, 0))
 ```
 Based on the optimal allocation calculation that accounts for both the stratum variability and cost constraints, I found that the sample should be distributed as:
 (Rounded off)
