@@ -114,14 +114,10 @@ N <- sum(Nh)
 # Calculating proportionate allocation
 n_prop <- n * (Nh / N)
 
-print(round(n_prop, 2))
+print(round(n_prop, 0))
 ```
-Hence, the proportionate allocation for n = 100 is:
-Humanities: 3.51
-Social Sciences: 15.79
-Natural Sciences: 21.05
-Engineering: 24.56
-Business: 35.09
+Hence, the proportionate allocation for n = 100 is: 
+Humanities: 4 Social Sciences: 16 Natural Sciences: 21 Engineering: 25 Business: 35
 
 ## d) For a sample of n = 100, what is the Neyman allocation?
 
@@ -146,75 +142,93 @@ n <- 100
 Nh_Sh <- Nh * Sh
 n_neyman <- n * (Nh_Sh / sum(Nh_Sh))
 
-print(round(n_neyman, 2))
+print(round(n_neyman, 0))
 ```
 Hence, the Neyman allocation for n = 100 is:
-Humanities: 1.74
-Social Sciences: 9.78
-Natural Sciences: 16.79
-Engineering: 25.45
-Business: 46.25
+Humanities: 2
+Social Sciences: 10
+Natural Sciences: 17
+Engineering: 25
+Business: 46
 
 ## e) Estimate the sampling variance of the mean for the proportionate c) and Neyman d) allocations.
 
-The sampling variance of the mean for stratified random sampling is:
+The sampling variance of the mean for stratified sampling is:
 
-$$V(\bar{y}_{st}) = \sum_{h=1}^{H} (\frac{N_h}{N})^2 (\frac{1}{n_h} - \frac{1}{N_h}) S_h^2$$
+$$var(\bar{y}_w) = \sum_h W_h^2\frac{1-f_h}{n_h}s_h^2\text{ where }f_h=\frac{n_h}{N_h}$$
+
+where:
+
+W_h = N_h/N (stratum weight)
+n_h = allocated sample size for stratum h
+N_h = population size for stratum h
+S_h^2 = variance in stratum h
+
+### Step-by-step calculations:
 
 For Proportionate Allocation:
 
-$$\begin{aligned}
-V(\bar{y}_{prop}) &= \sum_{h=1}^{H} W_h^2 (\frac{1}{n_h} - \frac{1}{N_h}) S_h^2 \\
-&= \frac{1}{n}(1-f)\sum_{h=1}^{H} W_h S_h^2
-\end{aligned}$$
+For Humanities (h=1):
+$$(\frac{20}{570})^2 (1-\frac{4}{20})\frac{81,200^2}{4} = 1,623,500$$
 
-$$\begin{aligned}
-V(\bar{y}_{prop}) &= 0.00825 \times [(20/570)(81,200)^2 + (90/570)(101,700)^2 + \\
-&\quad (120/570)(130,900)^2 + (140/570)(170,100)^2 + (200/570)(216,400)^2] \\
-&= 0.00825 \times [231,347,368 + 1,633,613,684 + 3,607,328,421 + \\
-&\quad 7,095,669,474 + 16,441,619,123] \\
-&= 0.00825 \times 29,009,578,070 \\
-&= 290,095,781
-\end{aligned}$$
+For Social Sciences (h=2):
+$$(\frac{90}{570})^2 (1-\frac{16}{90})\frac{101,700^2}{16} = 13,250,932$$
+
+For Natural Sciences (h=3):
+$$(\frac{120}{570})^2 (1-\frac{21}{120})\frac{130,900^2}{21} = 29,835,047$$
+
+For Engineering (h=4):
+$$(\frac{140}{570})^2 (1-\frac{25}{140})\frac{170,100^2}{25} = 57,351,500$$
+
+For Business (h=5):
+$$(\frac{200}{570})^2 (1-\frac{35}{200})\frac{216,400^2}{35} = 135,897,259$$
+
+Total Proportionate Variance = 237,958,239
+
 
 For Neyman Allocation:
-$$\begin{aligned}
-V(\bar{y}_{neyman}) &= \frac{(20 \times 81,200 + 90 \times 101,700 + 120 \times 130,900 + 140 \times 170,100 + 200 \times 216,400)^2}{100 \times 570^2}(0.825) \\
-&= \frac{(1,624,000 + 9,153,000 + 15,708,000 + 23,814,000 + 43,280,000)^2}{100 \times 570^2}(0.825) \\
-&= \frac{(93,579,000)^2}{100 \times 324,900}(0.825) \\
-&= \frac{8,757,027,241,000}{32,490,000}(0.825) \\
-&= 269,529,986
-\end{aligned}
-$$
+
+For Humanities (h=1):
+$$(\frac{20}{570})^2 (1-\frac{2}{20})\frac{81,200^2}{2} = 3,652,875$$
+
+For Social Sciences (h=2):
+$$(\frac{90}{570})^2 (1-\frac{10}{90})\frac{101,700^2}{10} = 22,920,532$$
+
+For Natural Sciences (h=3):
+$$(\frac{120}{570})^2 (1-\frac{17}{120})\frac{130,900^2}{17} = 38,344,151$$
+
+For Engineering (h=4):
+$$(\frac{140}{570})^2 (1-\frac{25}{140})\frac{170,100^2}{25} = 57,351,500$$
+
+For Business (h=5):
+$$(\frac{200}{570})^2 (1-\frac{46}{200})\frac{216,400^2}{46} = 96,506,749$$
+
+Total Neyman Variance = 218,775,808
 
 ```{r}
-# Data
+# Data setup
 Nh <- c(20, 90, 120, 140, 200)
-Sh <- c(81200, 101700, 130900, 170100, 216400)
-n <- 100
 N <- sum(Nh)
+Wh <- Nh/N
+Sh2 <- c(81200^2, 101700^2, 130900^2, 170100^2, 216400^2)
+n <- 100
 
-# Calculating weights
-Wh <- Nh / N
+# Proportionate allocation
+n_prop <- round(n * (Nh/N))
 
-# Calculating variance for proportionate allocation
-V_prop <- sum(Wh * Sh^2) / n
+# Calculating proportionate variance
+prop_var <- sum(Wh^2 * (1 - n_prop/Nh) * Sh2/n_prop)
 
-cat("Sampling variance for proportionate allocation:", V_prop, "\n")
+# Neyman allocation
+n_neyman <- round(100 * (Nh * sqrt(Sh2))/sum(Nh * sqrt(Sh2)))
+
+# Calculating Neyman variance
+neyman_var <- sum(Wh^2 * (1 - n_neyman/Nh) * Sh2/n_neyman)
+
+cat("Proportionate Variance:", prop_var, "\n")
+cat("Neyman Variance:", neyman_var, "\n")
 ```
 
-```{r}
-# Calculate variance for Neyman allocation
-V_neyman <- (sum(Wh * Sh))^2 / n
-
-cat("Sampling variance for Neyman allocation:", V_neyman, "\n")
-```
-
-```{r}
-efficiency_ratio <- V_neyman / V_prop
-
-cat("Efficiency ratio (Neyman / Proportionate):", efficiency_ratio, "\n")
-```
 
 ## f) Estimate the total element variance S^2
 The total element variance $S^2$ is the sum of within-stratum and between-stratum variance:
