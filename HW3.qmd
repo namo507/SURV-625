@@ -240,3 +240,26 @@ cat("Expected Standard Error:", se_new, "\n")
 So for the modified cluster design, I found that by changing to 40 clusters of 5 women each (instead of 10 women), the design effect decreased to approximately 1.19. This means the variance penalty for using clusters is now only about 19% higher than simple random sampling, much better than the previous 42.5%. The expected standard error with this new design is about 0.037, which is slightly higher than what I got with 40 clusters of 10 women each (0.027), but still better than the original design of 20 clusters of 10 women (0.040). 
 
 This makes sense because while I increased the number of clusters (which helps precision), we decreased the cluster size, resulting in a smaller total sample size. The trade-off seems reasonable though, as I am getting good precision with fewer total observations.
+
+## 2) The data set, cherry.csv, contains measurements of diameter (inches), height (feet), and timber volume (cubic feet) for a sample of 31 black cherry trees. Diameter and height of trees are easily measured, but volume is more difficult to measure.
+
+## a) Plot volume vs. diameter for the 31 trees.
+
+```{r}
+# Reading the data
+cherry <- read.csv("cherry.csv")
+
+# Creating scatter plot
+plot(volume ~ diameter, data = cherry,
+     xlab = "Diameter (inches)",
+     ylab = "Volume (cubic feet)",
+     main = "Volume vs. Diameter of Black Cherry Trees",
+     pch = 19,  # solid circle points
+     col = "darkgreen")  # green color for points
+     
+# Adding grid for better readability
+grid()
+```
+Now the scatter plot visually demonstrates how tree volume increases with diameter. The trend appears non-linear, suggesting that larger diameters correspond to disproportionately higher volumes, which is consistent with biological growth patterns.
+
+
