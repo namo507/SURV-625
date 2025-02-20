@@ -4,7 +4,7 @@ format: pdf
 editor: visual
 ---
 
-## 1. The following are cluster totals $$y_\alpha$$ from a = 20 clusters of exactly b = 10 women (between the ages of 15 and 24) each. These clusters and the young women were sampled from the population frame used for Homework 1. The cluster totals $$y_\alpha$$ are the number of women who have ever been pregnant. Assume that the clusters were selected at random and with replacement, and the students were selected with epsem and without replacement. The sampling fraction is f = ab/AB = n/N = 200/2,920 = 1 / 14.6, meaning that the finite population correction (fpc) should not be ignored in this case. 
+## 1) The following are cluster totals $$y_\alpha$$ from a = 20 clusters of exactly b = 10 women (between the ages of 15 and 24) each. These clusters and the young women were sampled from the population frame used for Homework 1. The cluster totals $$y_\alpha$$ are the number of women who have ever been pregnant. Assume that the clusters were selected at random and with replacement, and the students were selected with epsem and without replacement. The sampling fraction is f = ab/AB = n/N = 200/2,920 = 1 / 14.6, meaning that the finite population correction (fpc) should not be ignored in this case. 
 
 | Cluster | $y_\alpha$ |
 |:--------|:----------:|
@@ -262,7 +262,7 @@ grid()
 ```
 Now the scatter plot visually demonstrates how tree volume increases with diameter. The trend appears non-linear, suggesting that larger diameters correspond to disproportionately higher volumes, which is consistent with biological growth patterns.
 
-## (b) Suppose that these trees are an SRS from a forest of N = 2967 trees and that the sum of the diameters for all trees in the forest is 41,835 inches. Use ratio estimation to estimate the total volume for all trees in the forest. Give a 95% CI.
+## b) Suppose that these trees are an SRS from a forest of N = 2967 trees and that the sum of the diameters for all trees in the forest is 41,835 inches. Use ratio estimation to estimate the total volume for all trees in the forest. Give a 95% CI.
 
 For ratio estimation, I will use:
 
@@ -323,3 +323,73 @@ Looking at the analysis of the black cherry trees data, I estimated that the tot
 
 To account for sampling uncertainty, I calculated a standard error of about 5,141 cubic feet. This led me to construct a 95% confidence interval ranging from about 84,773 to 105,771 cubic feet. 
 This means I can be 95% confident that the true total volume of all trees in the forest falls within this range. The relatively wide confidence interval (spanning about 21,000 cubic feet) reflects the natural variability in tree volumes, even among trees with similar diameters.
+
+## c) Use regression estimation to estimate the total volume for all trees in the forest. Give a 95% CI.
+
+For regression estimation, I will use:
+
+$$\hat{Y}_{reg} = N\bar{y} + b(X - N\bar{x})$$
+
+where:
+- $b$ is the slope from regression of $y$ on $x$
+- $\bar{y}$ is the sample mean of volume
+- $\bar{x}$ is the sample mean of diameter
+- $X$ is the population total of diameters
+- $N$ is the population size
+
+The variance is:
+
+$$V(\hat{Y}_{reg}) = N^2(1-\frac{n}{N})\frac{s_e^2}{n}$$
+
+where $s_e^2$ is the mean square error from the regression.
+
+So the calculation is:
+
+Sample means: $$\bar{x} = 13.25\text{ inches}, \quad \bar{y} = 20.49\text{ cubic feet}$$
+
+Regression slope: $$b = 4.708$$
+
+Regression estimate: $$\hat{Y}_{reg} = 2967(20.49) + 4.708(41835 - 2967(13.25)) = 102,318.9$$
+
+Standard error: $$SE(\hat{Y}_{reg}) = \sqrt{2967^2(1-\frac{31}{2967})\frac{s_e^2}{31}} = 2,254.0$$
+
+95% Confidence Interval: $$102,318.9 \pm 2.045 \times 2,254.0 = (97,709.0, 106,928.7)$$
+
+```{r}
+# Setting up the data
+cherry <- read.csv("/Users/namomac/Downloads/cherry.csv")
+n <- nrow(cherry)      # sample size
+N <- 2967             # population size
+X <- 41835           # population total of diameters
+
+# Calculating means
+x_bar <- mean(cherry$diameter)
+y_bar <- mean(cherry$volume)
+
+# Fitting regression model
+reg <- lm(volume ~ diameter, data = cherry)
+b <- coef(reg)[2]    # slope
+
+# Calculating regression estimate
+Y_reg <- N*y_bar + b*(X - N*x_bar)
+
+# Calculating standard error
+MSE <- sum(reg$residuals^2)/(n-2)  # mean square error
+var_reg <- N^2 * (1-n/N) * MSE/n
+se_reg <- sqrt(var_reg)
+
+# Calculating 95% CI
+t_value <- qt(0.975, df=n-2)
+ci_lower <- Y_reg - t_value * se_reg
+ci_upper <- Y_reg + t_value * se_reg
+
+cat("Regression estimate of total volume:", Y_reg, "cubic feet\n")
+cat("Standard Error:", se_reg, "\n")
+cat("95% CI:", c(ci_lower, ci_upper), "\n")
+```
+
+Now using regression estimation, I found that the total volume of all 2,967 trees in the forest is approximately 102,319 cubic feet. The standard error of this estimate is about 2,254 cubic feet, which is notably smaller than what I got with the ratio estimation (5,141 cubic feet). 
+
+This improved precision is reflected in the narrower 95% confidence interval, ranging from about 97,709 to 106,929 cubic feet. This means I can be 95% confident that the true total volume falls within this roughly 9,220 cubic foot range. 
+
+The smaller standard error and narrower confidence interval suggest that regression estimation is more efficient than ratio estimation for this particular dataset, likely because it better captures the relationship between tree diameter and volume.
