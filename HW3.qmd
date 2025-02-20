@@ -262,4 +262,64 @@ grid()
 ```
 Now the scatter plot visually demonstrates how tree volume increases with diameter. The trend appears non-linear, suggesting that larger diameters correspond to disproportionately higher volumes, which is consistent with biological growth patterns.
 
+## (b) Suppose that these trees are an SRS from a forest of N = 2967 trees and that the sum of the diameters for all trees in the forest is 41,835 inches. Use ratio estimation to estimate the total volume for all trees in the forest. Give a 95% CI.
 
+For ratio estimation, I will use:
+
+$$\hat{R} = \frac{\sum_{i=1}^n y_i}{\sum_{i=1}^n x_i}$$
+
+where:
+- $y_i$ is the volume of tree i
+- $x_i$ is the diameter of tree i
+
+Then the estimated total is:
+
+$$\hat{Y} = \hat{R} \times X$$
+
+The variance of the ratio estimate is:
+
+$$V(\hat{Y}) = N^2(1-\frac{n}{N})\frac{1}{n(n-1)}\sum_{i=1}^n(y_i-\hat{R}x_i)^2$$
+
+The calculation is as follows:
+
+Ratio estimate: 
+$$\hat{R} = \frac{\sum y_i}{\sum x_i} = \frac{635.1}{279.3} = 2.275$$
+
+Estimated total volume: 
+$$\hat{Y} = 2.275 \times 41,835 = 95,272.16\text{ cubic feet}$$
+
+Standard error: 
+$$SE(\hat{Y}) = \sqrt{2967^2(1-\frac{31}{2967})\frac{1}{31(30)}\sum(y_i-2.275x_i)^2} = 5,140.93$$
+
+95% Confidence Interval: 
+$$95,272.16 \pm 2.042 \times 5,140.93 = (84,773, 105,771)$$
+
+```{r}
+# Setting up the data first
+cherry <- read.csv("/Users/namomac/Downloads/cherry.csv")
+n <- nrow(cherry)      # sample size
+N <- 2967             # population size
+X <- 41835           # population total of diameters
+
+# Calculating ratio estimate
+R_hat <- sum(cherry$volume)/sum(cherry$diameter)
+Y_hat <- R_hat * X
+
+# Calculating standard error
+deviations <- cherry$volume - R_hat * cherry$diameter
+var_Y <- N^2 * (1-n/N) * sum(deviations^2)/(n*(n-1))
+se_Y <- sqrt(var_Y)
+
+# Calculating 95% CI
+t_value <- qt(0.975, df=n-1)
+ci_lower <- Y_hat - t_value * se_Y
+ci_upper <- Y_hat + t_value * se_Y
+
+cat("Ratio estimate of total volume:", Y_hat, "cubic feet\n")
+cat("Standard Error:", se_Y, "\n")
+cat("95% CI:", c(ci_lower, ci_upper), "\n")
+```
+Looking at the analysis of the black cherry trees data, I estimated that the total volume of all 2,967 trees in the forest is approximately 95,272 cubic feet. 
+
+To account for sampling uncertainty, I calculated a standard error of about 5,141 cubic feet. This led me to construct a 95% confidence interval ranging from about 84,773 to 105,771 cubic feet. 
+This means I can be 95% confident that the true total volume of all trees in the forest falls within this range. The relatively wide confidence interval (spanning about 21,000 cubic feet) reflects the natural variability in tree volumes, even among trees with similar diameters.
