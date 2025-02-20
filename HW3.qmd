@@ -186,3 +186,57 @@ cat("Intraclass Correlation (roh):", roh, "\n")
 ```
 
 Inferring this in layman terms, the design effect of 1.425 means that because of clustering, the variance is 42.5% higher than if one had sampled individuals completely at random. In other words, the effective sample size is reduced, and observations within the same cluster are somewhat similar; however, the intraclass correlation of about 4.7% indicates that this similarity is relatively low.
+
+## d) Now, using the computed value of roh from part (c), estimate the standard error that you would expect from a sample of a = 40 clusters of b = 5 women each.
+
+For a new design with different cluster size and number, we can use roh to calculate the design effect:
+
+$$deff_{new} = 1 + (b_{new} - 1)roh$$
+
+Then the new standard error is:
+
+$$SE_{new} = \sqrt{\frac{p(1-p)}{n_{new}}} \times \sqrt{deff_{new}} \times \sqrt{\frac{N-n_{new}}{N}}$$
+
+where:
+- $roh = 0.0472$ (from part c)
+- $b_{new} = 5$ (new cluster size)
+- $a_{new} = 40$ (new number of clusters)
+- $n_{new} = a_{new} \times b_{new}$ (new total sample size)
+- $p = 0.435$ (proportion from original data)
+- $N = 2920$ (population size)
+
+so the calculation is :
+New design effect: $$deff_{new} = 1 + (5 - 1)(0.0472) = 1.189$$
+
+SRS variance: $$var_{srs} = \frac{0.435(1-0.435)}{200} = 0.00123$$
+
+Finite population correction: $$fpc = \sqrt{\frac{2920-200}{2920}} = 0.917$$
+
+New standard error: $$SE_{new} = \sqrt{0.00123 \times 1.189} \times 0.917 = 0.0352$$
+
+```{r}
+# Parameters from previous calculations
+roh <- 0.0472      # intraclass correlation from part c
+p <- 87/200        # proportion from original data
+N <- 2920          # population size
+
+# New design parameters
+a_new <- 40        # new number of clusters
+b_new <- 5         # new cluster size
+n_new <- a_new * b_new
+
+# Calculate new design effect
+deff_new <- 1 + (b_new - 1) * roh
+
+# Calculate new standard error
+var_srs_new <- (p * (1-p))/n_new
+fpc_new <- sqrt((N - n_new)/N)
+se_new <- sqrt(var_srs_new * deff_new) * fpc_new
+
+cat("New Design Effect:", deff_new, "\n")
+cat("Expected Standard Error:", se_new, "\n")
+```
+
+So for the modified cluster design, I found that by changing to 40 clusters of 5 women each (instead of 10 women), the design effect decreased to approximately 1.19. This means the variance penalty for using clusters is now only about 19% higher than simple random sampling, much better than the previous 42.5%. The expected standard error with this new design is about 0.037, which is slightly higher than what I got with 40 clusters of 10 women each (0.027), but still better than the original design of 20 clusters of 10 women (0.040). 
+
+This makes sense because while I increased the number of clusters (which helps precision), we decreased the cluster size, resulting in a smaller total sample size. The trade-off seems reasonable though, as I am getting good precision with fewer total observations.
