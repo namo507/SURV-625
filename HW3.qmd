@@ -93,3 +93,39 @@ Using this standard error, I calculated a 95% confidence interval for the popula
 Also the relatively narrow confidence interval suggests that the estimate is fairly precise, even when accounting for the finite population correction. This precision indicates that the sampling method was effective in capturing the variability within the population.
 
 
+## b) Estimate the standard error of the mean that you would expect if the sample consisted of a = 40 clusters of b = 10 each. (Hint: What about this design has not changed, and what quantity needed to answer this question could therefore be considered portable?)
+
+For cluster sampling with a different number of clusters, I can use the fact that the cluster means variance remains constant. The new standard error would be:
+
+$$SE_{new}(\bar{y}) = \sqrt{\frac{V(y_\alpha/b)}{a_{new}}} \times \sqrt{\frac{N-n_{new}}{N}}$$
+
+where:
+- $V(y_\alpha/b)$ is the variance of cluster means (portable from previous calculation)
+- $a_{new} = 40$ is the new number of clusters
+- $n_{new} = a_{new} \times b$ is the new total sample size
+- $N = 2920$ is the total population size
+
+So a step by step calculation will be:
+
+Using portable variance of cluster means: $$V(y_\alpha/b) = 0.0326$$
+
+Calculating new standard error: $$SE_{new} = \sqrt{\frac{0.0326}{40}} \times \sqrt{\frac{2920-400}{2920}} = 0.0267$$
+
+```{r}
+# Taking Data from previous calculation
+var_cluster_means <- var(y_alpha/b)  # portable variance of cluster means
+a_new <- 40  # new number of clusters
+b <- 10      # cluster size (unchanged)
+N <- 2920    # total population size
+n_new <- a_new * b  # new sample size
+
+# Calculating new standard error
+fpc_new <- sqrt((N - n_new)/N)
+se_new <- sqrt(var_cluster_means/a_new) * fpc_new
+
+cat("Expected Standard Error with 40 clusters:", se_new, "\n")
+```
+
+Ok so looking at the results I got, I found that if one is to double the number of clusters from 20 to 40 while keeping the cluster size at 10 women each, the expected standard error would decrease to approximately 0.027. This is notably smaller than the original standard error of 0.040, which makes sense because one is sampling more clusters. 
+
+The reduction in standard error suggests that increasing the number of clusters would improve the precision of the estimate by about 32%. This improvement in precision demonstrates how sampling more clusters, even while maintaining the same cluster size, can lead to better estimates of the population mean number of pregnant women per cluster.
