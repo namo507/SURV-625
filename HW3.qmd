@@ -63,27 +63,33 @@ Standard Error: $$SE(\bar{y}) = \sqrt{V(\bar{y})}$$
 y_alpha <- c(4, 4, 3, 6, 4, 6, 3, 4, 4, 1, 1, 8, 3, 3, 5, 6, 4, 5, 8, 5)
 a <- 20  # number of clusters
 b <- 10  # cluster size
+N <- 2920  # total population size
+n <- a * b  # sample size
 
-# Calculate mean
+# Calculating mean
 y_bar <- sum(y_alpha)/(a*b)
 
-# Calculate variance and SE
+# Calculating variance and SE with fpc
 cluster_means <- y_alpha/b
 var_y <- var(cluster_means)  # using a-1 degrees of freedom
-se_y <- sqrt(var_y/a)
+fpc <- sqrt((N - n) / N)
+se_y <- sqrt(var_y/a) * fpc
 
-# Calculate 95% CI using t-distribution with a-1 df
+# Calculating 95% CI using t-distribution with a-1 df
 t_value <- qt(0.975, df = a-1)
 ci_lower <- y_bar - t_value * se_y
 ci_upper <- y_bar + t_value * se_y
 
-# Print results
 cat("Mean:", y_bar, "\n")
 cat("Standard Error:", se_y, "\n")
 cat("95% CI:", c(ci_lower, ci_upper), "\n")
 ```
-Ok so based on the analysis of the cluster sampling data, I found that the estimated mean number of women who have ever been pregnant in the population is approximately 0.435. 
+Based on the analysis of the cluster sampling data, I found that the estimated mean number of women who have ever been pregnant in each cluster of 10 women is approximately 4.35. 
 
-The standard error of this estimate is about 0.042, which gives an idea of the variability of the sample mean. Using this standard error, I calculated a 95% confidence interval for the population mean, which ranges from approximately 0.347 to 0.523. This means one can be 95% confident that the true mean number of women who have ever been pregnant in the population falls within this interval. The relatively narrow confidence interval suggests that our estimate is fairly precise, even when accounting for the finite population correction.
+The standard error of this estimate is about 0.040, which gives an idea of the variability of the sample mean. 
+
+Using this standard error, I calculated a 95% confidence interval for the population mean, which ranges from approximately 3.50 to 5.20 women per cluster. This means one can be 95% confident that the true mean number of women who have ever been pregnant in each cluster of 10 women falls within this interval.
+
+Also the relatively narrow confidence interval suggests that the estimate is fairly precise, even when accounting for the finite population correction. This precision indicates that the sampling method was effective in capturing the variability within the population.
 
 
