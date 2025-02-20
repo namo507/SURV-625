@@ -129,3 +129,60 @@ cat("Expected Standard Error with 40 clusters:", se_new, "\n")
 Ok so looking at the results I got, I found that if one is to double the number of clusters from 20 to 40 while keeping the cluster size at 10 women each, the expected standard error would decrease to approximately 0.027. This is notably smaller than the original standard error of 0.040, which makes sense because one is sampling more clusters. 
 
 The reduction in standard error suggests that increasing the number of clusters would improve the precision of the estimate by about 32%. This improvement in precision demonstrates how sampling more clusters, even while maintaining the same cluster size, can lead to better estimates of the population mean number of pregnant women per cluster.
+
+
+## c) Note that the mean y bar is a proportion. Based on the sample of 20 clusters [and ignoring the ratio n / (n – 1)], compute the design effect deff, as well as roh. How would you interpret the design effect for a colleague in plain English?
+
+For cluster sampling, the design effect is:
+
+$$deff = \frac{var_{cluster}(\bar{y})}{var_{srs}(\bar{y})}$$
+
+where:
+- $var_{cluster}(\bar{y})$ is the variance under cluster sampling
+- $var_{srs}(\bar{y}) = \frac{p(1-p)}{n}$ is the variance under SRS
+- $p$ is the proportion (mean)
+- $n$ is total sample size
+
+And the intraclass correlation (roh) is:
+
+$$roh = \frac{deff - 1}{b - 1}$$
+
+where:
+- $b$ is the cluster size
+- $deff$ is the design effect
+
+Now calculating:
+
+Proportion: $$p = \frac{87}{200} = 0.435$$
+
+Cluster sampling variance: $$var_{cluster}(\bar{y}) = \frac{0.0326}{20} = 0.00163$$
+
+SRS variance: $$var_{srs}(\bar{y}) = \frac{0.435(1-0.435)}{200} = 0.00114$$
+
+Design Effect: $$deff = \frac{0.00163}{0.00114} = 1.425$$
+
+Intraclass Correlation: $$roh = \frac{1.425 - 1}{10 - 1} = 0.0472$$
+
+```{r}
+# Data
+y_alpha <- c(4, 4, 3, 6, 4, 6, 3, 4, 4, 1, 1, 8, 3, 3, 5, 6, 4, 5, 8, 5)
+a <- 20      # number of clusters
+b <- 10      # cluster size
+n <- a * b   # total sample size
+
+# Calculating proportion (p)
+p <- sum(y_alpha)/(n)  # divide by ab*b since y_alpha are totals
+
+# Calculating variances
+var_cluster <- var(y_alpha/b)/a  # cluster sampling variance
+var_srs <- (p*(1-p))/n          # SRS variance
+
+# Calculate deff and roh
+deff <- var_cluster/var_srs
+roh <- (deff - 1)/(b - 1)
+
+cat("Design Effect (deff):", deff, "\n")
+cat("Intraclass Correlation (roh):", roh, "\n")
+```
+
+Inferring this in layman terms, the design effect of 1.425 means that because of clustering, the variance is 42.5% higher than if one had sampled individuals completely at random. In other words, the effective sample size is reduced, and observations within the same cluster are somewhat similar; however, the intraclass correlation of about 4.7% indicates that this similarity is relatively low.
