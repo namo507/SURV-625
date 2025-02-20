@@ -1,0 +1,89 @@
+---
+title: "Homework 3: Namit Shrivastava"
+format: pdf
+editor: visual
+---
+
+## 1. The following are cluster totals $$y_\alpha$$ from a = 20 clusters of exactly b = 10 women (between the ages of 15 and 24) each. These clusters and the young women were sampled from the population frame used for Homework 1. The cluster totals $$y_\alpha$$ are the number of women who have ever been pregnant. Assume that the clusters were selected at random and with replacement, and the students were selected with epsem and without replacement. The sampling fraction is f = ab/AB = n/N = 200/2,920 = 1 / 14.6, meaning that the finite population correction (fpc) should not be ignored in this case. 
+
+| Cluster | $y_\alpha$ |
+|:--------|:----------:|
+| 1       | 4          |
+| 2       | 4          |
+| 3       | 3          |
+| 4       | 6          |
+| 5       | 4          |
+| 6       | 6          |
+| 7       | 3          |
+| 8       | 4          |
+| 9       | 4          |
+| 10      | 1          |
+| 11      | 1          |
+| 12      | 8          |
+| 13      | 3          |
+| 14      | 3          |
+| 15      | 5          |
+| 16      | 6          |
+| 17      | 4          |
+| 18      | 5          |
+| 19      | 8          |
+| 20      | 5          |
+
+## a) Compute an estimate of the mean , y bar its standard error, and a 95% confidence interval for the population mean. (Hint: the degrees of freedom used in computing this confidence interval should not be 199.)
+
+Now for cluster sampling, the estimate of the population mean is:
+
+$$\bar{y} = \frac{1}{ab}\sum_{\alpha=1}^a y_\alpha$$
+
+where:
+- $a$ is the number of clusters (20)
+- $b$ is the cluster size (10)
+- $y_\alpha$ is the cluster total
+
+The variance of the mean is:
+
+$$V(\bar{y}) = \frac{1}{a^2b^2}\sum_{\alpha=1}^a(y_\alpha - \bar{y}b)^2/(a-1)$$
+
+And the standard error is:
+
+$$SE(\bar{y}) = \sqrt{V(\bar{y})}$$
+
+So step by step calculation will be:
+
+Mean: $$\bar{y} = \frac{87}{(20 \times 10)} = 0.435$$
+
+Variance: $$V(\bar{y}) = \frac{1}{20^2}\sum_{\alpha=1}^{20}(y_\alpha/10 - 0.435)^2/19$$
+
+Standard Error: $$SE(\bar{y}) = \sqrt{V(\bar{y})}$$
+
+95% Confidence Interval: $$\bar{y} \pm t_{19,0.975} \times SE(\bar{y})$$
+
+```{r}
+# Data
+y_alpha <- c(4, 4, 3, 6, 4, 6, 3, 4, 4, 1, 1, 8, 3, 3, 5, 6, 4, 5, 8, 5)
+a <- 20  # number of clusters
+b <- 10  # cluster size
+
+# Calculate mean
+y_bar <- sum(y_alpha)/(a*b)
+
+# Calculate variance and SE
+cluster_means <- y_alpha/b
+var_y <- var(cluster_means)  # using a-1 degrees of freedom
+se_y <- sqrt(var_y/a)
+
+# Calculate 95% CI using t-distribution with a-1 df
+t_value <- qt(0.975, df = a-1)
+ci_lower <- y_bar - t_value * se_y
+ci_upper <- y_bar + t_value * se_y
+
+# Print results
+cat("Mean:", y_bar, "\n")
+cat("Standard Error:", se_y, "\n")
+cat("95% CI:", c(ci_lower, ci_upper), "\n")
+```
+Ok so based on the analysis of the cluster sampling data, I found that the estimated mean number of women who have ever been pregnant in the population is approximately 0.435. 
+
+The standard error of this estimate is about 0.042, which gives an idea of the variability of the sample mean. Using this standard error, I calculated a 95% confidence interval for the population mean, which ranges from approximately 0.347 to 0.523. This means one can be 95% confident that the true mean number of women who have ever been pregnant in the population falls within this interval. The relatively narrow confidence interval suggests that our estimate is fairly precise, even when accounting for the finite population correction.
+
+
