@@ -247,7 +247,7 @@ This makes sense because while I increased the number of clusters (which helps p
 
 ```{r}
 # Reading the data
-cherry <- read.csv("cherry.csv")
+cherry <- read.csv("/Users/namomac/Downloads/cherry.csv")
 
 # Creating scatter plot
 plot(volume ~ diameter, data = cherry,
