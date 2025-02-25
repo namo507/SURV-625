@@ -77,20 +77,22 @@ se_y <- sqrt(var_y/a) * fpc
 
 # Calculating 95% CI using t-distribution with a-1 df
 t_value <- qt(0.975, df = a-1)
-ci_lower <- y_bar - t_value * se_y
-ci_upper <- y_bar + t_value * se_y
+ci_lower <- b*y_bar - t_value * se_y
+ci_upper <- b*y_bar + t_value * se_y
+
 
 cat("Mean:", y_bar, "\n")
 cat("Standard Error:", se_y, "\n")
 cat("95% CI:", c(ci_lower, ci_upper), "\n")
 ```
-Based on the analysis of the cluster sampling data, I found that the estimated mean number of women who have ever been pregnant in each cluster of 10 women is approximately 4.35. 
+
+Based on the analysis of the cluster sampling data, I found that the estimated mean number of women who have ever been pregnant in each cluster of 10 women is approximately 4.35 (or 0.435 as a proportion). 
 
 The standard error of this estimate is about 0.040, which gives an idea of the variability of the sample mean. 
 
-Using this standard error, I calculated a 95% confidence interval for the population mean, which ranges from approximately 3.50 to 5.20 women per cluster. This means one can be 95% confident that the true mean number of women who have ever been pregnant in each cluster of 10 women falls within this interval.
+Using this standard error, I calculated a 95% confidence interval for the population mean, which ranges from approximately 4.27 to 4.43 women per cluster. This means I can be 95% confident that the true mean number of women who have ever been pregnant in each cluster of 10 women falls within this interval.
 
-Also the relatively narrow confidence interval suggests that the estimate is fairly precise, even when accounting for the finite population correction. This precision indicates that the sampling method was effective in capturing the variability within the population.
+The very narrow confidence interval (spanning only about 0.17 women per cluster) suggests that the estimate is highly precise, even when accounting for the finite population correction. This high precision indicates that our sampling method was very effective in capturing the variability within the population, and we can be quite confident in our estimate of the average number of pregnant women per cluster.
 
 
 ## b) Estimate the standard error of the mean that you would expect if the sample consisted of a = 40 clusters of b = 10 each. (Hint: What about this design has not changed, and what quantity needed to answer this question could therefore be considered portable?)
