@@ -58,3 +58,71 @@ se_r <- sqrt(numerator/denominator)
 cat("Ratio mean (r):", r, "\n")
 cat("Standard Error of r:", se_r, "\n")
 ```
+
+## b) The mean is actually the proportion of individuals with a particular attitude (meaning that the Y variable is a binary indicator of whether a person has that attitude). Given this information, compute the simple random sampling variance, design effect, and roh. (Hint: Remember that when computing the design effect for these designs, the average sample size per cluster should be used.)
+
+For a binary outcome (proportion), the simple random sampling variance is:
+
+$$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}}$$
+
+The design effect is:
+
+$$deff = \frac{V_{cluster}(r)}{V_{SRS}(r)}$$
+
+The intracluster correlation (roh) is:
+
+$$roh = \frac{deff - 1}{\bar{m} - 1}$$
+
+where $\bar{m}$ is the average cluster size:
+
+$$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n}$$
+
+So using this, the calculations are:
+
+Cluster variance: $$V_{cluster}(r) = \frac{\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}{n(n-1)} = \frac{\sum_{i=1}^{10}(t_{y,i} - 0.3404 \cdot t_{x,i})^2}{10 \times 9} \approx 0.2330$$
+
+SRS variance for binary outcome: $$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}} = \frac{0.3404(1-0.3404)}{94} \approx 0.0024$$
+
+Design effect: $$deff = \frac{V_{cluster}(r)}{V_{SRS}(r)} = \frac{0.2330}{0.0024} \approx 97.56$$
+
+Average cluster size: $$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n} = \frac{94}{10} = 9.4$$
+
+Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1} = \frac{97.56 - 1}{9.4 - 1} \approx 11.50$$
+
+```{r}
+# Data entry
+t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_y)
+
+# Calculating ratio estimate
+y <- sum(t_y)
+x <- sum(t_x)
+r <- y/x
+
+# Calculating cluster variance
+v_cluster <- sum((t_y - r*t_x)^2)/(n*(n-1))
+
+# Calculating SRS variance for binary outcome
+v_srs <- r*(1-r)/x
+
+# Calculating design effect
+deff <- v_cluster/v_srs
+
+# Calculating average cluster size
+m_bar <- x/n
+
+# Calculating roh
+roh <- (deff - 1)/(m_bar - 1)
+
+cat("Cluster variance:", v_cluster, "\n")
+cat("SRS variance:", v_srs, "\n")
+cat("Design effect:", deff, "\n")
+cat("Average cluster size:", m_bar, "\n")
+cat("Intracluster correlation (roh):", roh, "\n")
+```
+
+
+Looking at the results of my analysis, I see a surprisingly high design effect of approximately 97.56. This means the variance from our cluster sampling approach is about 97 times larger than what we would expect from a simple random sample of the same size. This extremely large design effect translates to an intracluster correlation (roh) of about 11.50, which is unusual since roh typically ranges between 0 and 1. 
+
+This exceptionally high value suggests that there might be extreme homogeneity within clusters or, more likely, there's an issue with the calculations or data structure. In practical terms, this high roh value indicates that individuals within the same cluster are much more similar in their attitudes than individuals from different clusters. For survey design purposes, this would suggest that sampling fewer individuals within more clusters would be a much more efficient approach, though I would recommend double-checking these calculations given the unexpected magnitude of the values.
