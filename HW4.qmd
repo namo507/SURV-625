@@ -271,3 +271,86 @@ cat("Is Taylor series approximation adequate? (CV < 0.1):", cv_x < 0.1, "\n")
 Ok so after examining the coefficient of variation for the denominator, I found it to be approximately 0.087 or 8.7%. This is good because it falls below the typical threshold of 0.1 (or 10%) that determines whether the Taylor series approximation is adequate. The CV essentially tells me how much relative variability exists in the cluster sizes, which ranged from 5 to 13 individuals with a mean of 9.4. Since this variability is modest, one can be confident in using the Taylor series linearization approach for the variance estimation. 
 
 This means the earlier calculations of standard errors and confidence intervals for the ratio estimate are likely reliable. If the CV had been larger, one might have needed to consider alternative methods like jackknife or bootstrap for variance estimation. Overall, this result validates my analytical approach and suggests the approximations I have been using should work well for this dataset.
+
+
+
+
+## 2. The following are cluster totals from five strata, with two primary stage selections per stratum, for a binary variable named "total cholesterol greater than 200" ($t_{y,h,i}$):
+
+| $h$ | $i$ | $t_{y,h,i}$ | $t_{x,h,i}$ |
+|:---:|:---:|:-----------:|:-----------:|
+| 1   | 1   | 16          | 23          |
+|     | 2   | 15          | 25          |
+| 2   | 1   | 9           | 17          |
+|     | 2   | 5           | 15          |
+| 3   | 1   | 8           | 20          |
+|     | 2   | 10          | 21          |
+| 4   | 1   | 6           | 16          |
+|     | 2   | 10          | 19          |
+| 5   | 1   | 10          | 12          |
+|     | 2   | 7           | 16          |
+
+
+## a) Compute an estimate of the proportion with total cholesterol greater than 200, and its standard error (you can ignore the finite population corrections again in this case). Make sure that you are carefully accounting for this specific type of cluster sampling design in your variance estimation.
+
+For stratified two-stage cluster sampling with two PSUs per stratum, one can estimate the proportion as:
+
+$$\hat{p} = \frac{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{y,h,i}}{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}}$$
+
+For the variance estimation, I will use the between-PSU variance formula with two PSUs per stratum:
+
+$$V(\hat{p}) = \sum_{h=1}^L \frac{(z_{h1} - z_{h2})^2}{4}$$
+
+where $z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$
+
+Now to calculate overall proportion: $$\hat{p} = \frac{\sum_{h=1}^5 \sum_{i=1}^{2} t_{y,h,i}}{\sum_{h=1}^5 \sum_{i=1}^{2} t_{x,h,i}} = \frac{96}{184} \approx 0.5217$$
+
+Calculate residuals for each PSU: $$z_{h,i} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$$
+
+So an example, for stratum 1, PSU 1: $$z_{1,1} = 16 - 0.5217 \cdot 23 = 16 - 12 = 4$$
+
+Calculating variance component for each stratum: $$v_h = \frac{(z_{h1} - z_{h2})^2}{4}$$
+For example, for stratum 1: $$v_1 = \frac{(z_{1,1} - z_{1,2})^2}{4}$$
+
+Summing the variance components across strata: $$V(\hat{p}) = \sum_{h=1}^5 v_h$$
+
+Calculating the standard error: $$SE(\hat{p}) = \sqrt{V(\hat{p})}$$
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculating overall proportion
+total_y <- sum(data$t_y)
+total_x <- sum(data$t_x)
+p_hat <- total_y / total_x
+
+# Calculating variance using between-PSU formula
+# First I will calculate the residuals (z-values)
+data$z <- data$t_y - p_hat * data$t_x
+
+# Calculating the between-PSU variance for each stratum
+var_components <- tapply(data$z, data$stratum, function(z) {
+  (z[1] - z[2])^2 / 4
+})
+
+# Sum variance components across strata
+var_p_hat <- sum(var_components)
+
+# Calculating standard error
+se_p_hat <- sqrt(var_p_hat / total_x)
+
+cat("Estimated proportion (p_hat):", p_hat, "\n")
+cat("Variance of p_hat:", var_p_hat, "\n")
+cat("Standard error of p_hat:", se_p_hat, "\n")
+```
+
+Based on my analysis of the stratified cluster data, I found that approximately 52.2% of individuals have total cholesterol levels greater than 200. 
+
+The standard error of this estimate is about 0.25, which means one can expect the proportion estimate to vary by around 25 percentage points if one were to repeat the sampling process. This relatively large standard error reflects the variability inherent in the cluster sampling approach used before. The variance components across the five strata contributed to a total variance of 11.73, which is then appropriately scaled by the sample size to give me the standard error. 
+
+So if greater precision is needed, one might want to consider increasing the number of PSUs within each stratum or exploring alternative sampling designs that could reduce this variability.
