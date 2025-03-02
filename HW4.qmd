@@ -219,4 +219,55 @@ Looking at my analysis of tripling the subsampling rate within each cluster, I f
 
 So, the variance actually increased from 0.233 to about 0.250, which represents a roughly 7.2% increase in variance. This shows the estimates would become less precise, not more, despite tripling our sample size. 
 This counterintuitive result is directly caused by the extremely high intracluster correlation of 11.5 that was observed earlier. When individuals within clusters are so similar to each other, adding more of them to our sample provides very little new information. In fact, the additional sampling effort is essentially wasted due to this redundancy. 
+
 So in cases like this with strong within-cluster homogeneity, it would be far better to sample more clusters rather than more individuals within each cluster, as seen in part (c) where tripling the number of clusters reduced variance by 66.7% instead of increasing it.
+
+## e) Compute the coefficient of variation of the denominator based on the current design [from part (a)]. Remember to account for the cluster sampling design in your calculation. Is the Taylor series approximation adequate?
+
+The coefficient of variation (CV) of the denominator is defined as:
+
+$$CV(x) = \frac{\sqrt{V(x)}}{E(x)} = \frac{\sqrt{V(\sum_{i=1}^n t_{x,i})}}{\sum_{i=1}^n t_{x,i}}$$
+
+Where $V(x)$ is the variance of the denominator under cluster sampling:
+
+$$V(x) = n \cdot V(t_{x,i}) = \frac{n}{n-1} \sum_{i=1}^n (t_{x,i} - \bar{t}_x)^2$$
+
+And $\bar{t}_x = \frac{1}{n}\sum_{i=1}^n t_{x,i}$ is the mean cluster size.
+
+For the Taylor series approximation to be adequate, typically CV(x) should be less than 0.1 (or 10%).
+
+So the Total denominator: $$x = \sum_{i=1}^n t_{x,i} = 13 + 11 + 7 + 11 + 6 + 11 + 5 + 11 + 9 + 10 = 94$$
+
+Mean cluster size: $$\bar{t}x = \frac{1}{n}\sum{i=1}^n t_{x,i} = \frac{94}{10} = 9.4$$
+
+Variance of cluster sizes: $$V(t_{x,i}) = \frac{1}{n-1} \sum_{i=1}^n (t_{x,i} - \bar{t}x)^2 = \frac{1}{9} \sum{i=1}^{10} (t_{x,i} - 9.4)^2$$
+
+Variance of denominator: $$V(x) = n \cdot V(t_{x,i})$$
+
+Coefficient of variation: $$CV(x) = \frac{\sqrt{V(x)}}{x}$$
+
+```{r}
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_x)
+x <- sum(t_x)
+mean_tx <- mean(t_x)
+
+# Calculate variance of denominator
+var_tx <- sum((t_x - mean_tx)^2)/(n-1)
+var_x <- n * var_tx
+
+# Calculate coefficient of variation
+cv_x <- sqrt(var_x)/x
+
+# Print results
+cat("Total denominator (x):", x, "\n")
+cat("Mean cluster size:", mean_tx, "\n")
+cat("Variance of cluster sizes:", var_tx, "\n")
+cat("Variance of denominator:", var_x, "\n")
+cat("Coefficient of variation of denominator:", cv_x, "\n")
+cat("Is Taylor series approximation adequate? (CV < 0.1):", cv_x < 0.1, "\n")
+```
+
+Ok so after examining the coefficient of variation for the denominator, I found it to be approximately 0.087 or 8.7%. This is good because it falls below the typical threshold of 0.1 (or 10%) that determines whether the Taylor series approximation is adequate. The CV essentially tells me how much relative variability exists in the cluster sizes, which ranged from 5 to 13 individuals with a mean of 9.4. Since this variability is modest, one can be confident in using the Taylor series linearization approach for the variance estimation. 
+
+This means the earlier calculations of standard errors and confidence intervals for the ratio estimate are likely reliable. If the CV had been larger, one might have needed to consider alternative methods like jackknife or bootstrap for variance estimation. Overall, this result validates my analytical approach and suggests the approximations I have been using should work well for this dataset.
