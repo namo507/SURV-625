@@ -90,7 +90,6 @@ Average cluster size: $$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n} = \frac{94}{10}
 Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1} = \frac{97.56 - 1}{9.4 - 1} \approx 11.50$$
 
 ```{r}
-# Data entry
 t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
 t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
 n <- length(t_y)
