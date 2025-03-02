@@ -165,3 +165,58 @@ Based on my calculations, I found that increasing the number of clusters from 10
 In practical terms, this means that if we were to redesign the survey, we'd get much more reliable results by sampling more clusters rather than more individuals within each cluster. This finding reinforces a common principle in cluster sampling that when there's high homogeneity within clusters, it's more efficient to spread the sample across more clusters. For this particular attitude measure, tripling the number of clusters would give us estimates that are about three times more precise without having to increase the overall sample size.
 
 
+## d) Estimate the sampling variance if the sample size were tripled by tripling the subsampling rate in each cluster.
+
+When increasing the subsampling rate within each cluster, I will use the formula that accounts for the intracluster correlation:
+
+$$V_{new}(r) = \frac{V_{SRS}(r)}{m'} \times [1 + (m'-1) \times roh]$$
+
+Where:
+- $m' = 3 \times \bar{m}$ is the new average cluster size (tripled)
+- $\bar{m} = 9.4$ is the original average cluster size
+- $roh = 11.50$ is the intracluster correlation
+- $V_{SRS}(r)$ is the simple random sampling variance
+
+Original average cluster size: $$\bar{m} = 9.4$$
+
+New average cluster size: $$m' = 3 \times 9.4 = 28.2$$
+
+Original SRS variance: $$V_{SRS}(r) = 0.0024$$
+
+New SRS variance: $$V_{SRS,new}(r) = V_{SRS}(r) \times \frac{\bar{m}}{m'} = 0.0024 \times \frac{9.4}{28.2} \approx 0.0008$$
+
+Original design effect: $$deff_{original} = 1 + (\bar{m}-1) \times roh = 1 + (9.4-1) \times 11.50 \approx 97.6$$
+
+New design effect: $$deff_{new} = 1 + (m'-1) \times roh = 1 + (28.2-1) \times 11.50 \approx 312.8$$
+
+New variance: $$V_{new}(r) = V_{SRS,new}(r) \times deff_{new} = 0.0008 \times 312.8 \approx 0.2502$$
+
+Percent change: $$\text{Change} = (1 - \frac{V_{new}(r)}{V_{original}(r)}) \times 100% = (1 - \frac{0.2502}{0.2330}) \times 100% \approx -7.38%$$
+
+```{r}
+m_original <- m_bar
+m_new <- 3 * m_original  # tripled subsampling rate
+n <- 10  # number of clusters remains the same
+
+#Now let me show the variance using 2 methods
+
+# Method 1: Using the design effect formula
+v_srs_new <- v_srs * (m_original/m_new)  # adjusted SRS variance
+deff_new <- 1 + (m_new-1) * roh
+v_new_1 <- v_srs_new * deff_new
+
+# Method 2: Using the ratio formula
+deff_original <- 1 + (m_original-1) * roh
+v_new_2 <- v_original * (m_original/m_new) * (deff_new/deff_original)
+
+cat("Original variance:", v_original, "\n")
+cat("New variance (Method 1):", v_new_1, "\n")
+cat("New variance (Method 2):", v_new_2, "\n")
+cat("Percent change in variance:", (1 - v_new_1/v_original) * 100, "%\n")
+```
+
+Looking at my analysis of tripling the subsampling rate within each cluster, I found something quite interesting.
+
+So, the variance actually increased from 0.233 to about 0.250, which represents a roughly 7.2% increase in variance. This shows the estimates would become less precise, not more, despite tripling our sample size. 
+This counterintuitive result is directly caused by the extremely high intracluster correlation of 11.5 that was observed earlier. When individuals within clusters are so similar to each other, adding more of them to our sample provides very little new information. In fact, the additional sampling effort is essentially wasted due to this redundancy. 
+So in cases like this with strong within-cluster homogeneity, it would be far better to sample more clusters rather than more individuals within each cluster, as seen in part (c) where tripling the number of clusters reduced variance by 66.7% instead of increasing it.
