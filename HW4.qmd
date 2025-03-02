@@ -1,0 +1,60 @@
+---
+title: "Homework 4: Namit Shrivastava"
+format: pdf
+editor: visual
+---
+
+## 1. The following data were collected from a sample of n = 10 clusters that was selected from a large population (assume that the sampling fractions are negligible):
+
+| $i$ | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Totals |
+|:---:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:--:|:------:|
+| $t_{y,i}$ | 5 | 1 | 2 | 4 | 2 | 2 | 3 | 3 | 4 | 6 | 32 |
+| $t_{x,i}$ | 13 | 11 | 7 | 11 | 6 | 11 | 5 | 11 | 9 | 10 | 94 |
+
+## a) Compute the ratio mean r = y/x , where y =∑ty,i is the total outcome and x=∑tx,i is  the realized sample size, and its standard error. Note that this is an example of simple  random sampling of unequal-sized clusters. Use the ultimate cluster idea for variance  estimation purposes (i.e., we don’t really care how many stages of cluster sampling led to  the realized sample sizes in each cluster; we assume a one-stage selection of ultimate  clusters, where all units were sampled within them).
+
+In cluster sampling with unequal cluster sizes, the ratio mean is:
+
+$$r = \frac{\sum_{i=1}^n t_{y,i}}{\sum_{i=1}^n t_{x,i}} = \frac{y}{x}$$
+
+The standard error using the ultimate cluster approach is:
+
+$$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^n (t_{y,i} - r \times t_{x,i})^2}$$
+
+So firstly calculating the total outcome (y) and realized sample size (x)
+
+$$y = \sum_{i=1}^{n} t_{y,i} = 5 + 1 + 2 + 4 + 2 + 2 + 3 + 3 + 4 + 6 = 32$$
+
+$$x = \sum_{i=1}^{n} t_{x,i} = 13 + 11 + 7 + 11 + 6 + 11 + 5 + 11 + 9 + 10 = 94$$
+
+then, computing the ratio mean (r)
+$$r = \frac{y}{x} = \frac{32}{94} \approx 0.3404255$$
+
+and then calculating the standard error using the ultimate cluster idea:
+
+$$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}$$
+
+Where n = 10 (number of clusters)
+
+$$SE(r) = \sqrt{\frac{1}{10(10-1)}\sum_{i=1}^{10}(t_{y,i} - 0.3404255 \cdot t_{x,i})^2}$$
+
+$$SE(r) \approx 0.04826531$$ 
+
+```{r}
+t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_y)
+
+# Calculating ratio estimate
+y <- sum(t_y)
+x <- sum(t_x)
+r <- y/x
+
+# Calculating standard error using ultimate cluster approach
+numerator <- sum((t_y - r*t_x)^2)
+denominator <- n*(n-1)
+se_r <- sqrt(numerator/denominator)
+
+cat("Ratio mean (r):", r, "\n")
+cat("Standard Error of r:", se_r, "\n")
+```
