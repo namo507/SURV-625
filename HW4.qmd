@@ -503,3 +503,45 @@ Looking at my analysis of the intracluster correlation and design effect, I foun
 This could be happening because the stratification was particularly effective at capturing between-group differences. In practical terms, this means the complex sampling design actually improved precision compared to a simple random sample of the same size meaning I am getting a "design benefit" rather than a design effect penalty. 
 
 This finding contradicts the common assumption that cluster sampling always reduces precision, and suggests that for this particular health measure, this sampling strategy was quite efficient.
+
+
+## d) Estimate the standard error expected if the sample size were doubled by doubling the number of primary selections from two to four in each stratum.
+
+When the number of primary selections per stratum is doubled from 2 to 4, the standard error decreases by a factor of $\sqrt{2}$:
+
+$$SE_{new}(\hat{p}) = \frac{SE_{original}(\hat{p})}{\sqrt{2}}$$
+
+This is because:
+
+$$V_{new}(\hat{p}) = \frac{V_{original}(\hat{p})}{2}$$
+
+So I can derive this from the general formula for variance estimation with $n_h$ PSUs per stratum:
+
+$$V(\hat{p}) = \sum_{h=1}^L \frac{1}{n_h(n_h-1)} \sum_{i=1}^{n_h} (z_{hi} - \bar{z}_h)^2$$
+
+Original standard error (from part a): $$SE_{original}(\hat{p}) = 0.0186$$
+
+New standard error with doubled PSUs: $$SE_{new}(\hat{p}) = \frac{SE_{original}(\hat{p})}{\sqrt{2}} = \frac{0.0186}{\sqrt{2}} \approx 0.0132$$
+
+Percentage reduction: $$\text{Reduction} = \left(1 - \frac{SE_{new}(\hat{p})}{SE_{original}(\hat{p})}\right) \times 100% = \left(1 - \frac{0.0132}{0.0186}\right) \times 100% \approx 29.3%$$
+
+```{r}
+# Getting the original standard error
+se_original <- se_p_hat
+
+# Calculating the new standard error with doubled PSUs
+se_new <- se_original / sqrt(2)
+
+# Calculating the percentage reduction in standard error
+pct_reduction <- (1 - se_new/se_original) * 100
+
+cat("Original standard error:", se_original, "\n")
+cat("New standard error (with 4 PSUs per stratum):", se_new, "\n")
+cat("Percentage reduction in standard error:", pct_reduction, "%\n")
+```
+
+Looking at my analysis, I found that doubling the number of PSUs per stratum from 2 to 4 would significantly improve the precision of the cholesterol proportion estimate. 
+
+Specifically, the standard error would decrease from about 0.0186 to 0.0132, representing a roughly 29.3% reduction. This improvement makes intuitive sense since by selecting more primary sampling units within each stratum, I'd be capturing more of the between-PSU variation that contributes to sampling error. The square root relationship between sample size and standard error is clearly demonstrated here, as doubling the number of PSUs leads to a reduction by a factor of approximately sqrt(2). 
+
+Now, if I were designing a follow-up study, this finding would strongly suggest that increasing the number of PSUs per stratum would be a worthwhile investment to improve precision, especially considering the relatively small number of degrees of freedom in the current design. This approach would give me much more reliable estimates of the proportion of people with elevated cholesterol levels without requiring any changes to the stratification scheme.
