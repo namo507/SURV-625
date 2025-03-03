@@ -545,3 +545,73 @@ Looking at my analysis, I found that doubling the number of PSUs per stratum fro
 Specifically, the standard error would decrease from about 0.0186 to 0.0132, representing a roughly 29.3% reduction. This improvement makes intuitive sense since by selecting more primary sampling units within each stratum, I'd be capturing more of the between-PSU variation that contributes to sampling error. The square root relationship between sample size and standard error is clearly demonstrated here, as doubling the number of PSUs leads to a reduction by a factor of approximately sqrt(2). 
 
 Now, if I were designing a follow-up study, this finding would strongly suggest that increasing the number of PSUs per stratum would be a worthwhile investment to improve precision, especially considering the relatively small number of degrees of freedom in the current design. This approach would give me much more reliable estimates of the proportion of people with elevated cholesterol levels without requiring any changes to the stratification scheme.
+
+## e) Compute the coefficient of variation of the denominator. Remember to account for the stratified cluster sampling design in your calculation. Is the Taylor series approximation adequate?
+
+For stratified cluster sampling, the coefficient of variation (CV) of the denominator is:
+
+$$CV(x) = \frac{\sqrt{V(x)}}{E(x)} = \frac{\sqrt{V(\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i})}}{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}}$$
+
+The variance of the denominator under stratified cluster sampling is:
+
+$$V(x) = \sum_{h=1}^L \frac{(t_{x,h,1} - t_{x,h,2})^2}{4}$$
+
+For the Taylor series approximation to be adequate, typically CV(x) should be less than 0.1 (or 10%).
+
+Now the calculation will be:
+
+Total denominator: $$x = \sum_{h=1}^5 \sum_{i=1}^2 t_{x,h,i} = 184$$
+
+Variance components for each stratum: 
+
+For stratum 1: $$v_1 = \frac{(t_{x,1,1} - t_{x,1,2})^2}{4} = \frac{(23-25)^2}{4} = \frac{4}{4} = 1$$
+
+For stratum 2: $$v_2 = \frac{(t_{x,2,1} - t_{x,2,2})^2}{4} = \frac{(17-15)^2}{4} = \frac{4}{4} = 1$$
+
+For stratum 3: $$v_3 = \frac{(t_{x,3,1} - t_{x,3,2})^2}{4} = \frac{(20-21)^2}{4} = \frac{1}{4} = 0.25$$
+
+For stratum 4: $$v_4 = \frac{(t_{x,4,1} - t_{x,4,2})^2}{4} = \frac{(16-19)^2}{4} = \frac{9}{4} = 2.25$$
+
+For stratum 5: $$v_5 = \frac{(t_{x,5,1} - t_{x,5,2})^2}{4} = \frac{(12-16)^2}{4} = \frac{16}{4} = 4$$
+
+Hence, Total variance: $$V(x) = \sum_{h=1}^5 v_h = 1 + 1 + 0.25 + 2.25 + 4 = 8.5$$
+
+Coefficient of variation: $$CV(x) = \frac{\sqrt{V(x)}}{x} = \frac{\sqrt{8.5}}{184} = \frac{2.92}{184} = 0.016$$
+
+Since CV(x) = 0.016 < 0.1, the Taylor series approximation is adequate.
+
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculate total denominator (x)
+x <- sum(data$t_x)
+
+# Calculate variance components for the denominator by stratum
+var_components_x <- tapply(data$t_x, data$stratum, function(tx) {
+  (tx[1] - tx[2])^2 / 4
+})
+
+# Sum variance components to get total variance of denominator
+var_x <- sum(var_components_x)
+
+# Calculate coefficient of variation
+cv_x <- sqrt(var_x) / x
+
+# Print results
+cat("Total denominator (x):", x, "\n")
+cat("Variance of denominator:", var_x, "\n")
+cat("Coefficient of variation of denominator:", cv_x, "\n")
+cat("Is Taylor series approximation adequate? (CV < 0.1):", cv_x < 0.1, "\n")
+```
+
+After analyzing the coefficient of variation for the denominator in this stratified cluster sample, I found that the CV is approximately 0.016 or 1.6%, which is well below the standard threshold of 0.1 (10%) for determining whether the Taylor series approximation is adequate. 
+
+This low CV indicates that there's relatively little variability in the cluster sizes across different PSUs when compared to their average size. The total variance of the denominator was calculated to be 8.5, which is quite small relative to the total denominator of 184. 
+
+Looking at each stratum's contribution to this variance, I can see that stratum 5 had the largest difference in cluster sizes (12 vs 16), contributing 4 units to the total variance, while stratum 3 had the smallest difference (20 vs 21), contributing only 0.25 units. So, given this small coefficient of variation, I can confidently rely on the Taylor series approximation for the variance estimation of the ratio estimate, which validates the approach I've used throughout my analysis of the cholesterol data.
