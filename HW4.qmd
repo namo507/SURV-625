@@ -451,7 +451,7 @@ Total sample size: $$total_x = 23 + 25 + 17 + 15 + 20 + 21 + 16 + 19 + 12 + 16 =
 
 Average cluster size: $$\bar{m} = \frac{total_x}{n_{PSU}} = \frac{184}{10} = 18.4$$
 
-Variance under cluster sampling: $$V_{cluster}(\hat{p}) = \left(\frac{\sqrt{var_p_hat}}{total_x}\right)^2 = \left(\frac{\sqrt{11.73}}{184}\right)^2 = 0.00035$$
+Variance under cluster sampling: $$V_{cluster}(\hat{p}) = \left(\frac{\sqrt{var_{p\_hat}}}{total_x}\right)^2 = \left(\frac{\sqrt{11.73}}{184}\right)^2 = 0.00035$$
 
 Variance under SRS: $$V_{SRS}(\hat{p}) = \frac{p(1-p)}{total_x} = \frac{0.5217(1-0.5217)}{184} = \frac{0.5217 \times 0.4783}{184} = 0.00136$$
 
