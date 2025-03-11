@@ -151,10 +151,10 @@ n_new <- 30  # tripled number of clusters
 # Original cluster variance from part (a)
 v_original <- v_cluster
 
-# Calculate new variance when tripling cluster selections
+# Calculating new variance when tripling cluster selections
 v_new <- v_original * (n_original / n_new)
 
-# Print results
+# Now showing the results
 cat("Original variance with 10 clusters:", v_original, "\n")
 cat("New variance with 30 clusters:", v_new, "\n")
 cat("Percent reduction in variance:", (1 - v_new/v_original) * 100, "%\n")
@@ -252,14 +252,14 @@ n <- length(t_x)
 x <- sum(t_x)
 mean_tx <- mean(t_x)
 
-# Calculate variance of denominator
+# Calculating variance of denominator
 var_tx <- sum((t_x - mean_tx)^2)/(n-1)
 var_x <- n * var_tx
 
-# Calculate coefficient of variation
+# Calculating coefficient of variation
 cv_x <- sqrt(var_x)/x
 
-# Print results
+# Now showing the results
 cat("Total denominator (x):", x, "\n")
 cat("Mean cluster size:", mean_tx, "\n")
 cat("Variance of cluster sizes:", var_tx, "\n")
@@ -589,10 +589,10 @@ data <- data.frame(
   t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
 )
 
-# Calculate total denominator (x)
+# Calculating total denominator (x)
 x <- sum(data$t_x)
 
-# Calculate variance components for the denominator by stratum
+# Calculating variance components for the denominator by stratum
 var_components_x <- tapply(data$t_x, data$stratum, function(tx) {
   (tx[1] - tx[2])^2 / 4
 })
@@ -600,10 +600,10 @@ var_components_x <- tapply(data$t_x, data$stratum, function(tx) {
 # Sum variance components to get total variance of denominator
 var_x <- sum(var_components_x)
 
-# Calculate coefficient of variation
+# Calculating coefficient of variation
 cv_x <- sqrt(var_x) / x
 
-# Print results
+# Now showing the results
 cat("Total denominator (x):", x, "\n")
 cat("Variance of denominator:", var_x, "\n")
 cat("Coefficient of variation of denominator:", cv_x, "\n")
