@@ -124,7 +124,7 @@ cat("Intracluster correlation (roh):", roh, "\n")
 
 Looking at the results of my analysis, I see a surprisingly high design effect of approximately 97.56. This means the variance from our cluster sampling approach is about 97 times larger than what we would expect from a simple random sample of the same size. This extremely large design effect translates to an intracluster correlation (roh) of about 11.50, which is unusual since roh typically ranges between 0 and 1. 
 
-This exceptionally high value suggests that there might be extreme homogeneity within clusters or, more likely, there's an issue with the calculations or data structure. In practical terms, this high roh value indicates that individuals within the same cluster are much more similar in their attitudes than individuals from different clusters. For survey design purposes, this would suggest that sampling fewer individuals within more clusters would be a much more efficient approach, though I would recommend double-checking these calculations given the unexpected magnitude of the values.
+This exceptionally high value suggests that there might be extreme homogeneity within clusters In practical terms, this high roh value indicates that individuals within the same cluster are much more similar in their attitudes than individuals from different clusters. For survey design purposes, this would suggest that sampling fewer individuals within more clusters would be a much more efficient approach, though I would recommend double-checking these calculations given the unexpected magnitude of the values.
 
 ## c) Estimate the variance if the sample size were tripled by tripling the number of primary stage cluster selections from 10 to 30.
 
