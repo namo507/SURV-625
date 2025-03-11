@@ -522,7 +522,7 @@ Original standard error (from part a): $$SE_{original}(\hat{p}) = 0.0186$$
 
 New standard error with doubled PSUs: $$SE_{new}(\hat{p}) = \frac{SE_{original}(\hat{p})}{\sqrt{2}} = \frac{0.0186}{\sqrt{2}} \approx 0.0132$$
 
-Percentage reduction: $$\text{Reduction} = \left(1 - \frac{SE_{new}(\hat{p})}{SE_{original}(\hat{p})}\right) \times 100% = \left(1 - \frac{0.0132}{0.0186}\right) \times 100% \approx 29.3%$$
+Percentage reduction: $$\text{Reduction} = \left(1 - \frac{SE_{new}(\hat{p})}{SE_{original}(\hat{p})}\right) \times 100\% = \left(1 - \frac{0.0132}{0.0186}\right) \times 100\% \approx 29.3\%$$
 
 ```{r}
 # Getting the original standard error
