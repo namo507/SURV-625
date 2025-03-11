@@ -576,7 +576,15 @@ For stratum 5: $$v_5 = \frac{(t_{x,5,1} - t_{x,5,2})^2}{4} = \frac{(12-16)^2}{4}
 
 Hence, Total variance: $$V(x) = \sum_{h=1}^5 v_h = 1 + 1 + 0.25 + 2.25 + 4 = 8.5$$
 
-Coefficient of variation: $$CV(x) = \frac{\sqrt{V(x)}}{x} = \frac{\sqrt{8.5}}{184} = \frac{2.92}{184} = 0.016$$
+Now the Coefficient of variation is:
+
+$$CV(x) = \frac{\sqrt{V(x)}}{x}$$
+where
+$$V(x) = 8.5$$
+and
+$$x = 184$$
+so
+$$CV(x) = \frac{\sqrt{8.5}}{184} = \frac{2.92}{184} = 0.016$$
 
 Since CV(x) = 0.016 < 0.1, the Taylor series approximation is adequate.
 
