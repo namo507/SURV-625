@@ -1,6 +1,240 @@
 ## Class 10
 ## Complex surveys
 
+1. Estimated variance of weighted mean
+```{r}
+# Function to estimate variance of a weighted mean
+var_weighted_mean <- function(u, w) {
+  # u: vector of values
+  # w: vector of weights
+  
+  # Calculate weighted mean (r)
+  r <- sum(u) / sum(w)
+  
+  # Calculate variance components
+  var_u <- var(u) * (length(u) - 1) / length(u)  # Population variance
+  var_w <- var(w) * (length(w) - 1) / length(w)  # Population variance
+  
+  # Calculate covariance between u and w
+  cov_uw <- cov(u, w) * (length(u) - 1) / length(u)  # Population covariance
+  
+  # Calculate total weight
+  total_w <- sum(w)
+  
+  # Apply the formula: var(yw) ≈ (1/w²)[var(u) + r²var(w) - 2*r*cov(u,w)]
+  variance <- (1 / (total_w^2)) * (var_u + (r^2 * var_w) - (2 * r * cov_uw))
+  
+  return(variance)
+}
+
+# Example usage
+u <- c(10, 15, 20, 25, 30)  # Example values
+w <- c(1, 2, 1, 3, 2)       # Example weights
+
+result <- var_weighted_mean(u, w)
+print(paste("Estimated variance of weighted mean:", result))
+```
+
+2. Effective Sample Size with Design Effect
+
+```{r}
+# Function to calculate effective sample size
+calculate_n_ess <- function(weights) {
+  # weights: vector of sampling weights
+  
+  # Calculate squared sum of weights
+  sum_weights_squared <- sum(weights)^2
+  
+  # Calculate sum of squared weights
+  sum_squared_weights <- sum(weights^2)
+  
+  # Calculate design effect (1 + L)
+  deff <- sum_weights_squared / sum_squared_weights
+  
+  # Calculate effective sample size
+  n_nominal <- length(weights)
+  n_ess <- n_nominal / deff
+  
+  return(list(
+    nominal_sample_size = n_nominal,
+    design_effect = deff,
+    effective_sample_size = n_ess
+  ))
+}
+
+# Example usage
+weights <- c(2.5, 1.8, 3.2, 1.0, 2.1, 1.5, 2.0, 3.0, 1.7, 2.2)
+result <- calculate_n_ess(weights)
+print(paste("Nominal sample size:", result$nominal_sample_size))
+print(paste("Design effect:", result$design_effect))
+print(paste("Effective sample size:", result$effective_sample_size))
+```
+
+3. SRS Variance with FPC for Binary Outcome
+
+```{r}
+# Function to calculate SRS variance with finite population correction for binary outcome
+srs_var_binary <- function(p, n, N = Inf) {
+  # p: proportion (binary outcome)
+  # n: sample size
+  # N: population size (default: Inf, meaning no FPC)
+  
+  # Calculate finite population correction
+  fpc <- (N - n) / (N - 1)
+  if(is.infinite(N)) fpc <- 1
+  
+  # Calculate variance
+  var <- p * (1 - p) / (n - 1) * fpc
+  
+  return(var)
+}
+
+# Example usage
+p_est <- 0.3    # Estimated proportion
+n <- 100        # Sample size
+N <- 1000       # Population size
+
+var_with_fpc <- srs_var_binary(p_est, n, N)
+var_without_fpc <- srs_var_binary(p_est, n)
+
+print(paste("Variance with FPC:", var_with_fpc))
+print(paste("Variance without FPC:", var_without_fpc))
+```
+
+4. Degrees of Freedom for Complex Surveys
+
+```{r}
+# Function to calculate degrees of freedom for complex surveys
+complex_survey_df <- function(n_clusters, n_strata) {
+  # n_clusters: number of primary sampling units (PSUs)
+  # n_strata: number of strata
+  
+  # Calculate degrees of freedom: n - H
+  df <- n_clusters - n_strata
+  
+  return(df)
+}
+
+# Example usage
+n_clusters <- 50  # Number of PSUs
+n_strata <- 10    # Number of strata
+
+df <- complex_survey_df(n_clusters, n_strata)
+print(paste("Degrees of freedom:", df))
+```
+
+4. Degrees of Freedom for Different Sampling Designs
+
+```{r}
+# Function to calculate degrees of freedom for various sampling designs
+calculate_df <- function(design_type, M = NULL, n = NULL, H = 1) {
+  # design_type: "cluster", "stratified_element", or "srs"
+  # M: number of sampled elements
+  # n: number of clusters
+  # H: number of strata (default: 1)
+  
+  if (design_type == "cluster") {
+    # Cluster sample, no stratification
+    df <- n - 1
+  } else if (design_type == "stratified_element") {
+    # Stratified element sample, no cluster sampling
+    df <- M - H
+  } else if (design_type == "srs") {
+    # Simple random sample
+    df <- M - 1
+  } else {
+    stop("Invalid design type. Use 'cluster', 'stratified_element', or 'srs'")
+  }
+  
+  return(df)
+}
+
+# Example usage
+# Cluster sample with 30 clusters
+df_cluster <- calculate_df("cluster", n = 30)
+print(paste("DF for cluster sample:", df_cluster))
+
+# Stratified element sample with 200 elements and 5 strata
+df_strat <- calculate_df("stratified_element", M = 200, H = 5)
+print(paste("DF for stratified element sample:", df_strat))
+
+# Simple random sample with 100 elements
+df_srs <- calculate_df("srs", M = 100)
+print(paste("DF for simple random sample:", df_srs))
+```
+
+
+## Class 9
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+```{r}
+
+```
 ```{r}
 
 ```
