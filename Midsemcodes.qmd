@@ -510,30 +510,388 @@ print(result$weights)
 ## Class 8
 ## Sampling Probability Proportional to size
 
+1. Basic PPS Sampling: Main Function
+```{r}
+# Function for PPS sampling with equal subsample sizes
+basic_pps_sampling <- function(cluster_sizes, n_clusters, m_subsamples) {
+  # Total population size
+  M0 <- sum(cluster_sizes)
+  
+  # Calculate selection probabilities for clusters
+  pps_probs <- cluster_sizes / M0
+  
+  # Select clusters with PPS
+  selected_clusters <- sample(1:length(cluster_sizes), n_clusters, 
+                              prob = pps_probs, replace = FALSE)
+  
+  # Calculate sampling fractions
+  f_i <- (n_clusters * cluster_sizes[selected_clusters]) / M0
+  f_j_given_i <- m_subsamples / cluster_sizes[selected_clusters]
+  overall_f <- (n_clusters * m_subsamples) / M0
+  
+  return(list(
+    selected_clusters = selected_clusters,
+    pps_probabilities = pps_probs,
+    first_stage_fraction = f_i,
+    second_stage_fraction = f_j_given_i,
+    overall_sampling_fraction = overall_f
+  ))
+}
+```
+
+2. Basic PPS Sampling: Usage Example
+```{r}
+# Example data
+cluster_sizes <- c(120, 200, 130, 554, 300, 210, 190, 230, 226)
+n_clusters <- 2
+m_subsamples <- 18
+
+# Run basic PPS sampling
+set.seed(123)
+result <- basic_pps_sampling(cluster_sizes, n_clusters, m_subsamples)
+
+# Display results
+print("Selected clusters:")
+print(result$selected_clusters)
+print("First-stage sampling fractions:")
+print(result$first_stage_fraction)
+print("Second-stage sampling fractions:")
+print(result$second_stage_fraction)
+print("Overall sampling fraction:")
+print(result$overall_sampling_fraction)
+```
+
+3. Verifying EPSEM Property in PPS Sampling
+
+```{r}
+# Calculate and check overall sampling fraction for each selected cluster
+overall_f_check <- result$first_stage_fraction * result$second_stage_fraction
+
+# Compare with the target overall sampling fraction
+print("Overall sampling fraction (target):")
+print(result$overall_sampling_fraction)
+print("Actual sampling fraction for selected clusters:")
+print(overall_f_check)
+
+# Check if design is EPSEM
+is_epsem <- all(abs(overall_f_check - result$overall_sampling_fraction) < 1e-10)
+print(paste("Is the design EPSEM?", is_epsem))
+```
+
+
+4. Systematic PPS Sampling: Main Function
+
+```{r}
+# Function for systematic PPS sampling
+systematic_pps <- function(cluster_sizes, n_clusters, m_subsamples) {
+  # Total population size
+  M0 <- sum(cluster_sizes)
+  
+  # Calculate zone size (sampling interval)
+  k <- M0 / n_clusters
+  
+  # Generate random start and selection points
+  random_start <- runif(1, 1, k)
+  selection_points <- random_start + (0:(n_clusters-1)) * k
+  
+  # Create cumulative sum and identify selected clusters
+  cum_sizes <- cumsum(cluster_sizes)
+  selected_clusters <- numeric(n_clusters)
+  
+  for (i in 1:n_clusters) {
+    selected_clusters[i] <- which(cum_sizes >= selection_points[i])[1]
+  }
+  
+  return(list(
+    selected_clusters = selected_clusters,
+    zone_size = k,
+    random_start = random_start,
+    selection_points = selection_points,
+    cum_sizes = cum_sizes
+  ))
+}
+```
+
+5. Systematic PPS Sampling: Usage Example
+```{r}
+# Run systematic PPS sampling
+set.seed(456)
+result_sys <- systematic_pps(cluster_sizes, n_clusters, m_subsamples)
+
+# Display results
+print("Selection interval (zone size):")
+print(result_sys$zone_size)
+print("Random start:")
+print(result_sys$random_start)
+print("Selection points:")
+print(result_sys$selection_points)
+print("Selected clusters:")
+print(result_sys$selected_clusters)
+```
+
+6. Calculating Sampling Fractions for Systematic PPS
+
+```{r}
+# Calculate first and second stage sampling fractions
+f_i <- cluster_sizes[result_sys$selected_clusters] / result_sys$zone_size
+f_j_given_i <- m_subsamples / cluster_sizes[result_sys$selected_clusters]
+overall_f <- (n_clusters * m_subsamples) / sum(cluster_sizes)
+
+# Check EPSEM property
+overall_f_check <- f_i * f_j_given_i
+is_epsem_sys <- all(abs(overall_f_check - overall_f) < 1e-10)
+
+print("First-stage sampling fractions:")
+print(f_i)
+print("Second-stage sampling fractions:")
+print(f_j_given_i)
+print(paste("Is systematic PPS design EPSEM?", is_epsem_sys))
+```
+
+
+7. PPeS Sampling: Main Function
+
+```{r}
+# Function for PPeS sampling (Probability Proportional to estimated Size)
+ppes_sampling_basic <- function(mos_values, n_clusters, target_m) {
+  # Total estimated size
+  mos_total <- sum(mos_values)
+  
+  # Selection interval
+  interval <- mos_total / n_clusters
+  
+  # Random start and selection points
+  random_start <- runif(1, 1, interval)
+  selection_points <- random_start + (0:(n_clusters-1)) * interval
+  
+  # Cumulative MOS and selected clusters
+  cum_mos <- cumsum(mos_values)
+  selected_clusters <- numeric(n_clusters)
+  
+  for (i in 1:n_clusters) {
+    selected_clusters[i] <- which(cum_mos >= selection_points[i])[1]
+  }
+  
+  # Calculate subsampling rates
+  subsampling_rates <- target_m / mos_values[selected_clusters]
+  
+  return(list(
+    selected_clusters = selected_clusters,
+    subsampling_rates = subsampling_rates
+  ))
+}
+```
+
+8. PPeS Sampling with Actual Sizes Different from MOS
+
+```{r}
+# Function to handle actual sizes vs. MOS
+ppes_with_actual_sizes <- function(mos_values, actual_sizes, 
+                                  selected_clusters, subsampling_rates) {
+  # Expected subsample sizes based on actual sizes
+  expected_subsample_sizes <- subsampling_rates * actual_sizes[selected_clusters]
+  
+  # Handle fractional sample sizes
+  fractional_parts <- expected_subsample_sizes - floor(expected_subsample_sizes)
+  final_sample_sizes <- floor(expected_subsample_sizes)
+  
+  # Randomized rounding
+  set.seed(789)
+  for (i in 1:length(fractional_parts)) {
+    if (runif(1) < fractional_parts[i]) {
+      final_sample_sizes[i] <- final_sample_sizes[i] + 1
+    }
+  }
+  
+  return(list(
+    expected_sizes = expected_subsample_sizes,
+    final_sizes = final_sample_sizes
+  ))
+}
+```
+
+9. PPeS Sampling: Usage Example
+```{r}
+# Example with MOS different from actual sizes
+mos_values <- c(120, 200, 130, 554, 300, 210, 190, 230, 226)
+actual_sizes <- c(125, 190, 135, 560, 295, 215, 185, 235, 230)
+n_clusters <- 2
+target_m <- 18
+
+# Run PPeS sampling
+set.seed(101)
+ppes_result <- ppes_sampling_basic(mos_values, n_clusters, target_m)
+
+# Handle difference between MOS and actual sizes
+size_result <- ppes_with_actual_sizes(
+  mos_values, actual_sizes,
+  ppes_result$selected_clusters, 
+  ppes_result$subsampling_rates
+)
+
+# Display results
+print("Selected clusters:")
+print(ppes_result$selected_clusters)
+print("Expected subsample sizes:")
+print(size_result$expected_sizes)
+print("Final sample sizes after rounding:")
+print(size_result$final_sizes)
+```
+
+10. Stratified PPS Sampling: Basic Setup
+
+```{r}
+# Function for stratified PPS: first stage
+stratified_pps_setup <- function(cluster_sizes, strata) {
+  # Identify unique strata
+  unique_strata <- unique(strata)
+  n_strata <- length(unique_strata)
+  
+  # Calculate stratum sizes
+  stratum_sizes <- numeric(n_strata)
+  for (h in 1:n_strata) {
+    stratum_indices <- which(strata == unique_strata[h])
+    stratum_sizes[h] <- sum(cluster_sizes[stratum_indices])
+  }
+  
+  return(list(
+    unique_strata = unique_strata,
+    n_strata = n_strata,
+    stratum_sizes = stratum_sizes
+  ))
+}
+```
+
+11. Stratified PPS Sampling: Within-Stratum Selection
+```{r}
+# Function for PPS selection within a stratum
+within_stratum_pps <- function(stratum_sizes, n_clusters, m_subsamples) {
+  # Total stratum size
+  total_size <- sum(stratum_sizes)
+  
+  # Interval for systematic selection
+  interval <- total_size / n_clusters
+  random_start <- runif(1, 1, interval)
+  selection_points <- random_start + (0:(n_clusters-1)) * interval
+  
+  # Cumulative sizes and selection
+  cum_sizes <- cumsum(stratum_sizes)
+  selected_indices <- numeric(n_clusters)
+  
+  for (i in 1:n_clusters) {
+    selected_indices[i] <- which(cum_sizes >= selection_points[i])[1]
+  }
+  
+  return(list(
+    selected_indices = selected_indices,
+    interval = interval
+  ))
+}
+```
+
+12. Stratified PPS Sampling: Complete Example
+```{r}
+# Example data for stratified sampling
+cluster_sizes <- c(120, 200, 130, 554, 300, 210, 190, 230, 226)
+strata <- c(1, 1, 1, 1, 1, 2, 2, 2, 2)  # 5 in stratum 1, 4 in stratum 2
+n_clusters_per_strata <- c(2, 2)  # Select 2 from each stratum
+m_subsamples <- 18
+
+# Get stratum information
+strat_info <- stratified_pps_setup(cluster_sizes, strata)
+
+# Perform sampling in each stratum
+selected_clusters <- list()
+for (h in 1:strat_info$n_strata) {
+  stratum <- strat_info$unique_strata[h]
+  stratum_indices <- which(strata == stratum)
+  stratum_cluster_sizes <- cluster_sizes[stratum_indices]
+  
+  # Select clusters within stratum
+  result <- within_stratum_pps(stratum_cluster_sizes, n_clusters_per_strata[h], m_subsamples)
+  
+  # Map back to original indices
+  selected_clusters[[h]] <- stratum_indices[result$selected_indices]
+}
+
+# Display results
+for (h in 1:strat_info$n_strata) {
+  cat("Stratum", h, "selected clusters:", selected_clusters[[h]], "\n")
+}
+```
+
+13. Adjusting Subsample Sizes in Stratified PPeS
+```{r}
+# Function to calculate adjusted subsample sizes for stratified PPeS
+adjust_subsample_sizes <- function(mos_values, strata, n_clusters_per_strata, target_f = 1/30) {
+  # Identify unique strata
+  unique_strata <- unique(strata)
+  n_strata <- length(unique_strata)
+  
+  # Calculate MOS by stratum
+  mos_by_stratum <- tapply(mos_values, strata, sum)
+  
+  # Calculate adjusted target subsample sizes
+  m_star_by_stratum <- numeric(n_strata)
+  for (h in 1:n_strata) {
+    m_star_by_stratum[h] <- target_f * mos_by_stratum[h] / n_clusters_per_strata[h]
+  }
+  
+  return(list(
+    mos_by_stratum = mos_by_stratum,
+    target_m_by_stratum = m_star_by_stratum
+  ))
+}
+```
+
+14. Implementing Fixed Sampling Fraction in Stratified PPeS
+```{r}
+# Example of adjusting subsample sizes to maintain equal sampling fraction
+mos_values <- c(120, 200, 130, 554, 300, 210, 190, 230, 226)
+strata <- c(1, 1, 1, 1, 1, 2, 2, 2, 2)
+n_clusters_per_strata <- c(2, 2)
+target_f <- 1/30  # Target overall sampling fraction
+
+# Calculate adjusted subsample sizes
+adj_result <- adjust_subsample_sizes(mos_values, strata, n_clusters_per_strata, target_f)
+
+# Display results
+cat("Stratum 1 MOS total:", adj_result$mos_by_stratum[1], "\n")
+cat("Stratum 2 MOS total:", adj_result$mos_by_stratum[2], "\n")
+cat("Adjusted target subsample size for stratum 1:", adj_result$target_m_by_stratum[1], "\n")
+cat("Adjusted target subsample size for stratum 2:", adj_result$target_m_by_stratum[2], "\n")
+```
+
+15. Verifying EPSEM Property Across Strata
+```{r}
+# Calculate and verify overall sampling fractions by stratum
+f1 <- n_clusters_per_strata[1] * adj_result$target_m_by_stratum[1] / adj_result$mos_by_stratum[1]
+f2 <- n_clusters_per_strata[2] * adj_result$target_m_by_stratum[2] / adj_result$mos_by_stratum[2]
+
+cat("Overall sampling fraction for stratum 1:", f1, "\n")
+cat("Overall sampling fraction for stratum 2:", f2, "\n")
+cat("Target sampling fraction:", target_f, "\n")
+cat("Is the design EPSEM across strata?", abs(f1 - f2) < 1e-10, "\n")
+```
+
+
+## Class 7
+## Systematic Sampling
+
 ```{r}
 
 ```
 ```{r}
 
 ```
+
 ```{r}
 
 ```
 ```{r}
 
 ```
-```{r}
 
-```
-```{r}
-
-```
-```{r}
-
-```
-```{r}
-
-```
 ```{r}
 
 ```
@@ -548,6 +906,55 @@ print(result$weights)
 ```{r}
 
 ```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+
 
 ```{r}
 
