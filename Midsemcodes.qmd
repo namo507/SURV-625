@@ -2087,51 +2087,144 @@ print(paste("Standard error:", result$standard_error))
 ## Class 5
 ## Cluster Sampling: Equal Sized
 
+1. SRS inference:
 ```{r}
+# Define parameters
+N <- 4000
+n <- 400
+p <- 124 / 400
 
+# Population total estimate
+t_hat <- N * p
+
+# Sampling variance of t_hat
+s2 <- p * (1 - p)
+var_t_hat <- N^2 * (1 - n / N) * s2 / n
+
+list(t_hat = t_hat, var_t_hat = var_t_hat)
 ```
+2. Poststratification estimator:
 ```{r}
+Nh <- c(2700, 1300)
+ph <- c(84/240, 40/160)
 
+t_post <- sum(Nh * ph)
+t_post
 ```
+3. Stratified sampling variance:
 ```{r}
+Nh <- c(...) # population size per stratum
+Wh <- Nh / sum(Nh)
+sh2 <- c(...) # variance per stratum
+nh <- c(...) # sample size per stratum
+fh <- nh / Nh
 
+var_tst <- sum((Nh^2)*(Wh^2)*(1 - fh)*sh2/nh)
+var_tst
 ```
+
+4. Notation: Population quantities:
+
 ```{r}
+# Assume y is a list of vectors, each vector representing PSU i measurements y_ij
+Mi <- sapply(y, length)
+M0 <- sum(Mi)
+ti <- sapply(y, sum)
+Yi_bar <- ti / Mi
+Y_bar <- sum(ti) / M0
 
+S2_total <- sum(sapply(1:length(y), function(i) sum((y[[i]] - Y_bar)^2))) / (M0 - 1)
+Si2_within <- sapply(1:length(y), function(i) var(y[[i]]))
+Sw2_avg_within <- mean(Si2_within)
+SB2_between_PSU <- sum((Yi_bar - Y_bar)^2)/(length(y)-1)
 ```
+
+5. Notation for sample quantities:
 ```{r}
+# Sample quantities assuming sampled PSUs and SSUs within them:
+mi <- c(...) # number of SSUs selected per PSU i
+yi_sampled <- list(...) # sampled SSUs per PSU i
 
+yi_bar_sampled <- sapply(yi_sampled, mean)
+ti_hat_sampled <- sapply(1:length(mi), function(i) Mi[i]*yi_bar_sampled[i])
+t_hat_total_sampled <- sum(ti_hat_sampled) * (N/length(mi))
+
+si2_within_sampled <- sapply(yi_sampled, var)
+st2_between_PSU_sampled <- var(ti_hat_sampled)
+
+wij_sampling_weights <- Mi / mi # sampling weights for SSU j in PSU i
 ```
+
+6. Population mean estimate and SE:
 ```{r}
+ybar_hat <- sum(ti_hat_sampled)/(length(mi)*mean(Mi))
+st2 <- var(ti_hat_sampled)
 
+SE_ybar_hat <- (1/mean(Mi)) * sqrt((1 - length(mi)/N)*(st2/length(mi)))
 ```
+
+7. Random selection of suites example:
 ```{r}
+PSU_totals <- c(12.16, 11.36, 8.96, 12.96, 11.08)
+t_hat_suites <- (100/5)*sum(PSU_totals)
 
+st2_suites <- var(PSU_totals)
+SE_ybar_suites <- (1/4)*sqrt((1-5/100)*st2_suites/5)
+
+CI95_suites_mean <- t_hat_suites/400 + c(-1,1)*qt(0.975,4)*SE_ybar_suites
 ```
+
+8. ANOVA cluster sampling variance:
 ```{r}
-
+MSB_between_PSU = SSB/(N-1) # SSB calculated from data
+cluster_var = N^2*(1-n/N)*M*MSB_between_PSU/n
 ```
+
+9. Intraclass Correlation Coefficient (ICC):
 ```{r}
-
+ICC = (MSB - MSW)/(MSB + (M-1)*MSW)
 ```
+
+10. Design effect (deff):
 ```{r}
-
+deff = 1 + (M - 1)*roh # roh is ICC estimate from previous step
 ```
+
+11 & 12. Two-stage cluster sampling with equal sizes and variance estimation:
 ```{r}
-
+# Population and sample parameters defined previously:
+var_ybar_two_stage = ((1-n/N)*SB2_between_PSU/n) + ((n/N)*(1-m/M)*Sw2_avg_within/(m*n))
 ```
+
+13. Two-stage selection with replacement sampling variance:
 ```{r}
-
+var_ybar_two_stage_wr = ((1 - n*m/(N*M))*st2_between_PSU_sampled/n)
 ```
+
+14. Generate new design effect given roh and new m value:
 ```{r}
-
+deff_new = 1 + (m_new - 1)*roh 
 ```
+
+15 & 16. Estimation under two-stage cluster sampling and SRS variance comparison:
 ```{r}
+ybar_estimate = sum(ti_hat_sampled)/(n*m)
 
+var_cluster_estimate = ((1-n*m/(N*M))*var(ti_hat_sampled)/n)
+
+var_SRS_estimate = ((1-n*m/(N*M))*ybar_estimate*(1-ybar_estimate))/(n*m-1)
+
+deff_estimate = var_cluster_estimate / var_SRS_estimate
+
+roh_estimate = (deff_estimate - 1)/(m-1)
 ```
+
+17. Optimal cluster size m_opt:
 ```{r}
-
+m_optimal = sqrt((c_n/c_m)*(Sw2_avg_within/SB2_between_PSU))
 ```
+
+
 ```{r}
 
 ```
