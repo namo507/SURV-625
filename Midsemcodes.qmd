@@ -1387,46 +1387,760 @@ print(paste("Overall estimated mean:", result$overall_mean))
 ```
 
 
+## Class 6
+## Cluster Sampling with Unequal Sizes
+
+1. Population Mean Estimation
+```{r}
+# Function to calculate population mean as a ratio
+population_mean_ratio <- function(cluster_totals, cluster_sizes) {
+  # cluster_totals: vector of totals for each cluster (t_i)
+  # cluster_sizes: vector of sizes for each cluster (M_i)
+  
+  # Calculate population total (B)
+  B <- sum(cluster_totals)
+  
+  # Calculate population size (M0)
+  M0 <- sum(cluster_sizes)
+  
+  # Calculate population mean (Y_bar)
+  Y_bar <- B / M0
+  
+  return(list(
+    population_total = B,
+    population_size = M0,
+    population_mean = Y_bar
+  ))
+}
+
+# Example usage
+cluster_totals <- c(150, 200, 350, 275, 180)  # t_i values
+cluster_sizes <- c(30, 40, 70, 55, 36)        # M_i values
+
+result <- population_mean_ratio(cluster_totals, cluster_sizes)
+print(paste("Population total (B):", result$population_total))
+print(paste("Population size (M0):", result$population_size))
+print(paste("Population mean (Y_bar):", result$population_mean))
+```
+
+2. Sample Mean Estimation
+```{r}
+# Function to estimate population mean from sample
+estimate_sample_mean <- function(sampled_totals, sampled_sizes, N) {
+  # sampled_totals: vector of totals for sampled clusters (t_i)
+  # sampled_sizes: vector of sizes for sampled clusters (M_i)
+  # N: total number of clusters in the population
+  
+  # Number of sampled clusters
+  n <- length(sampled_totals)
+  
+  # Expansion factor
+  f <- N / n
+  
+  # Estimate population total
+  t_hat <- f * sum(sampled_totals)
+  
+  # Estimate population size
+  M0_hat <- f * sum(sampled_sizes)
+  
+  # Estimate population mean
+  y_bar_hat <- t_hat / M0_hat
+  
+  return(list(
+    estimated_total = t_hat,
+    estimated_size = M0_hat,
+    estimated_mean = y_bar_hat
+  ))
+}
+
+# Example usage
+sampled_totals <- c(150, 275, 180)  # Totals for sampled clusters
+sampled_sizes <- c(30, 55, 36)      # Sizes for sampled clusters
+N <- 5                              # Total number of clusters in population
+
+result <- estimate_sample_mean(sampled_totals, sampled_sizes, N)
+print(paste("Estimated population total:", result$estimated_total))
+print(paste("Estimated population size:", result$estimated_size))
+print(paste("Estimated population mean:", result$estimated_mean))
+```
+
+3. One-Stage Cluster Sampling with Unequal Sizes
+
+```{r}
+# Function for one-stage cluster sampling with unequal sizes
+one_stage_cluster_unequal <- function(cluster_values, cluster_sizes, N) {
+  # cluster_values: list of values for each sampled cluster
+  # cluster_sizes: vector of sizes for sampled clusters
+  # N: total number of clusters in population
+  
+  # Number of sampled clusters
+  n <- length(cluster_sizes)
+  
+  # Calculate sampling weight
+  w <- N / n
+  
+  # Estimate population size
+  M0_hat <- w * sum(cluster_sizes)
+  
+  # Calculate cluster means
+  cluster_means <- sapply(cluster_values, mean)
+  
+  # Calculate ratio estimate of population mean
+  numerator <- sum(cluster_sizes * cluster_means)
+  denominator <- sum(cluster_sizes)
+  y_bar_r <- numerator / denominator
+  
+  # Calculate residuals for variance estimation
+  e_i <- cluster_sizes * (cluster_means - y_bar_r)
+  
+  # Calculate variance of ratio estimator
+  M_bar <- mean(cluster_sizes)
+  s2_r <- sum(e_i^2) / (n - 1)
+  var_ratio <- (1 - n/N) * s2_r / (n * M_bar^2)
+  
+  # Calculate standard error
+  se_ratio <- sqrt(var_ratio)
+  
+  return(list(
+    ratio_mean = y_bar_r,
+    estimated_population_size = M0_hat,
+    variance = var_ratio,
+    standard_error = se_ratio
+  ))
+}
+
+# Example usage
+# Create a list of cluster values
+cluster_values <- list(
+  c(5, 7, 3, 8, 6),         # Values for cluster 1
+  c(10, 12, 9, 11, 8, 10),  # Values for cluster 2
+  c(4, 6, 5, 7)             # Values for cluster 3
+)
+
+cluster_sizes <- c(5, 6, 4)  # Sizes of sampled clusters
+N <- 10                      # Total number of clusters in population
+
+result <- one_stage_cluster_unequal(cluster_values, cluster_sizes, N)
+print(paste("Ratio estimate of population mean:", result$ratio_mean))
+print(paste("Estimated population size:", result$estimated_population_size))
+print(paste("Variance of ratio estimator:", result$variance))
+print(paste("Standard error:", result$standard_error))
+```
+
+4. Two-stage Cluster Sampling
+```{r}
+# Function to set up two-stage cluster sampling
+two_stage_setup <- function(n, N, m_i, M_i) {
+  # n: number of sampled PSUs
+  # N: total number of PSUs in population
+  # m_i: vector of sampled SSUs per selected PSU
+  # M_i: vector of total SSUs in each selected PSU
+  
+  # Calculate first-stage sampling rate
+  f_n <- n / N
+  
+  # Calculate second-stage sampling rates
+  f_m <- m_i / M_i
+  
+  # Calculate overall sampling rate
+  f <- f_n * f_m
+  
+  # Calculate sampling weights
+  w <- (N * M_i) / (n * m_i)
+  
+  return(list(
+    first_stage_rate = f_n,
+    second_stage_rates = f_m,
+    overall_rates = f,
+    sampling_weights = w
+  ))
+}
+
+# Example usage
+n <- 3                    # Number of sampled PSUs
+N <- 15                   # Total number of PSUs in population
+m_i <- c(10, 8, 12)       # Number of sampled SSUs in each selected PSU
+M_i <- c(50, 40, 60)      # Total SSUs in each selected PSU
+
+result <- two_stage_setup(n, N, m_i, M_i)
+print("First-stage sampling rate:")
+print(result$first_stage_rate)
+print("Second-stage sampling rates:")
+print(result$second_stage_rates)
+print("Overall sampling rates:")
+print(result$overall_rates)
+print("Sampling weights:")
+print(result$sampling_weights)
+```
+
+5. Two-Stage Cluster Sampling Inference
+
+```{r}
+# Function for inference in two-stage cluster sampling
+two_stage_inference <- function(y_values, cluster_ids, element_ids, 
+                               m_i, M_i, n, N) {
+  # y_values: vector of observed values
+  # cluster_ids: vector identifying which cluster each value belongs to
+  # element_ids: vector identifying which element within cluster each value belongs to
+  # m_i: vector of number of sampled elements per cluster
+  # M_i: vector of total elements per cluster
+  # n: number of sampled clusters
+  # N: total number of clusters in population
+  
+  # Identify unique clusters
+  unique_clusters <- unique(cluster_ids)
+  
+  # Calculate weights
+  weights <- numeric(length(y_values))
+  for (i in 1:length(y_values)) {
+    cluster <- cluster_ids[i]
+    cluster_idx <- which(unique_clusters == cluster)
+    weights[i] <- (N * M_i[cluster_idx]) / (n * m_i[cluster_idx])
+  }
+  
+  # Calculate ratio estimate of population mean
+  y_bar_r <- sum(weights * y_values) / sum(weights)
+  
+  # Organize values by cluster for variance estimation
+  cluster_data <- list()
+  for (i in 1:length(unique_clusters)) {
+    cluster <- unique_clusters[i]
+    cluster_data[[i]] <- y_values[cluster_ids == cluster]
+  }
+  
+  # First stage variance component
+  # Calculate cluster means
+  y_bar_i <- sapply(cluster_data, mean)
+  
+  # Calculate e_i residuals
+  e_i <- M_i * (y_bar_i - y_bar_r)
+  
+  # Calculate s²_r
+  s2_r <- sum(e_i^2) / (n - 1)
+  
+  # Calculate M_bar
+  M_bar <- mean(M_i)
+  
+  # Calculate first stage variance
+  var_stage1 <- (1 - n/N) * s2_r / (n * M_bar^2)
+  
+  # Second stage variance component (simplified)
+  var_stage2 <- numeric(length(unique_clusters))
+  for (i in 1:length(unique_clusters)) {
+    cluster_y <- cluster_data[[i]]
+    if (length(cluster_y) > 1) {  # Need more than one observation
+      var_stage2[i] <- (1 - m_i[i]/M_i[i]) * M_i[i]^2 * var(cluster_y) / m_i[i]
+    }
+  }
+  
+  # Total variance
+  total_var <- var_stage1 + sum(var_stage2) / (N * M_bar)^2
+  
+  return(list(
+    ratio_mean = y_bar_r,
+    first_stage_variance = var_stage1,
+    second_stage_variance = sum(var_stage2) / (N * M_bar)^2,
+    total_variance = total_var,
+    standard_error = sqrt(total_var)
+  ))
+}
+
+# Example usage
+# Simulate some data
+set.seed(123)
+y_values <- c(
+  rnorm(10, 50, 5),   # 10 observations from cluster 1
+  rnorm(8, 45, 4),    # 8 observations from cluster 2
+  rnorm(12, 55, 6)    # 12 observations from cluster 3
+)
+
+cluster_ids <- c(rep(1, 10), rep(2, 8), rep(3, 12))  # Cluster IDs
+element_ids <- c(1:10, 1:8, 1:12)                   # Element IDs within clusters
+m_i <- c(10, 8, 12)                                 # Sampled elements per cluster
+M_i <- c(50, 40, 60)                                # Total elements per cluster
+n <- 3                                              # Sampled clusters
+N <- 15                                             # Total clusters in population
+
+result <- two_stage_inference(y_values, cluster_ids, element_ids, m_i, M_i, n, N)
+print(paste("Ratio estimate of population mean:", result$ratio_mean))
+print(paste("First stage variance component:", result$first_stage_variance))
+print(paste("Second stage variance component:", result$second_stage_variance))
+print(paste("Total variance:", result$total_variance))
+print(paste("Standard error:", result$standard_error))
+```
+
+6. Simplified Variance for Ratio Estimator
+
+```{r}
+# Function to calculate simplified variance for ratio estimator using Taylor linearization
+simplified_ratio_variance <- function(y_values, x_values, cluster_ids, n, N) {
+  # y_values: vector of observation values
+  # x_values: vector of size/weight values
+  # cluster_ids: vector identifying which cluster each value belongs to
+  # n: number of sampled clusters
+  # N: total number of clusters in population
+  
+  # Calculate ratio estimator
+  r <- sum(y_values) / sum(x_values)
+  
+  # Calculate FPC
+  f <- n / N
+  
+  # Calculate cluster totals
+  unique_clusters <- unique(cluster_ids)
+  t_y <- numeric(length(unique_clusters))
+  t_x <- numeric(length(unique_clusters))
+  
+  for (i in 1:length(unique_clusters)) {
+    cluster <- unique_clusters[i]
+    cluster_y <- y_values[cluster_ids == cluster]
+    cluster_x <- x_values[cluster_ids == cluster]
+    
+    t_y[i] <- sum(cluster_y)
+    t_x[i] <- sum(cluster_x)
+  }
+  
+  # Calculate components for Taylor series variance
+  sum_t_y_squared <- sum(t_y^2)
+  sum_t_x_squared <- sum(t_x^2)
+  sum_t_y_t_x <- sum(t_y * t_x)
+  
+  # Calculate variance using simplified formula
+  t_x_total <- sum(t_x)
+  var_r <- (1 / t_x_total^2) * (n / (n - 1)) * 
+           (sum_t_y_squared + r^2 * sum_t_x_squared - 2 * r * sum_t_y_t_x)
+  
+  return(list(
+    ratio = r,
+    variance = var_r,
+    standard_error = sqrt(var_r),
+    cluster_totals_y = t_y,
+    cluster_totals_x = t_x
+  ))
+}
+
+# Example usage
+set.seed(123)
+y_values <- c(
+  rnorm(10, 50, 5),   # 10 observations from cluster 1
+  rnorm(8, 45, 4),    # 8 observations from cluster 2
+  rnorm(12, 55, 6)    # 12 observations from cluster 3
+)
+
+x_values <- c(
+  rep(1, 10),  # Size values for cluster 1
+  rep(1, 8),   # Size values for cluster 2
+  rep(1, 12)   # Size values for cluster 3
+)
+
+cluster_ids <- c(rep(1, 10), rep(2, 8), rep(3, 12))  # Cluster IDs
+n <- 3  # Number of sampled clusters
+N <- 15  # Total number of clusters in population
+
+result <- simplified_ratio_variance(y_values, x_values, cluster_ids, n, N)
+print(paste("Ratio estimate:", result$ratio))
+print(paste("Variance estimate:", result$variance))
+print(paste("Standard error:", result$standard_error))
+```
+
+7. Coefficient of Variation for Approximation Check
+
+```{r}
+# Function to check adequacy of variance approximation
+check_variance_approximation <- function(x_values, cluster_ids, n, N) {
+  # x_values: vector of size/weight values
+  # cluster_ids: vector identifying which cluster each value belongs to
+  # n: number of sampled clusters
+  # N: total number of clusters in population
+  
+  # Calculate FPC
+  f <- n / N
+  
+  # Calculate cluster totals
+  unique_clusters <- unique(cluster_ids)
+  t_x <- numeric(length(unique_clusters))
+  
+  for (i in 1:length(unique_clusters)) {
+    cluster <- unique_clusters[i]
+    cluster_x <- x_values[cluster_ids == cluster]
+    t_x[i] <- sum(cluster_x)
+  }
+  
+  # Calculate total
+  t_x_total <- sum(t_x)
+  
+  # Calculate variance of t_x
+  var_t_x <- (n / (n - 1)) * (1 - f) * (sum(t_x^2) - (t_x_total^2 / n))
+  
+  # Calculate coefficient of variation
+  cv_t_x <- sqrt(var_t_x) / t_x_total
+  
+  # Determine adequacy of approximation
+  if (cv_t_x < 0.1) {
+    adequacy <- "Good approximation (CV < 0.1)"
+  } else if (cv_t_x < 0.2) {
+    adequacy <- "Acceptable approximation (0.1 <= CV < 0.2)"
+  } else {
+    adequacy <- "Poor approximation (CV >= 0.2)"
+  }
+  
+  return(list(
+    coefficient_of_variation = cv_t_x,
+    adequacy = adequacy
+  ))
+}
+
+# Example usage
+set.seed(123)
+x_values <- c(
+  rep(1, 10),  # Size values for cluster 1
+  rep(1, 8),   # Size values for cluster 2
+  rep(1, 12)   # Size values for cluster 3
+)
+
+cluster_ids <- c(rep(1, 10), rep(2, 8), rep(3, 12))  # Cluster IDs
+n <- 3  # Number of sampled clusters
+N <- 15  # Total number of clusters in population
+
+result <- check_variance_approximation(x_values, cluster_ids, n, N)
+print(paste("Coefficient of variation of denominator:", result$coefficient_of_variation))
+print(paste("Adequacy of approximation:", result$adequacy))
+```
+
+8. Design Effect for New Cluster Sizes
+```{r}
+# Function to calculate design effect for new choices of n and m
+calculate_new_deff <- function(roh, new_n, new_m, old_deff, old_n, old_m) {
+  # roh: rate of homogeneity
+  # new_n: new number of clusters
+  # new_m: new cluster size
+  # old_deff: original design effect
+  # old_n: original number of clusters
+  # old_m: original cluster size
+  
+  # Calculate rate of homogeneity from old values if not provided
+  if (missing(roh)) {
+    roh <- (old_deff - 1) / (old_m - 1)
+  }
+  
+  # Calculate new design effect
+  new_deff <- 1 + (new_m - 1) * roh
+  
+  # Calculate variance for new design
+  # For SRS of same size: var_srs = (old_var * old_deff) * (old_n * old_m) / (new_n * new_m)
+  # For cluster design: var_new = var_srs * new_deff
+  var_ratio <- (old_n * old_m) / (new_n * new_m) * (new_deff / old_deff)
+  
+  return(list(
+    new_design_effect = new_deff,
+    variance_ratio = var_ratio,
+    rate_of_homogeneity = roh
+  ))
+}
+
+# Example usage
+old_deff <- 4.874
+old_n <- 10
+old_m <- 40
+new_n <- 20
+new_m <- 20
+
+result <- calculate_new_deff(NULL, new_n, new_m, old_deff, old_n, old_m)
+print(paste("Rate of homogeneity (roh):", result$rate_of_homogeneity))
+print(paste("New design effect:", result$new_design_effect))
+print(paste("Variance ratio (new/old):", result$variance_ratio))
+```
+
+
+9. Confidence Interval for Ratio Estimate
+```{r}
+# Function to calculate confidence interval for ratio estimate
+ratio_confidence_interval <- function(r, var_r, n, confidence = 0.95) {
+  # r: ratio estimate
+  # var_r: variance of ratio estimate
+  # n: number of clusters
+  # confidence: confidence level
+  
+  # Calculate degrees of freedom
+  df <- n - 1
+  
+  # Calculate t-critical value
+  alpha <- 1 - confidence
+  t_crit <- qt(1 - alpha/2, df)
+  
+  # Calculate standard error
+  se_r <- sqrt(var_r)
+  
+  # Calculate confidence interval
+  ci_lower <- r - t_crit * se_r
+  ci_upper <- r + t_crit * se_r
+  
+  return(list(
+    ratio = r,
+    standard_error = se_r,
+    df = df,
+    t_critical = t_crit,
+    ci_lower = ci_lower,
+    ci_upper = ci_upper,
+    confidence = confidence
+  ))
+}
+
+# Example usage
+r <- 0.45
+var_r <- 0.003023
+n <- 10
+confidence <- 0.95
+
+result <- ratio_confidence_interval(r, var_r, n, confidence)
+print(paste("Ratio estimate:", result$ratio))
+print(paste("Standard error:", result$standard_error))
+print(paste("Degrees of freedom:", result$df))
+print(paste("t-critical value:", result$t_critical))
+print(paste(confidence*100, "% confidence interval: (", 
+            result$ci_lower, ", ", result$ci_upper, ")", sep=""))
+```
+
+10. Stratified Ratio Estimation
+```{r}
+# Function for stratified ratio estimation
+stratified_ratio_estimation <- function(y_values, x_values, 
+                                       cluster_ids, stratum_ids) {
+  # y_values: vector of observation values
+  # x_values: vector of size/weight values
+  # cluster_ids: vector identifying which cluster each value belongs to
+  # stratum_ids: vector identifying which stratum each value belongs to
+  
+  # Get unique strata and clusters
+  unique_strata <- unique(stratum_ids)
+  
+  # Calculate ratio estimate
+  w_y <- sum(y_values)
+  w_x <- sum(x_values)
+  r <- w_y / w_x
+  
+  # Create structure to store results by stratum
+  strata_results <- list()
+  
+  for (h in 1:length(unique_strata)) {
+    stratum <- unique_strata[h]
+    stratum_mask <- stratum_ids == stratum
+    
+    # Calculate stratum ratio
+    y_h <- y_values[stratum_mask]
+    x_h <- x_values[stratum_mask]
+    r_h <- sum(y_h) / sum(x_h)
+    
+    strata_results[[h]] <- list(
+      stratum = stratum,
+      ratio = r_h,
+      y_total = sum(y_h),
+      x_total = sum(x_h)
+    )
+  }
+  
+  return(list(
+    overall_ratio = r,
+    strata_results = strata_results
+  ))
+}
+
+# Example usage
+set.seed(123)
+y_values <- c(
+  rnorm(20, 50, 5),   # 20 observations from stratum 1
+  rnorm(30, 45, 4)    # 30 observations from stratum 2
+)
+
+x_values <- c(
+  rep(1, 20),  # Size values for stratum 1
+  rep(1, 30)   # Size values for stratum 2
+)
+
+cluster_ids <- c(rep(1, 10), rep(2, 10), rep(3, 15), rep(4, 15))  # Cluster IDs
+stratum_ids <- c(rep(1, 20), rep(2, 30))  # Stratum IDs
+
+result <- stratified_ratio_estimation(y_values, x_values, cluster_ids, stratum_ids)
+print(paste("Overall ratio estimate:", result$overall_ratio))
+print("Stratum-level results:")
+for (h in 1:length(result$strata_results)) {
+  stratum_result <- result$strata_results[[h]]
+  print(paste("Stratum", stratum_result$stratum, "ratio:", stratum_result$ratio))
+}
+```
+
+11-14. Variance Estimation in Stratified Design
+
+```{r}
+# Function to calculate variance for stratified ratio estimator
+stratified_ratio_variance <- function(y_values, x_values, cluster_ids, stratum_ids, n_h, N_h) {
+  # y_values: vector of observation values
+  # x_values: vector of size/weight values
+  # cluster_ids: vector identifying which cluster each value belongs to
+  # stratum_ids: vector identifying which stratum each value belongs to
+  # n_h: vector of number of sampled clusters in each stratum
+  # N_h: vector of total clusters in each stratum
+  
+  # Calculate overall ratio
+  r <- sum(y_values) / sum(x_values)
+  
+  # Get unique strata
+  unique_strata <- unique(stratum_ids)
+  
+  # Initialize variance components
+  var_components <- numeric(length(unique_strata))
+  
+  # Process each stratum
+  for (h in 1:length(unique_strata)) {
+    stratum <- unique_strata[h]
+    stratum_mask <- stratum_ids == stratum
+    
+    # Get stratum values
+    y_h <- y_values[stratum_mask]
+    x_h <- x_values[stratum_mask]
+    cluster_ids_h <- cluster_ids[stratum_mask]
+    
+    # Get unique clusters in this stratum
+    unique_clusters_h <- unique(cluster_ids_h)
+    
+    # Calculate residuals (e_hi = y_hi - r*x_hi)
+    e_hi <- numeric(length(unique_clusters_h))
+    
+    for (i in 1:length(unique_clusters_h)) {
+      cluster <- unique_clusters_h[i]
+      cluster_mask <- cluster_ids_h == cluster
+      
+      y_hi <- sum(y_h[cluster_mask])
+      x_hi <- sum(x_h[cluster_mask])
+      
+      e_hi[i] <- y_hi - r * x_hi
+    }
+    
+    # Calculate variance component for this stratum
+    n_h_i <- n_h[h]
+    N_h_i <- N_h[h]
+    f_h <- n_h_i / N_h_i
+    
+    if (n_h_i > 1) {
+      # Standard variance formula
+      var_h <- (n_h_i * (1 - f_h) / (n_h_i - 1)) * (sum(e_hi^2) - (sum(e_hi)^2 / n_h_i))
+    } else if (n_h_i == 2) {
+      # For exactly 2 clusters per stratum
+      var_h <- (1 - f_h) * (e_hi[1] - e_hi[2])^2
+    } else {
+      # For successive differences (n_h > 2)
+      squared_diffs <- numeric(n_h_i - 1)
+      for (i in 1:(n_h_i - 1)) {
+        squared_diffs[i] <- (e_hi[i] - e_hi[i+1])^2
+      }
+      
+      var_h <- (n_h_i * (1 - f_h) / (2 * (n_h_i - 1))) * sum(squared_diffs)
+    }
+    
+    var_components[h] <- var_h
+  }
+  
+  # Calculate total variance
+  total_var <- sum(var_components) / (sum(x_values)^2)
+  
+  return(list(
+    ratio = r,
+    stratum_variance_components = var_components,
+    total_variance = total_var,
+    standard_error = sqrt(total_var)
+  ))
+}
+
+# Example usage
+set.seed(123)
+# Generate sample data
+y_values <- c(
+  rnorm(20, 50, 5),   # 20 observations from stratum 1
+  rnorm(30, 45, 4)    # 30 observations from stratum 2
+)
+
+x_values <- c(
+  rep(1, 20),  # Size values for stratum 1
+  rep(1, 30)   # Size values for stratum 2
+)
+
+cluster_ids <- c(rep(1, 5), rep(2, 5), rep(3, 5), rep(4, 5),  # Clusters in stratum 1
+                 rep(5, 10), rep(6, 10), rep(7, 10))          # Clusters in stratum 2
+                 
+stratum_ids <- c(rep(1, 20), rep(2, 30))  # Stratum IDs
+
+# Number of sampled clusters in each stratum
+n_h <- c(4, 3)
+
+# Total number of clusters in each stratum
+N_h <- c(10, 8)
+
+result <- stratified_ratio_variance(y_values, x_values, cluster_ids, stratum_ids, n_h, N_h)
+print(paste("Ratio estimate:", result$ratio))
+print("Variance components by stratum:")
+print(result$stratum_variance_components)
+print(paste("Total variance:", result$total_variance))
+print(paste("Standard error:", result$standard_error))
+```
+
+
 ```{r}
 
 ```
 ```{r}
 
 ```
-
-
 ```{r}
 
 ```
 ```{r}
 
 ```
-
-
 ```{r}
 
 ```
 ```{r}
 
 ```
-
-
 ```{r}
 
 ```
 ```{r}
 
 ```
-
-
 ```{r}
 
 ```
 ```{r}
 
 ```
+```{r}
 
+```
+```{r}
 
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
 ```{r}
 
 ```
