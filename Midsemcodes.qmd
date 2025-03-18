@@ -2084,6 +2084,9 @@ print(paste("Standard error:", result$standard_error))
 ```
 
 
+## Class 5
+## Cluster Sampling: Equal Sized
+
 ```{r}
 
 ```
