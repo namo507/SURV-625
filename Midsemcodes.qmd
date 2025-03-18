@@ -878,41 +878,512 @@ cat("Is the design EPSEM across strata?", abs(f1 - f2) < 1e-10, "\n")
 ## Class 7
 ## Systematic Sampling
 
-```{r}
+1. Basic Systematic Sampling Function
 
+```{r}
+# Function to perform systematic sampling
+systematic_sample <- function(population, n) {
+  N <- length(population)
+  
+  # Calculate sampling interval
+  k <- N / n
+  
+  # Generate random start between 1 and k
+  random_start <- sample(1:ceiling(k), 1)
+  
+  # Generate indices for systematic sample
+  indices <- seq(random_start, by = k, length.out = n)
+  indices <- floor(indices)
+  
+  # Ensure indices are within bounds
+  indices <- indices[indices <= N]
+  
+  # Return the sample
+  return(list(
+    sample = population[indices],
+    indices = indices,
+    interval = k,
+    random_start = random_start
+  ))
+}
+
+# Example usage
+set.seed(123)
+population <- 1:100
+n <- 10
+sys_sample <- systematic_sample(population, n)
+
+print("Systematic sample:")
+print(sys_sample$sample)
+print(paste("Sampling interval (k):", sys_sample$interval))
+print(paste("Random start:", sys_sample$random_start))
 ```
-```{r}
 
+2. Theoretical Variance of Systematic Sampling
+```{r}
+# Function to calculate theoretical variance of systematic sampling
+systematic_variance_theoretical <- function(population, M = 1) {
+  # population: vector of population values
+  # M: number of systematic samples (default: 1)
+  
+  N <- length(population)
+  
+  # Calculate population mean
+  y_bar <- mean(population)
+  
+  # Calculate population variance S²
+  S_squared <- sum((population - y_bar)^2) / (N - 1)
+  
+  # Calculate theoretical variance
+  var_sys <- (1 - 1/M) * S_squared / N
+  
+  # For comparison, calculate SRS variance
+  var_srs <- (1 - n/N) * S_squared / n
+  
+  return(list(
+    systematic_variance = var_sys,
+    srs_variance = var_srs,
+    relative_efficiency = var_srs / var_sys
+  ))
+}
+
+# Example usage
+set.seed(123)
+population <- rnorm(100, mean = 50, sd = 10)
+result <- systematic_variance_theoretical(population)
+
+print(paste("Theoretical systematic sampling variance:", result$systematic_variance))
+print(paste("SRS variance for same sample size:", result$srs_variance))
+print(paste("Relative efficiency (SRS/SYS):", result$relative_efficiency))
 ```
 
-```{r}
+3. SRS Variance Estimation for Systematic Samples
 
+```{r}
+# Function to estimate variance using SRS formula
+srs_variance_estimator <- function(sample, N) {
+  # sample: systematic sample
+  # N: population size
+  
+  n <- length(sample)
+  
+  # Calculate sample mean
+  y_bar <- mean(sample)
+  
+  # Calculate sample variance
+  s_squared <- sum((sample - y_bar)^2) / (n - 1)
+  
+  # Calculate finite population correction
+  f <- n / N
+  
+  # Calculate estimated variance
+  var_est <- (1 - f) * s_squared / n
+  
+  return(list(
+    mean = y_bar,
+    variance = var_est,
+    standard_error = sqrt(var_est)
+  ))
+}
+
+# Example usage
+N <- 1000  # Population size
+set.seed(123)
+population <- rnorm(N, mean = 50, sd = 10)
+n <- 100   # Sample size
+
+# Generate systematic sample
+sys_sample <- systematic_sample(population, n)
+
+# Estimate variance using SRS formula
+result <- srs_variance_estimator(sys_sample$sample, N)
+
+print(paste("Estimated mean:", result$mean))
+print(paste("Estimated variance using SRS formula:", result$variance))
+print(paste("Estimated standard error:", result$standard_error))
 ```
-```{r}
 
+4. Stratified Sampling Variance Estimation
+
+```{r}
+# Function to estimate variance using stratified sampling formula
+stratified_variance_estimator <- function(samples, strata_weights, N) {
+  # samples: list of samples from each stratum
+  # strata_weights: vector of stratum weights (W_h)
+  # N: total population size
+  
+  # Calculate total sample size
+  n_total <- sum(sapply(samples, length))
+  
+  # Calculate overall sampling fraction
+  f <- n_total / N
+  
+  # Calculate stratum variances
+  stratum_vars <- numeric(length(samples))
+  for (h in 1:length(samples)) {
+    y_h <- samples[[h]]
+    n_h <- length(y_h)
+    stratum_vars[h] <- var(y_h)
+  }
+  
+  # Calculate weighted sum of stratum variances
+  weighted_var_sum <- sum(strata_weights * stratum_vars)
+  
+  # Calculate estimated variance
+  var_est <- (1 - f) * weighted_var_sum / n_total
+  
+  return(var_est)
+}
+
+# Example usage
+set.seed(123)
+# Create strata in population
+stratum1 <- rnorm(500, mean = 45, sd = 8)
+stratum2 <- rnorm(300, mean = 55, sd = 12)
+stratum3 <- rnorm(200, mean = 65, sd = 15)
+
+# Take systematic samples from each stratum
+sample1 <- systematic_sample(stratum1, 50)$sample
+sample2 <- systematic_sample(stratum2, 30)$sample
+sample3 <- systematic_sample(stratum3, 20)$sample
+
+# Calculate stratum weights
+N <- length(stratum1) + length(stratum2) + length(stratum3)
+weights <- c(length(stratum1)/N, length(stratum2)/N, length(stratum3)/N)
+
+# Estimate variance
+samples <- list(sample1, sample2, sample3)
+var_est <- stratified_variance_estimator(samples, weights, N)
+
+print(paste("Estimated variance using stratified formula:", var_est))
+print(paste("Estimated standard error:", sqrt(var_est)))
 ```
 
+5. Paired Successive Rows Variance Estimation
 ```{r}
+# Function to estimate variance by pairing successive rows
+paired_rows_variance_estimator <- function(sample, N) {
+  # sample: systematic sample
+  # N: population size
+  
+  n <- length(sample)
+  
+  # Check if n is even
+  if (n %% 2 != 0) {
+    warning("Sample size is not even; dropping last observation")
+    sample <- sample[1:(n-1)]
+    n <- n - 1
+  }
+  
+  # Pair successive rows
+  pairs <- matrix(sample, ncol = 2, byrow = TRUE)
+  
+  # Calculate differences between pairs
+  diffs_squared <- (pairs[, 1] - pairs[, 2])^2
+  
+  # Calculate sampling fraction
+  f <- n / N
+  
+  # Calculate variance estimate
+  var_est <- (1 - f) * sum(diffs_squared) / (n^2)
+  
+  return(list(
+    variance = var_est,
+    standard_error = sqrt(var_est)
+  ))
+}
 
+# Example usage
+set.seed(123)
+population <- rnorm(1000, mean = 50, sd = 10)
+n <- 100  # Must be even for pairing
+N <- length(population)
+
+# Generate systematic sample
+sys_sample <- systematic_sample(population, n)
+
+# Estimate variance using paired rows method
+result <- paired_rows_variance_estimator(sys_sample$sample, N)
+
+print(paste("Estimated variance using paired rows method:", result$variance))
+print(paste("Estimated standard error:", result$standard_error))
 ```
-```{r}
 
+
+6. Successive Differences Variance Estimation
+```{r}
+# Function to estimate variance using successive differences
+successive_diff_variance_estimator <- function(sample, N) {
+  # sample: systematic sample
+  # N: population size
+  
+  n <- length(sample)
+  
+  # Calculate sampling fraction
+  f <- n / N
+  
+  # Calculate successive differences
+  diffs <- numeric(n - 1)
+  for (i in 1:(n-1)) {
+    diffs[i] <- (sample[i] - sample[i+1])^2
+  }
+  
+  # Calculate variance estimate
+  var_est <- (1 - f) * sum(diffs) / (2 * n * (n - 1))
+  
+  return(list(
+    variance = var_est,
+    standard_error = sqrt(var_est)
+  ))
+}
+
+# Example usage
+set.seed(123)
+population <- rnorm(1000, mean = 50, sd = 10)
+n <- 100
+N <- length(population)
+
+# Generate systematic sample
+sys_sample <- systematic_sample(population, n)
+
+# Estimate variance using successive differences method
+result <- successive_diff_variance_estimator(sys_sample$sample, N)
+
+print(paste("Estimated variance using successive differences:", result$variance))
+print(paste("Estimated standard error:", result$standard_error))
 ```
 
-
+7. Comparison of Variance Estimators
 ```{r}
+# Function to compare different variance estimators
+compare_variance_estimators <- function(population, n) {
+  N <- length(population)
+  
+  # True population variance of mean
+  pop_mean <- mean(population)
+  pop_var <- var(population) * (1 - n/N) / n
+  
+  # Generate systematic sample
+  sys_sample <- systematic_sample(population, n)$sample
+  
+  # 1. SRS variance estimator
+  srs_result <- srs_variance_estimator(sys_sample, N)
+  
+  # 2. Paired rows variance estimator (if n is even)
+  if (n %% 2 == 0) {
+    paired_result <- paired_rows_variance_estimator(sys_sample, N)
+  } else {
+    paired_result <- list(variance = NA, standard_error = NA)
+  }
+  
+  # 3. Successive differences variance estimator
+  succ_result <- successive_diff_variance_estimator(sys_sample, N)
+  
+  # Calculate sample mean
+  sample_mean <- mean(sys_sample)
+  
+  # Compare results
+  results <- data.frame(
+    Estimator = c("True Population Variance", "SRS Formula", 
+                 "Paired Rows", "Successive Differences"),
+    Variance = c(pop_var, srs_result$variance, 
+                paired_result$variance, succ_result$variance),
+    SE = c(sqrt(pop_var), srs_result$standard_error,
+          paired_result$standard_error, succ_result$standard_error)
+  )
+  
+  return(list(
+    population_mean = pop_mean,
+    sample_mean = sample_mean,
+    results = results
+  ))
+}
 
+# Example usage with a population with trend (where systematic sampling is more efficient)
+set.seed(123)
+N <- 1000
+# Create population with trend
+x <- 1:N
+population <- 30 + 0.05 * x + rnorm(N, 0, 5)
+n <- 100
+
+comparison <- compare_variance_estimators(population, n)
+
+print(paste("Population mean:", comparison$population_mean))
+print(paste("Sample mean:", comparison$sample_mean))
+print("Variance estimator comparison:")
+print(comparison$results)
 ```
-```{r}
 
+8. Circular Systematic Sampling
+```{r}
+# Function to perform circular systematic sampling
+circular_systematic_sample <- function(population, n) {
+  N <- length(population)
+  
+  # Calculate sampling interval
+  k <- N / n
+  
+  # Generate random start between 1 and N
+  random_start <- sample(1:N, 1)
+  
+  # Generate indices for circular systematic sample
+  indices <- numeric(n)
+  for (i in 1:n) {
+    # Use modular arithmetic to wrap around
+    index <- (random_start + (i-1)*k) %% N
+    if (index == 0) index <- N  # Handle the case where index is exactly N
+    indices[i] <- index
+  }
+  
+  # Return the sample
+  return(list(
+    sample = population[indices],
+    indices = indices,
+    interval = k,
+    random_start = random_start
+  ))
+}
+
+# Example usage
+set.seed(123)
+population <- 1:100
+n <- 10
+circ_sample <- circular_systematic_sample(population, n)
+
+print("Circular systematic sample:")
+print(circ_sample$sample)
+print(paste("Sampling interval (k):", circ_sample$interval))
+print(paste("Random start:", circ_sample$random_start))
 ```
 
-
+9. Systematic Sampling with Multiple Starts
 ```{r}
+# Function to perform systematic sampling with multiple random starts
+multiple_start_systematic_sample <- function(population, n, m) {
+  # population: vector of population values
+  # n: sample size for each systematic sample
+  # m: number of random starts
+  
+  N <- length(population)
+  
+  # Calculate sampling interval
+  k <- N / n
+  
+  # Generate m random starts between 1 and k
+  random_starts <- sample(1:ceiling(k), m, replace = FALSE)
+  
+  # Generate m systematic samples
+  samples <- list()
+  for (j in 1:m) {
+    start <- random_starts[j]
+    indices <- seq(start, by = k, length.out = n)
+    indices <- floor(indices)
+    indices <- indices[indices <= N]
+    
+    samples[[j]] <- population[indices]
+  }
+  
+  # Calculate combined sample mean
+  combined_mean <- mean(unlist(samples))
+  
+  # Calculate between-sample variance
+  sample_means <- sapply(samples, mean)
+  between_var <- var(sample_means) / m
+  
+  return(list(
+    samples = samples,
+    random_starts = random_starts,
+    sample_means = sample_means,
+    combined_mean = combined_mean,
+    between_sample_variance = between_var
+  ))
+}
 
+# Example usage
+set.seed(123)
+population <- rnorm(1000, mean = 50, sd = 10)
+n <- 20  # Sample size for each systematic sample
+m <- 5   # Number of random starts
+
+result <- multiple_start_systematic_sample(population, n, m)
+
+print("Sample means from multiple systematic samples:")
+print(result$sample_means)
+print(paste("Combined mean:", result$combined_mean))
+print(paste("Between-sample variance estimate:", result$between_sample_variance))
 ```
-```{r}
 
+10. Systematic Sampling in Stratified Designs
+
+```{r}
+# Function to perform stratified systematic sampling
+stratified_systematic_sample <- function(strata_populations, n_per_stratum) {
+  # strata_populations: list of population vectors for each stratum
+  # n_per_stratum: vector of sample sizes for each stratum
+  
+  n_strata <- length(strata_populations)
+  
+  # Check input dimensions
+  if (length(n_per_stratum) != n_strata) {
+    stop("Number of sample sizes must match number of strata")
+  }
+  
+  # Perform systematic sampling in each stratum
+  stratum_samples <- list()
+  stratum_intervals <- numeric(n_strata)
+  
+  for (h in 1:n_strata) {
+    pop_h <- strata_populations[[h]]
+    n_h <- n_per_stratum[h]
+    
+    # Perform systematic sampling within stratum
+    sample_h <- systematic_sample(pop_h, n_h)
+    
+    stratum_samples[[h]] <- sample_h$sample
+    stratum_intervals[h] <- sample_h$interval
+  }
+  
+  # Calculate stratum weights
+  N_h <- sapply(strata_populations, length)
+  N_total <- sum(N_h)
+  stratum_weights <- N_h / N_total
+  
+  # Calculate overall mean
+  stratum_means <- sapply(stratum_samples, mean)
+  overall_mean <- sum(stratum_weights * stratum_means)
+  
+  return(list(
+    stratum_samples = stratum_samples,
+    stratum_means = stratum_means,
+    stratum_weights = stratum_weights,
+    stratum_intervals = stratum_intervals,
+    overall_mean = overall_mean
+  ))
+}
+
+# Example usage
+set.seed(123)
+# Create three strata populations
+strata_pops <- list(
+  rnorm(500, mean = 40, sd = 5),
+  rnorm(300, mean = 60, sd = 8),
+  rnorm(200, mean = 80, sd = 12)
+)
+
+# Sample sizes for each stratum
+n_per_stratum <- c(50, 30, 20)
+
+# Perform stratified systematic sampling
+result <- stratified_systematic_sample(strata_pops, n_per_stratum)
+
+print("Stratum means:")
+print(result$stratum_means)
+print("Stratum weights:")
+print(result$stratum_weights)
+print("Sampling intervals by stratum:")
+print(result$stratum_intervals)
+print(paste("Overall estimated mean:", result$overall_mean))
 ```
 
 
