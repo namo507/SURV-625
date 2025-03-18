@@ -2225,6 +2225,9 @@ m_optimal = sqrt((c_n/c_m)*(Sw2_avg_within/SB2_between_PSU))
 ```
 
 
+## Class 4
+
+
 ```{r}
 
 ```
