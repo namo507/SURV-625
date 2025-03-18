@@ -166,33 +166,350 @@ print(paste("DF for simple random sample:", df_srs))
 
 ## Class 9
 
+## Sampling with unequal probabilities
 
+1. Variance Estimation for Cluster Designs
 ```{r}
+# Function to calculate inclusion probabilities
+calculate_inclusion_probs <- function(selection_probs) {
+  # selection_probs: probability of selection on first draw (psi_i)
+  # This is a simplified approach - actual calculation depends on the sampling design
+  n <- length(selection_probs)
+  pi_i <- 1 - (1 - selection_probs)^n
+  return(pi_i)
+}
 
+# Example usage
+selection_probs <- c(0.1, 0.15, 0.2, 0.25, 0.3)
+inclusion_probs <- calculate_inclusion_probs(selection_probs)
+print("Inclusion probabilities:")
+print(inclusion_probs)
 ```
 
-```{r}
-
-```
-
+2. One-stage Sampling with Replacement
 
 ```{r}
+# Function for one-stage sampling with replacement
+one_stage_wr <- function(t_values, psi_values, n) {
+  # t_values: cluster totals
+  # psi_values: probabilities of selection on first draw
+  # n: sample size
+  
+  # Calculate u_i = t_i/psi_i
+  u_values <- t_values / psi_values
+  
+  # Estimate population total
+  t_hat_psi <- mean(u_values)
+  
+  # Calculate variance estimator
+  var_t_hat <- var(u_values) / n
+  
+  # Calculate weights
+  weights <- 1 / (n * psi_values)
+  
+  # Alternative calculation of total
+  t_hat_alt <- sum(weights * t_values)
+  
+  return(list(
+    u_values = u_values,
+    t_hat_psi = t_hat_psi,
+    variance = var_t_hat,
+    weights = weights,
+    t_hat_weighted = t_hat_alt
+  ))
+}
 
+# Example usage
+t_values <- c(100, 150, 200, 250, 300)  # Cluster totals
+psi_values <- c(0.1, 0.15, 0.2, 0.25, 0.3)  # Selection probabilities
+n <- 3  # Sample size
+
+result <- one_stage_wr(t_values, psi_values, n)
+print(paste("Estimated population total:", result$t_hat_psi))
+print(paste("Variance of estimated total:", result$variance))
+print("Sampling weights:")
+print(result$weights)
 ```
+
+3. Two-stage Sampling with Replacement
 
 ```{r}
+# Function for two-stage sampling with replacement
+two_stage_wr <- function(t_estimates, psi_values, n, Q_i) {
+  # t_estimates: list of vectors, each vector contains estimated totals for a PSU
+  # psi_values: probabilities of selection for PSUs
+  # n: number of PSU selections
+  # Q_i: vector showing how many times each PSU was selected
+  
+  # Calculate the estimator for the population total
+  sum_numerator <- 0
+  for (i in 1:length(psi_values)) {
+    if (Q_i[i] > 0) {
+      # Sum all estimates for PSU i
+      for (j in 1:Q_i[i]) {
+        sum_numerator <- sum_numerator + t_estimates[[i]][j] / psi_values[i]
+      }
+    }
+  }
+  t_hat_psi <- sum_numerator / n
+  
+  # Calculate the variance estimator
+  squared_diff_sum <- 0
+  for (i in 1:length(psi_values)) {
+    if (Q_i[i] > 0) {
+      for (j in 1:Q_i[i]) {
+        squared_diff <- (t_estimates[[i]][j] / psi_values[i] - t_hat_psi)^2
+        squared_diff_sum <- squared_diff_sum + squared_diff
+      }
+    }
+  }
+  var_t_hat <- squared_diff_sum / (n * (n - 1))
+  
+  # Calculate weights for SSUs
+  weights <- list()
+  for (i in 1:length(psi_values)) {
+    if (Q_i[i] > 0) {
+      M_i <- length(t_estimates[[i]])  # Number of elements in PSU i
+      m_i <- Q_i[i]  # Number of samples from PSU i
+      weights[[i]] <- rep(1 / (n * psi_values[i] * (m_i / M_i)), m_i)
+    } else {
+      weights[[i]] <- numeric(0)
+    }
+  }
+  
+  return(list(
+    t_hat_psi = t_hat_psi,
+    variance = var_t_hat,
+    weights = weights
+  ))
+}
 
+# Example usage
+# Suppose we have 3 PSUs, with different numbers of estimated totals
+t_estimates <- list(
+  c(100, 110),  # Estimated totals for PSU 1 (selected twice)
+  c(150),       # Estimated totals for PSU 2 (selected once)
+  c()           # PSU 3 not selected
+)
+psi_values <- c(0.4, 0.3, 0.3)  # Selection probabilities for PSUs
+n <- 3  # Total number of PSU selections
+Q_i <- c(2, 1, 0)  # Number of times each PSU was selected
+
+result <- two_stage_wr(t_estimates, psi_values, n, Q_i)
+print(paste("Estimated population total:", result$t_hat_psi))
+print(paste("Variance of estimated total:", result$variance))
+print("Weights for each PSU's samples:")
+print(result$weights)
 ```
+
+4. Horvitz-Thompson Estimator
+
 ```{r}
+# Function for Horvitz-Thompson estimator
+horvitz_thompson <- function(t_values, pi_i) {
+  # t_values: values for sampled units
+  # pi_i: inclusion probabilities for sampled units
+  
+  # Calculate HT estimator
+  t_hat_ht <- sum(t_values / pi_i)
+  
+  return(t_hat_ht)
+}
 
+# Example usage
+t_values <- c(100, 150, 200)  # Values for sampled units
+pi_i <- c(0.3, 0.4, 0.5)     # Inclusion probabilities
+
+t_hat <- horvitz_thompson(t_values, pi_i)
+print(paste("Horvitz-Thompson estimate of population total:", t_hat))
 ```
+
+5. Variance Estimators for One-stage Sampling without Replacement
+
 ```{r}
+# Function for variance estimation in one-stage sampling without replacement
+variance_one_stage_wor <- function(t_values, pi_i, pi_ik = NULL, method = "WR") {
+  # t_values: values for sampled units
+  # pi_i: inclusion probabilities for sampled units
+  # pi_ik: joint inclusion probabilities (matrix)
+  # method: "HT" (Horvitz-Thompson), "SYG" (Sen-Yates-Grundy), or "WR" (with-replacement approximation)
+  
+  n <- length(t_values)
+  t_hat_ht <- sum(t_values / pi_i)
+  
+  if (method == "HT" && !is.null(pi_ik)) {
+    # Horvitz-Thompson variance estimator
+    var_hat <- 0
+    for (i in 1:n) {
+      var_hat <- var_hat + (1 - pi_i[i]) * (t_values[i] / pi_i[i])^2
+      for (k in 1:n) {
+        if (k != i) {
+          var_hat <- var_hat + (pi_ik[i, k] - pi_i[i] * pi_i[k]) * 
+                              (t_values[i] / pi_i[i]) * (t_values[k] / pi_i[k])
+        }
+      }
+    }
+    return(var_hat)
+    
+  } else if (method == "SYG" && !is.null(pi_ik)) {
+    # Sen-Yates-Grundy variance estimator
+    var_hat <- 0
+    for (i in 1:n) {
+      for (k in 1:n) {
+        if (k != i) {
+          var_hat <- var_hat + 0.5 * ((pi_ik[i, k] - pi_i[i] * pi_i[k]) / pi_ik[i, k]) * 
+                              (t_values[i] / pi_i[i] - t_values[k] / pi_i[k])^2
+        }
+      }
+    }
+    return(var_hat)
+    
+  } else if (method == "WR") {
+    # Simplified with-replacement variance estimator
+    psi_i <- pi_i / n  # Approximate psi_i from pi_i
+    var_hat <- (n / (n - 1)) * sum(((t_values / pi_i) - (t_hat_ht / n))^2)
+    return(var_hat)
+    
+  } else {
+    stop("Invalid method or missing joint inclusion probabilities")
+  }
+}
 
+# Example usage
+t_values <- c(100, 150, 200)  # Values for sampled units
+pi_i <- c(0.3, 0.4, 0.5)     # Inclusion probabilities
+
+# Create a simple example of joint inclusion probabilities (this is simplified)
+pi_ik <- matrix(c(
+  0.3, 0.1, 0.15,
+  0.1, 0.4, 0.2,
+  0.15, 0.2, 0.5
+), nrow = 3, byrow = TRUE)
+
+# Calculate variances using different methods
+var_ht <- variance_one_stage_wor(t_values, pi_i, pi_ik, "HT")
+var_syg <- variance_one_stage_wor(t_values, pi_i, pi_ik, "SYG")
+var_wr <- variance_one_stage_wor(t_values, pi_i, method = "WR")
+
+print(paste("HT variance estimate:", var_ht))
+print(paste("SYG variance estimate:", var_syg))
+print(paste("Simplified WR variance estimate:", var_wr))
 ```
+
+6. Two-stage Sampling without Replacement
 
 ```{r}
+# Function for two-stage sampling without replacement
+two_stage_wor <- function(t_estimates, pi_i) {
+  # t_estimates: estimated totals for sampled PSUs
+  # pi_i: inclusion probabilities for PSUs
+  
+  # Calculate HT estimator
+  t_hat_ht <- sum(t_estimates / pi_i)
+  
+  # Calculate simplified WR variance estimator
+  n <- length(t_estimates)
+  var_hat <- (n / (n - 1)) * sum(((t_estimates / pi_i) - (t_hat_ht / n))^2)
+  
+  return(list(
+    t_hat_ht = t_hat_ht,
+    variance = var_hat
+  ))
+}
 
+# Example usage
+t_estimates <- c(100, 150, 200)  # Estimated totals for sampled PSUs
+pi_i <- c(0.3, 0.4, 0.5)        # Inclusion probabilities for PSUs
+
+result <- two_stage_wor(t_estimates, pi_i)
+print(paste("Estimated population total:", result$t_hat_ht))
+print(paste("Variance estimate:", result$variance))
 ```
+
+7. Weights and Mean Estimation in Unequal-probability Samples
+
+```{r}
+# Function for weights and mean estimation in unequal-probability samples
+weighted_mean_estimator <- function(y_values, pi_i, pi_j_given_i) {
+  # y_values: list of vectors containing y-values for each PSU
+  # pi_i: inclusion probabilities for PSUs
+  # pi_j_given_i: list of vectors containing conditional inclusion probs for SSUs
+  
+  # Calculate weights
+  weights <- list()
+  for (i in 1:length(pi_i)) {
+    weights[[i]] <- 1 / (pi_j_given_i[[i]] * pi_i[i])
+  }
+  
+  # Calculate weighted mean
+  numerator <- 0
+  denominator <- 0
+  for (i in 1:length(pi_i)) {
+    numerator <- numerator + sum(weights[[i]] * y_values[[i]])
+    denominator <- denominator + sum(weights[[i]])
+  }
+  y_bar_ht <- numerator / denominator
+  
+  # Calculate M_i estimates (estimated number of SSUs in each PSU)
+  M_hat <- numeric(length(pi_i))
+  for (i in 1:length(pi_i)) {
+    M_hat[i] <- sum(1 / pi_j_given_i[[i]])
+  }
+  
+  # Calculate residuals for variance estimation
+  e_hat <- numeric(length(pi_i))
+  for (i in 1:length(pi_i)) {
+    # t_i estimate
+    t_i_hat <- sum(y_values[[i]] / pi_j_given_i[[i]])
+    e_hat[i] <- t_i_hat - y_bar_ht * M_hat[i]
+  }
+  
+  # Calculate variance using WR approximation
+  n <- length(pi_i)
+  
+  # Alternative calculation using weights directly
+  e_hat_alt <- numeric(length(pi_i))
+  for (i in 1:length(pi_i)) {
+    e_hat_alt[i] <- sum(weights[[i]] * (y_values[[i]] - y_bar_ht))
+  }
+  
+  # Variance calculation
+  e_squared_sum <- sum((e_hat_alt / denominator)^2)
+  var_hat <- (n / (n - 1)) * e_squared_sum
+  
+  return(list(
+    y_bar_ht = y_bar_ht,
+    weights = weights,
+    variance = var_hat
+  ))
+}
+
+# Example usage
+# Suppose we have 3 PSUs with different numbers of SSUs
+y_values <- list(
+  c(10, 15, 20),    # y-values for SSUs in PSU 1
+  c(25, 30),        # y-values for SSUs in PSU 2
+  c(35, 40, 45, 50) # y-values for SSUs in PSU 3
+)
+pi_i <- c(0.3, 0.4, 0.5)  # Inclusion probabilities for PSUs
+
+# Conditional inclusion probabilities for SSUs given PSU is selected
+pi_j_given_i <- list(
+  c(0.6, 0.7, 0.8),      # For PSU 1
+  c(0.5, 0.6),           # For PSU 2
+  c(0.4, 0.5, 0.6, 0.7)  # For PSU 3
+)
+
+result <- weighted_mean_estimator(y_values, pi_i, pi_j_given_i)
+print(paste("Estimated population mean:", result$y_bar_ht))
+print(paste("Variance of the mean estimator:", result$variance))
+print("Weights for each PSU's samples:")
+print(result$weights)
+```
+
+## Class 8
+## Sampling Probability Proportional to size
+
 ```{r}
 
 ```
