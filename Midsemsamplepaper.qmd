@@ -222,3 +222,26 @@ These probabilities are important because they help us understand how representa
 
 ## c. The overall probability of selection is f = 0.05. Give the within-cluster selection rate for each cluster selected in Part 2a that will result in an epsem sample of housing units.
 
+
+The Simple Formula
+For EPSEM sampling, we use this formula: Within-cluster selection rate = Overall sampling rate ÷ Cluster selection probability
+
+Since the overall sampling rate (f) is given as 0.05 (or 5%), and we know the selection probabilities for each cluster from part b, we can calculate:
+
+For Our Selected Clusters
+Cluster 2 (Blocks 2 & 3):
+Selection probability: 0.365 (36.5%)
+Within-cluster rate = 0.05 ÷ 0.365 = 0.137 (about 13.7%)
+This means we need to sample about 13.7% of housing units in Cluster 2
+Cluster 4 (Blocks 7, 8 & 9):
+Selection probability: 0.64 (64%)
+Within-cluster rate = 0.05 ÷ 0.64 = 0.078 (about 7.8%)
+This means we need to sample about 7.8% of housing units in Cluster 4
+Why This Makes Sense
+Cluster 4 had a higher chance of being selected (64% vs 36.5%), so we need to sample a smaller percentage of its units to balance things out. This creates our EPSEM design where every housing unit in the population ends up with the same 5% chance of being in our final sample.
+
+The final result:
+
+We sample 13.7% of units from Cluster 2
+We sample 7.8% of units from Cluster 4
+This ensures every housing unit in the population has exactly a 5% chance of being selected, regardless of which cluster it belongs to.
