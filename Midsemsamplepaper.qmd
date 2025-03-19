@@ -81,3 +81,53 @@ Second selected cluster: We add the selection interval (k) to the random start: 
 ◦
 Third selected cluster: We add the selection interval (k) again: $195.33 + 183.33 = 378.66$. This value falls within the cumulative MOS range of 266 to 365 (hypothetically extending the cumulative MOS of Cluster 4 by k), which corresponds to Cluster 4.
 Therefore, the three clusters selected using a random start of 12 are Cluster 1, Cluster 3, and Cluster 4.
+
+
+## c. Calculate the probability of selection for each of the three selected clusters.
+
+
+
+To calculate the probability of selection for each of the three selected clusters (Cluster 1, Cluster 3, and Cluster 4) in our Probability Proportionate to estimated Size (PPeS) systematic sampling, we use the formula for the inclusion probability in PPeS:
+$\pi_i = \frac{n \cdot MOS_i}{\sum MOS}$
+where:
+•$\pi_i$ is the probability of selection for cluster $i$.
+•$n$ is the number of clusters selected (in our case, $n = 3$).
+•$MOS_i$ is the Measure of Size for cluster $i$.
+•$\sum MOS$ is the total Measure of Size for all blocks (in our case, $\sum MOS = 550$).
+Now, let's calculate the probability of selection for each of the three selected clusters:
+•Cluster 1:
+◦MOS of Cluster 1 = 50
+◦Probability of selection for Cluster 1 = $\frac{3 \cdot 50}{550} = \frac{150}{550} = \frac{15}{55} = \frac{3}{11} \approx 0.2727$
+•Cluster 3:
+◦The original Block 4 formed Cluster 3, with an MOS of 70.
+◦MOS of Cluster 3 = 70
+◦Probability of selection for Cluster 3 = $\frac{3 \cdot 70}{550} = \frac{210}{550} = \frac{21}{55} \approx 0.3818$
+•Cluster 4:
+◦The original Block 5 formed Cluster 4, with an MOS of 100.
+◦MOS of Cluster 4 = 100
+◦Probability of selection for Cluster 4 = $\frac{3 \cdot 100}{550} = \frac{300}{550} = \frac{30}{55} = \frac{6}{11} \approx 0.5455$
+Therefore, the probabilities of selection for the three selected clusters are approximately:
+•Cluster 1: $\frac{3}{11}$ or approximately 0.2727
+•Cluster 3: $\frac{21}{55}$ or approximately 0.3818
+•Cluster 4: $\frac{6}{11}$ or approximately 0.5455
+As mentioned in the sources, in PPS sampling, larger clusters have higher probabilities of being selected because their MOS is larger. This is reflected in our calculated probabilities, where Cluster 4 (with the largest MOS of the three) has the highest probability of selection.
+
+The formula is straightforward:
+
+Probability of selection = (Number of clusters we're selecting × Size of the cluster) ÷ (Total size of all clusters)
+
+Using the formula: Probability = (n × MOS_i) ÷ (Total MOS)
+
+
+Cluster 1:
+Size (MOS) = 50
+Calculation: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727 (or about 27%)
+This means Cluster 1 had about a 27% chance of being selected
+Cluster 3:
+Size (MOS) = 70
+Calculation: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818 (or about 38%)
+This means Cluster 3 had about a 38% chance of being selected
+Cluster 4:
+Size (MOS) = 100
+Calculation: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455 (or about 55%)
+This means Cluster 4 had about a 55% chance of being selected.
