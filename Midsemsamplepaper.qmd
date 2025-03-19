@@ -298,3 +298,57 @@ The stratum-specific zone sizes are:
 
 Stratum 1: 183.33
 Stratum 2: 200
+
+
+## b. To retain epsem with the desired overall sampling rate (f = 0.1), what is the targeted subsample size for each cluster in Stratum 1?
+
+Part B: Targeted Subsample Size for Each Cluster in Stratum 1
+Step 1: Identify the Selected Clusters
+From part 1b, we selected Clusters 1, 3, and 4 in Stratum 1 with:
+
+Cluster 1: MOS = 50
+Cluster 3: MOS = 70
+Cluster 4: MOS = 100
+Step 2: Calculate the Selection Probability for Each Cluster
+Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
+
+Cluster 1: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727
+Cluster 3: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818
+Cluster 4: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455
+Step 3: Calculate the Within-Cluster Sampling Rate
+Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
+
+Cluster 1: 0.1 ÷ 0.2727 = 0.3667 (36.67%)
+Cluster 3: 0.1 ÷ 0.3818 = 0.2619 (26.19%)
+Cluster 4: 0.1 ÷ 0.5455 = 0.1833 (18.33%)
+Step 4: Calculate the Subsample Size for Each Cluster
+Since we're asked for the targeted subsample size, we multiply the within-cluster rate by the MOS:
+
+Cluster 1: 50 × 0.3667 = 18.33 ≈ 18 units
+Cluster 3: 70 × 0.2619 = 18.33 ≈ 18 units
+Cluster 4: 100 × 0.1833 = 18.33 ≈ 18 units
+
+## c. To retain epsem with the desired overall sampling rate (f = 0.1), what is the targeted subsample size for each cluster in Stratum 2?
+
+Step 1: Identify the Selected Clusters
+From part 2a, we selected Clusters 2 and 4 in Stratum 2 with:
+
+Cluster 2: MOS = 73 (Blocks 2 & 3)
+Cluster 4: MOS = 128 (Blocks 7, 8 & 9)
+Step 2: Calculate the Selection Probability for Each Cluster
+Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
+
+Cluster 2: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365
+Cluster 4: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64
+Step 3: Calculate the Within-Cluster Sampling Rate
+Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
+
+Cluster 2: 0.1 ÷ 0.365 = 0.2740 (27.40%)
+Cluster 4: 0.1 ÷ 0.64 = 0.1563 (15.63%)
+Step 4: Calculate the Subsample Size for Each Cluster
+Multiplying the within-cluster rate by the MOS:
+
+Cluster 2: 73 × 0.2740 = 20 units
+Cluster 4: 128 × 0.1563 = 20 units
+
+
