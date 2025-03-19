@@ -352,3 +352,67 @@ Cluster 2: 73 × 0.2740 = 20 units
 Cluster 4: 128 × 0.1563 = 20 units
 
 
+
+## True or False
+## a. (TRUE / FALSE) The Taylor Series Linearization method for estimating the sampling variance of an estimated mean is necessary when selecting a simple random sample of n clusters from a total population of N clusters, and a simple random sample of m elements from the M population elements in each of the n randomly sampled clusters.
+
+
+FALSE. While Taylor Series Linearization is a method for variance estimation in complex surveys, the sources indicate that for two-stage cluster sampling with equal-sized clusters, the sampling variance can be estimated using formulas that consider the between-cluster and within-cluster variances. These formulas are derived without explicitly stating the necessity of Taylor Series Linearization for this specific design.
+
+Taylor Series Linearization is typically necessary for more complex statistics (like ratios, regression coefficients) or complex sampling designs.
+
+
+## b. (TRUE / FALSE) The use of weights in analyses (whatever introduced the need to use them) will generally tend to increase the sampling variance of estimates, and the more variable the weights are, the higher the increase.
+
+TRUE. Source explicitly states that "The use of weights in estimation can increase the sampling variance of weighted estimates (part of the design effect)". Furthermore, it introduces the concept of loss of precision due to weighting ($L = C^2(weights)$), which implies that greater variability in weights (higher $C^2$) leads to a larger potential increase in sampling variance.
+
+The design effect due to weighting is approximately 1 + CV² (where CV is the coefficient of variation of the weights). More variable weights lead to larger increases in variance.
+
+
+## c. (TRUE / FALSE) Under certain assumptions, one can compute the size of a simple random sample needed to achieve a certain level of sampling variance for a given estimated mean if the only two pieces of information provided are 1) the desired level of sampling variance and 2) an estimate of the element variance.
+
+TRUE. Source discusses sample size projection for Simple Random Sampling (SRS). It mentions that the desired precision is often expressed in terms of the margin of error ($e$), which is related to the desired sampling variance. The formula $n_0 = z^2_{\alpha/2} \hat{S}^2 / e^2$ shows that if we have a desired level of precision (related to sampling variance via $e$) and an estimate of the element variance ($\hat{S}^2$), we can calculate the required sample size ($n_0$).
+
+
+For simple random sampling, the formula n = S²/V (where S² is the element variance and V is the desired sampling variance) can be used to determine the required sample size. This assumes the population is large relative to the sample size.
+
+
+## d. (TRUE / FALSE) With unequal-sized clusters and a fixed subsample size b within each cluster, the simple unweighted mean can still be used as an unbiased estimate of the population mean.
+
+FALSE. When clusters are of unequal sizes and a fixed number of elements are sampled from each, the selection probabilities for individual elements are not equal, meaning the design is not EPSEM (equal probability of selection method). In such cases, a simple unweighted mean would generally be a biased estimate of the population mean. Source suggests that in such scenarios, weights would be needed to account for the unequal probabilities of selection.
+
+using a simple unweighted mean would give elements in smaller clusters greater weight than those in larger clusters, leading to bias. Weighting is necessary to produce an unbiased estimate.
+
+## e. (TRUE / FALSE) The approximation of the variance when using Taylor Series Linearization is adequate for inference if the coefficient of variation of the sample size is 0.8.
+
+FALSE. Source discusses the adequacy of the Taylor series approximation for variance estimation in the context of unequal-sized cluster sampling. It states that the approximation is reasonably accurate if the coefficient of variation of the sample size (sum of weights within clusters) is less than 0.1, and values up to 0.2 might be acceptable. A coefficient of variation of 0.8 is significantly higher than these recommended thresholds, indicating that the approximation would likely not be adequate for reliable inference.
+
+A coefficient of variation of 0.8 (80%) for sample size is quite high, indicating substantial variability in sample sizes. This high variability would likely compromise the accuracy of Taylor Series Linearization, which works best when the coefficient of variation is small (typically less than 0.2 or 20%).
+
+## f. (TRUE / FALSE) In determining the number of clusters selected in stratified cluster sampling, allocation proportionate to the number of elements in a stratum in the population facilitates self-weighting element selection.
+
+FALSE. Source clarifies that in stratified cluster sampling, proportionate allocation usually refers to elements, not clusters, and this is what allows us to maintain epsem for the elements. Allocating the number of clusters proportionate to the number of elements in a stratum does not guarantee that the probability of selecting each element will be equal, especially if the clusters are of unequal sizes.
+
+## g. (TRUE / FALSE) If the elements in a list are approximately continuously ordered and an odd number of units is selected using systematic random sampling, the paired selection model can be used for variance estimation.
+
+FALSE. Source indicates that if the elements in the list are approximately continuously ordered and an odd number of units is selected using systematic random sampling, the successive differences model is more appropriate for variance estimation. The paired selection model is suggested when an even sample size is drawn under similar ordering assumptions.
+
+With an odd number of selections, one unit would be left unpaired, making the standard paired selection approach difficult to apply directly.
+
+
+
+## h. (TRUE / FALSE) If one selects all possible elements within a cluster that has been selected using simple random sampling (i.e., clusters were selected with equal probability), but the clusters are of unequal sizes, selection probabilities will vary for different population elements.
+
+TRUE. If clusters of unequal sizes are selected with equal probability, and all elements within the selected clusters are included in the sample, then an element in a smaller cluster has a higher probability of being selected than an element in a larger cluster. This is because each cluster has the same probability of selection, but the number of elements contributed to the sample differs.
+## i. (TRUE / FALSE) The sampling variance under “ultimate cluster” sampling mimics the sampling variance under with replacement selection of primary stage clusters and without replacement subsampling of elements within the clusters.
+
+TRUE. Source describes that the ultimate cluster idea leads to an approximation of the sampling variance and notes that it is similar to a two-stage selection where the first stage (selection of clusters) is with replacement. While the term "mimics" is used, the core concept of ultimate clusters simplifies variance estimation by focusing on the variability between these ultimate clusters, which aligns with the variance estimation under with-replacement PSU selection.
+## j. (TRUE / FALSE) Varying the subsample size m in two-stage cluster sampling by design will impact the rate of homogeneity, design effects and thus effective sample sizes.
+
+TRUE. While the rate of homogeneity ($\rho$) is a characteristic of the population and the defined clusters, the design effect ($DEFF = 1 + (m-1) \rho$) is directly influenced by the subsample size $m$. Since the effective sample size is calculated considering the design effect (e.g., $n_{eff} \approx \frac{n \times m}{DEFF}$), varying $m$ will indeed impact the design effect and, consequently, the effective sample size.
+
+## k. (TRUE / FALSE) In theory, the estimate of sampling variance in two-stage cluster sampling includes the between-cluster and within-cluster sampling.
+TRUE. Source explicitly states that the estimation of sampling variance in two-stage cluster sampling (with equal sizes) involves both the between-cluster variance and the average within-cluster sampling variance. Similarly, source for unequal-sized clusters shows variance formulas that account for variability at both stages.
+
+## l. (TRUE / FALSE) A proportionate allocation design is epsem (ignoring rounding error).
+TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
