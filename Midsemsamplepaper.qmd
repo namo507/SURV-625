@@ -245,3 +245,56 @@ The final result:
 We sample 13.7% of units from Cluster 2
 We sample 7.8% of units from Cluster 4
 This ensures every housing unit in the population has exactly a 5% chance of being selected, regardless of which cluster it belongs to.
+
+
+## d. After selecting clusters, field staff are sent to selected blocks to count the number of housing units that are actually there. Suppose the (potentially linked) cluster 2 is selected and the real # of housing units is 95, calculate the expected number of housing units to be selected in cluster 2 given the actual counts.
+
+
+The Basic Approach
+We already determined in part (c) that we need to sample 13.7% of housing units in Cluster 2 to maintain an EPSEM design. Now we just apply this percentage to the actual count.
+
+Simple Calculation Steps
+We know:
+
+The actual number of housing units in Cluster 2 = 95
+The within-cluster selection rate for Cluster 2 = 13.7% (or 0.137)
+To calculate the number of housing units to select:
+
+Number of units to select = Actual count × Selection rate
+Number of units to select = 95 × 0.137 = 13.01
+Since we can't select a partial housing unit, we would round to 13 housing units.
+
+
+
+## 3. Tables in Question 1 and Question 2 are the sample frame from two strata. 
+## • For Stratum 1: three clusters were selected, i.e., 𝑛! = 3 
+## • For Stratum 2: two clusters were selected, i.e., 𝑛" = 2 
+
+## a. What are stratum-specific zone size?
+
+
+We have sample frames from two strata:
+
+Stratum 1: Table in Question 1 (10 blocks with total MOS = 550)
+Stratum 2: Table in Question 2 (10 blocks with total MOS = 400)
+We need to determine the "zone size" for each stratum, knowing:
+
+For Stratum 1: Three clusters were selected (n₁ = 3)
+For Stratum 2: Two clusters were selected (n₂ = 2)
+What is Zone Size?
+In PPS/PPeS sampling, the "zone size" is the selection interval (k), which is calculated as: Zone Size (k) = Total MOS ÷ Number of selections
+
+Simple Calculation Steps
+For Stratum 1:
+Total MOS = 550 (sum of all MOS values in Question 1)
+Number of selections (n₁) = 3
+Zone Size = 550 ÷ 3 = 183.33
+For Stratum 2:
+Total MOS = 400 (sum of all MOS values in Question 2)
+Number of selections (n₂) = 2
+Zone Size = 400 ÷ 2 = 200
+Answer
+The stratum-specific zone sizes are:
+
+Stratum 1: 183.33
+Stratum 2: 200
