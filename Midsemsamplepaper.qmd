@@ -74,43 +74,14 @@ Determine the valid range for a random start: The valid range for a random start
 
 
 Select 3 clusters using a random start of 12: Our random start (RN) is 12. We will now select the clusters based on the cumulative MOS of the linked clusters:
-◦
-First selected cluster: The random start is 12. This falls within the cumulative MOS range of 1 to 50, which corresponds to Cluster 1.
-◦
-Second selected cluster: We add the selection interval (k) to the random start: $12 + 183.33 = 195.33$. This value falls within the cumulative MOS range of 166 to 235 (hypothetically extending the cumulative MOS of Cluster 3 by k), which corresponds to Cluster 3.
-◦
-Third selected cluster: We add the selection interval (k) again: $195.33 + 183.33 = 378.66$. This value falls within the cumulative MOS range of 266 to 365 (hypothetically extending the cumulative MOS of Cluster 4 by k), which corresponds to Cluster 4.
+◦First selected cluster: The random start is 12. This falls within the cumulative MOS range of 1 to 50, which corresponds to Cluster 1.
+◦Second selected cluster: We add the selection interval (k) to the random start: $12 + 183.33 = 195.33$. This value falls within the cumulative MOS range of 166 to 235 (hypothetically extending the cumulative MOS of Cluster 3 by k), which corresponds to Cluster 3.
+◦Third selected cluster: We add the selection interval (k) again: $195.33 + 183.33 = 378.66$. This value falls within the cumulative MOS range of 266 to 365 (hypothetically extending the cumulative MOS of Cluster 4 by k), which corresponds to Cluster 4.
 Therefore, the three clusters selected using a random start of 12 are Cluster 1, Cluster 3, and Cluster 4.
 
 
 ## c. Calculate the probability of selection for each of the three selected clusters.
 
-
-
-To calculate the probability of selection for each of the three selected clusters (Cluster 1, Cluster 3, and Cluster 4) in our Probability Proportionate to estimated Size (PPeS) systematic sampling, we use the formula for the inclusion probability in PPeS:
-$\pi_i = \frac{n \cdot MOS_i}{\sum MOS}$
-where:
-•$\pi_i$ is the probability of selection for cluster $i$.
-•$n$ is the number of clusters selected (in our case, $n = 3$).
-•$MOS_i$ is the Measure of Size for cluster $i$.
-•$\sum MOS$ is the total Measure of Size for all blocks (in our case, $\sum MOS = 550$).
-Now, let's calculate the probability of selection for each of the three selected clusters:
-•Cluster 1:
-◦MOS of Cluster 1 = 50
-◦Probability of selection for Cluster 1 = $\frac{3 \cdot 50}{550} = \frac{150}{550} = \frac{15}{55} = \frac{3}{11} \approx 0.2727$
-•Cluster 3:
-◦The original Block 4 formed Cluster 3, with an MOS of 70.
-◦MOS of Cluster 3 = 70
-◦Probability of selection for Cluster 3 = $\frac{3 \cdot 70}{550} = \frac{210}{550} = \frac{21}{55} \approx 0.3818$
-•Cluster 4:
-◦The original Block 5 formed Cluster 4, with an MOS of 100.
-◦MOS of Cluster 4 = 100
-◦Probability of selection for Cluster 4 = $\frac{3 \cdot 100}{550} = \frac{300}{550} = \frac{30}{55} = \frac{6}{11} \approx 0.5455$
-Therefore, the probabilities of selection for the three selected clusters are approximately:
-•Cluster 1: $\frac{3}{11}$ or approximately 0.2727
-•Cluster 3: $\frac{21}{55}$ or approximately 0.3818
-•Cluster 4: $\frac{6}{11}$ or approximately 0.5455
-As mentioned in the sources, in PPS sampling, larger clusters have higher probabilities of being selected because their MOS is larger. This is reflected in our calculated probabilities, where Cluster 4 (with the largest MOS of the three) has the highest probability of selection.
 
 The formula is straightforward:
 
@@ -131,3 +102,95 @@ Cluster 4:
 Size (MOS) = 100
 Calculation: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455 (or about 55%)
 This means Cluster 4 had about a 55% chance of being selected.
+
+
+## d. The desired overall sampling rate (f) is 48/550. Calculate the required subsampling rate for each of the selected clusters that will produce an epsem sample of housing units.
+
+The Basic Formula
+The overall chance of selecting any housing unit = (Chance of selecting its cluster) × (Chance of selecting that unit within its cluster)
+
+For EPSEM, we want this overall chance to be the same (48/550) for every housing unit.
+
+How We Do It
+We know the desired overall sampling rate: 48/550 (about 8.7%)
+
+We know each cluster's selection probability (π)
+We calculate each cluster's subsampling rate (r) using: r = (overall rate) ÷ (cluster probability)
+
+In Simple Terms for Each Cluster
+Cluster 1:
+Was selected with 27% probability (3/11)
+
+To achieve our target 8.7% overall rate:
+We need to sample 32% of housing units within this cluster
+Because: 27% × 32% ≈ 8.7%
+
+Cluster 3:
+Was selected with 38% probability (21/55)
+To achieve our target 8.7% overall rate:
+We need to sample about 23% of housing units within this cluster
+Because: 38% × 23% ≈ 8.7%
+
+Cluster 4:
+Was selected with 55% probability (6/11)
+To achieve our target 8.7% overall rate:
+We need to sample 16% of housing units within this cluster
+Because: 55% × 16% ≈ 8.7%
+
+
+
+
+
+2. Consider the following frame of blocks
+Block Cluster Number MOS Cumulative MOS
+1 50 50
+2 10 60
+3 63 123
+4 0 123
+5 22 145
+6 52 197
+7 0 197
+8 28 225
+9 100 325
+10 75 400
+
+
+## a. Select 2 blocks with probabilities proportionate to size, using a minimum size of 50. Use systematic selections with a random start of 75.0. If linking is necessary, identify the linked units in the appropriate column.
+
+Step 1: Link Small Blocks Together
+Some blocks are too small (less than 50 MOS), so we need to link them with neighbors until they reach our minimum size:
+
+Block 1 (MOS = 50): Already big enough → Cluster 1
+Blocks 2+3 (MOS = 10+63 = 73): Linked together → Cluster 2
+Blocks 4+5+6 (MOS = 0+22+52 = 74): Linked together → Cluster 3
+Blocks 7+8+9 (MOS = 0+28+100 = 128): Linked together → Cluster 4
+Block 10 (MOS = 75): Already big enough → Cluster 5
+
+## So here, you have to combine with the adjacent next wala accordingly 
+Now instead of 10 possibly undersized blocks, we have 5 clusters all meeting our minimum size requirement.
+
+Step 2: Set Up the Systematic Selection
+Total MOS = 400
+We need to select 2 clusters
+Selection interval = 400 ÷ 2 = 200
+Random start = 75 (given in the problem)
+Step 3: Make the Selections
+Think of the MOS as stretching along a number line from 1 to 400. Each cluster occupies a portion:
+
+Cluster 1: 1-50
+Cluster 2: 51-123
+Cluster 3: 124-197
+Cluster 4: 198-325
+Cluster 5: 326-400
+
+
+Now we place our selection points:
+
+First selection point = 75 → Falls in range 51-123 → Select Cluster 2 (Blocks 2 & 3)
+Second selection point = 75 + 200 = 275 → Falls in range 198-325 → Select Cluster 4 (Blocks 7, 8 & 9)
+Summary
+We selected:
+
+Cluster 2: Blocks 2 and 3 (MOS = 73)
+Cluster 4: Blocks 7, 8, and 9 (MOS = 128)
+The linking was necessary because of our minimum size requirement. By linking smaller blocks together, we ensured that each potential selection had a sufficient size, while still maintaining the probability proportionate to size principle.
