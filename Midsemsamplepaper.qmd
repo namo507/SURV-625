@@ -194,3 +194,31 @@ We selected:
 Cluster 2: Blocks 2 and 3 (MOS = 73)
 Cluster 4: Blocks 7, 8, and 9 (MOS = 128)
 The linking was necessary because of our minimum size requirement. By linking smaller blocks together, we ensured that each potential selection had a sufficient size, while still maintaining the probability proportionate to size principle.
+
+
+## b. Give the probability of selection for the primary selections (i.e., the clusters formed from the blocks) made in problem (i).
+
+The Simple Formula
+The formula for finding the probability of selecting a cluster is:
+
+Probability = (Number of clusters we're selecting × Size of the cluster) ÷ (Total size of all clusters)
+
+For Our Selected Clusters
+We selected 2 clusters out of 5 possible clusters, with a total MOS of 400.
+
+Cluster 2 (Blocks 2 & 3):
+Size (MOS) = 73
+Calculation: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365 (about 36.5%)
+This means Cluster 2 had about a 36.5% chance of being selected
+Cluster 4 (Blocks 7, 8 & 9):
+Size (MOS) = 128
+Calculation: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64 (64%)
+This means Cluster 4 had a 64% chance of being selected
+Why This Makes Sense
+Cluster 4 is almost twice as large as Cluster 2 (128 vs 73), so it had almost twice the chance of being selected (64% vs 36.5%). This shows how PPS sampling works - larger clusters have proportionally larger chances of being selected.
+
+These probabilities are important because they help us understand how representative our sample is and how to properly weight the results when analyzing the data.
+
+
+## c. The overall probability of selection is f = 0.05. Give the within-cluster selection rate for each cluster selected in Part 2a that will result in an epsem sample of housing units.
+
