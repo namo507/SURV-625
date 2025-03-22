@@ -187,7 +187,15 @@ cat("The sample size for width of 0.4 with t = 2 is:\t", n_CI, "\n")
 c(n_SE, n_CV, n_CI)
 ```
 
-Ok, for estimating the sample sizes for different conditions, I used the population variance, which is variance_partners here, rather than var_mean because it represents the population element variance, s\^2, which measures the variability of individual elements in the population. Whereas, using var_mean, which is the sampling variance of the mean adjusted for sample size, would lead to incorrect results since it already incorporates factors like the finite population correction.
+I estimated the required sample sizes for different precision requirements using the population element variance (s²) from my sample, which was approximately 0.274.
+
+For a standard error (SE) of 0.05, I need a sample size of 110 individuals. This calculation uses the direct relationship between variance and standard error: n = s²/SE².
+
+For a coefficient of variation (CV) of 0.10 (10%), I need a sample size of 43 individuals. The formula accounts for both the variance and the mean: n = s²/(CV × mean)².
+
+For a 95% confidence interval with width 0.40 (using t = 2 as an approximation), I need a sample size of 28 individuals. The correct formula for this calculation is n = ((4σ)/width)², where σ is the standard deviation (the square root of the variance).
+
+Note that all these calculations assume the population is large compared to the sample size, so the finite population correction (FPC) can be ignored. In sample size calculations, we always use the population element variance (s²), not the sampling variance of the mean.
 
 ## 5i) Estimate the mean number of male sexual partners in the past year (and its standard error) for the subclass of teenagers (age 15-19) in the sample. Ignore the finite population correction in the calculation of the standard error. How does this standard error compare to the standard error for the full sample? Would you expect such a difference? If so, why?
 
