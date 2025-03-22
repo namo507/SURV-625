@@ -26,8 +26,9 @@ $$\begin{aligned}
 &= \frac{47,233,000}{570}
 \end{aligned}
 \bar{Y} = 82864.91
-$$ The R code for this:
+$$ 
 
+The R code for this:
 ```{r}
 # Defining the data
 strata <- c(1, 2, 3, 4, 5)
@@ -110,7 +111,7 @@ n_prop <- n * (Nh / N)
 print(round(n_prop, 0))
 ```
 
-Hence, the proportionate allocation for n = 100 is: Humanities: 4 Social Sciences: 16 Natural Sciences: 21 Engineering: 25 Business: 35
+Hence, the proportionate allocation for n = 100 is: Humanities: 3 Social Sciences: 16 Natural Sciences: 21 Engineering: 25 Business: 35
 
 ## d) For a sample of n = 100, what is the Neyman allocation?
 
