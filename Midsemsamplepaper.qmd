@@ -550,3 +550,86 @@ If we need 106,200 total housing units and will sample 6 units per block group:
 
 Number of block groups = Total units needed ÷ Units per block group Number of block groups = 106,200 ÷ 6 = 17,700 block groups
 
+
+
+## e. Assume that you have the budget to purchase a commercial list of addresses within each selected block group. List two potential problems with the overall sampling frame that you can construct based on the list of block groups and the purchased commercial data. What could you do to solve these problems?
+
+
+Problem 1: Missing Addresses (Undercoverage)
+The Problem: Commercial address lists often don't include all housing units. They might miss:
+
+New buildings or recently constructed homes
+Certain apartment buildings
+Housing in lower-income areas
+Temporary or non-traditional housing
+This means some people have zero chance of being selected for your survey, which can bias your results about health insurance coverage.
+
+Solutions:
+
+Use multiple sources: Combine the commercial list with other lists (like utility records, tax assessor data, or postal service data)
+On-site listing: Have field staff create a complete list of all housing units in selected block groups
+Adjust your weights: Give more statistical weight to respondents from groups that are likely underrepresented due to missing addresses
+
+
+
+Problem 2: Duplicate Addresses
+The Problem: Some housing units might appear multiple times in commercial lists because:
+
+The same address is formatted differently (123 Main St vs. 123 Main Street)
+Both a physical address and PO Box are listed for the same household
+Errors in the database creation or maintenance
+Unit numbers might be inconsistently recorded
+Duplicates give some households a higher chance of selection, potentially biasing your results.
+
+Solutions:
+
+De-duplication software: Use specialized software to identify and remove likely duplicates before sampling
+Field verification: Have staff check selected addresses to identify duplicates during data collection
+Statistical correction: Adjust the sampling weights for any units that were found to be duplicated in the frame
+
+
+## f. The vendor of the commercial data advertises the ability to purchase additional auxiliary variables for the addresses in each selected block group, and you have the budget to do this. What auxiliary information should you request? For what might you use this auxiliary information?
+
+1. Demographic Information
+Ages of household members (especially whether 18-29 year olds live there)
+Household income level
+Education levels
+Race/ethnicity of household members
+Household size/composition
+
+2. Health-Related Information
+Insurance status indicators (if available)
+Presence of health conditions (if available)
+Previous healthcare utilization
+
+3. Housing Characteristics
+Home ownership status (owner vs. renter)
+Housing type (apartment, house, etc.)
+Housing value or rent amount
+Length of residence at address
+
+4. Geographic Information
+Neighborhood characteristics
+Proximity to healthcare facilities
+Urban/suburban/rural classification
+
+How to Use This Information
+1. For Better Sampling Design
+Stratification: Create more efficient samples by dividing addresses into groups with similar characteristics before sampling
+Targeted sampling: Focus more on demographics likely to include your key population (18-29 year olds)
+Sample size adjustment: Allocate larger samples to areas with more variability in health insurance coverage
+
+2. For Non-Response Adjustments
+Create detailed non-response weight adjustments when certain groups are less likely to participate
+Form adjustment cells based on combinations of auxiliary variables
+Compare respondents to non-respondents to assess potential bias
+
+3. For Post-Survey Weighting
+Adjust final sample weights to match known population totals
+Implement poststratification or calibration procedures
+Reduce biases from unequal response rates across demographic groups
+
+4. For Validation and Analysis
+Compare your sample to known population characteristics to verify representativeness
+Use as control variables in regression models to improve precision of estimates
+Create meaningful subgroup analyses for targeted policy recommendations
