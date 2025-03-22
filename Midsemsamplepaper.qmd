@@ -431,3 +431,35 @@ Variance estimation in two-stage cluster sampling accounts for both between-clus
 TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
 
 
+## 5.The Michigan Department of Health has hired you to evaluate design alternatives for a new sample of housing units in the state of Michigan. The objective of the larger study is to estimate the proportion of adults between the ages of 18 and 29 with private health insurance. A two-stage cluster sample is under consideration, featuring the selection of housing units within Census block groups.
+
+
+## a. Compute the size of a simple random sample of housing units (assuming one respondent per housing unit) needed to obtain a 99% confidence interval with half-width 0.025 for an expected proportion of 0.5. Assume that the degrees of freedom will be larger than 30 for this calculation, and ignore the FPC.Step 1: Find the Z-value for 99% Confidence
+
+Step 1: Find the Z-value for 99% Confidence
+For 99% confidence, we need z = 2.576 (from statistical tables)
+
+Step 2: Set Up Our Formula
+The standard formula for sample size when estimating a proportion is:
+
+n = (z²) × p(1-p) ÷ (margin of error)²
+
+Where:
+
+n is the sample size we need
+z is our confidence level value (2.576)
+p is our expected proportion (0.5)
+margin of error is our precision (0.025)
+
+n = (2.576)² × 0.5(1-0.5) ÷ (0.025)² n = 6.636 × 0.25 ÷ 0.000625 n = 1.659 ÷ 0.000625 n = 2,654.4
+
+Since we can't sample a fraction of a housing unit, we round up to 2,655 housing units.
+
+What This Means
+By sampling 2,655 housing units, the Michigan Department of Health can be 99% confident that their estimate of the proportion of young adults with private health insurance will be within ±2.5 percentage points of the true value.
+
+This is a relatively large sample because:
+
+We want high confidence (99% rather than 95%)
+We want good precision (±2.5 percentage points)
+We're assuming maximum variance (50% proportion)
