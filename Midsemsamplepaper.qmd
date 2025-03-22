@@ -429,3 +429,5 @@ Variance estimation in two-stage cluster sampling accounts for both between-clus
 
 ## l. (TRUE / FALSE) A proportionate allocation design is epsem (ignoring rounding error).
 TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
+
+
