@@ -487,3 +487,33 @@ A value of 0.594 is quite high - it means people in the same neighborhood tend t
 Values close to 0 would mean people in the same neighborhood are very different from each other
 Values close to 1 mean people in the same neighborhood are nearly identical
 
+
+
+## c. Assuming that this design effect will also apply to the new cluster sample design under consideration, how many housing units would you need to select overall in the new cluster sample to meet the same precision objectives from part 5a?
+
+The Basic Formula
+When using cluster sampling instead of simple random sampling, we need to adjust our sample size by multiplying by the design effect:
+
+Cluster sample size = SRS sample size × Design effect
+
+Simple Step-by-Step Calculation
+Start with what we know:
+
+We need 2,655 housing units for a simple random sample (from part a)
+Our cluster sample has a design effect of 40 (from part b)
+Multiply to get the needed cluster sample size:
+
+Cluster sample size = 2,655 × 40 = 106,200 housing units
+
+
+The design effect of 40 means that our cluster sample is about 40 times less efficient than a simple random sample. This happens because:
+
+People within the same neighborhood (block group) tend to be similar (high roh of 0.594)
+
+This similarity means that each additional person in the same neighborhood gives us less new information
+To compensate for this loss of efficiency, we need to sample many more housing units
+In practical terms, this result (needing 106,200 housing units) might indicate that:
+
+The current cluster design is extremely inefficient and should be reconsidered
+We might want to use more clusters with fewer housing units per cluster
+We might need to consider alternative sampling approaches or stratification methods
