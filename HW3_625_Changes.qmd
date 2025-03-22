@@ -74,8 +74,8 @@ se_y <- sqrt(var_y/a) * fpc
 
 # Calculating 95% CI using t-distribution with a-1 df
 t_value <- qt(0.975, df = a-1)
-ci_lower <- b*y_bar - t_value * se_y
-ci_upper <- b*y_bar + t_value * se_y
+ci_lower <- y_bar - t_value * se_y
+ci_upper <- y_bar + t_value * se_y
 
 
 cat("Mean:", y_bar, "\n")
