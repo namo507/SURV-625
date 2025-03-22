@@ -463,3 +463,27 @@ This is a relatively large sample because:
 We want high confidence (99% rather than 95%)
 We want good precision (±2.5 percentage points)
 We're assuming maximum variance (50% proportion)
+
+
+## b. Assuming the ultimate cluster model for a previous sample of 1,000 housing units selected from a sample of 15 block groups, the estimated between-cluster variance in proportions was 0.01. For a proportion estimated to be 0.5, what was the design effect associated with this previous design? What is the estimated value of roh for this indicator of having private health insurance?
+
+You correctly calculated the SRS variance: $Var(\hat{P}_{SRS}) = \frac{0.5 \times 0.5}{1000} = 0.00025$
+
+You correctly used the between-cluster variance (0.01) to calculate the design effect: $DEFF = \frac{0.01}{0.00025} = 40$
+
+You correctly calculated the average cluster size: $\bar{m} = \frac{1000}{15} \approx 66.67$
+
+You correctly solved for roh using the formula: $DEFF = 1 + (\bar{m} - 1) \times roh$ Solving: $40 = 1 + (66.67 - 1) \times roh$ Therefore: $roh = \frac{39}{65.67} \approx 0.594$
+
+Design Effect = 40
+
+This means their cluster sample was about 40 times less efficient than a simple random sample of the same size
+Put another way, they would need 40 times as many observations in their cluster sample to get the same precision as a simple random sample
+
+
+Rate of Homogeneity (roh) = 0.594
+This is a measure of how similar people are within the same neighborhood (block group)
+A value of 0.594 is quite high - it means people in the same neighborhood tend to have very similar health insurance status
+Values close to 0 would mean people in the same neighborhood are very different from each other
+Values close to 1 mean people in the same neighborhood are nearly identical
+
