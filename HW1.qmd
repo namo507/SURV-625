@@ -80,7 +80,7 @@ I looked up the number of male sexual partners in the past year (PARTS1YR) for e
 variance_partners <- var(merged_data$PARTS1YR, na.rm = TRUE)
 variance_partners
 ```
-I calculated the population element variance for the number of male sexual partners in the past year (PARTS1YR) reported by my sample. The variance is approximately 0.274. This measure of variability indicates how much the number of partners varies among the individuals in my sample.
+Now the calculation is based on the sample, so it is the sample element variance, which is used to estimate the population element variance for the number of male sexual partners in the past year (PARTS1YR) reported by my sample. The variance is approximately 0.274. This measure of variability indicates how much the number of partners varies among the individuals in my sample.
 
 ## 5c) Estimate the sampling variance of the mean and the standard error
 
