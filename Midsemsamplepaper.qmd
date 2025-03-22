@@ -425,5 +425,7 @@ The subsample size within clusters directly affects the design effect through it
 ## k. (TRUE / FALSE) In theory, the estimate of sampling variance in two-stage cluster sampling includes the between-cluster and within-cluster sampling.
 TRUE. Source explicitly states that the estimation of sampling variance in two-stage cluster sampling (with equal sizes) involves both the between-cluster variance and the average within-cluster sampling variance. Similarly, source for unequal-sized clusters shows variance formulas that account for variability at both stages.
 
+Variance estimation in two-stage cluster sampling accounts for both between-cluster variability (first stage) and within-cluster variability (second stage)
+
 ## l. (TRUE / FALSE) A proportionate allocation design is epsem (ignoring rounding error).
 TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
