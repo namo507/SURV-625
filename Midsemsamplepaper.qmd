@@ -418,6 +418,10 @@ Ultimate cluster sampling approximates this scenario because it assumes with-rep
 
 TRUE. While the rate of homogeneity ($\rho$) is a characteristic of the population and the defined clusters, the design effect ($DEFF = 1 + (m-1) \rho$) is directly influenced by the subsample size $m$. Since the effective sample size is calculated considering the design effect (e.g., $n_{eff} \approx \frac{n \times m}{DEFF}$), varying $m$ will indeed impact the design effect and, consequently, the effective sample size.
 
+The subsample size within clusters directly affects the design effect through its relationship with the intraclass correlation coefficient (ICC). Varying subsample sizes across clusters can change how the ICC impacts the effective sample size.
+
+
+
 ## k. (TRUE / FALSE) In theory, the estimate of sampling variance in two-stage cluster sampling includes the between-cluster and within-cluster sampling.
 TRUE. Source explicitly states that the estimation of sampling variance in two-stage cluster sampling (with equal sizes) involves both the between-cluster variance and the average within-cluster sampling variance. Similarly, source for unequal-sized clusters shows variance formulas that account for variability at both stages.
 
