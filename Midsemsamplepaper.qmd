@@ -410,6 +410,10 @@ TRUE. If clusters of unequal sizes are selected with equal probability, and all 
 ## i. (TRUE / FALSE) The sampling variance under “ultimate cluster” sampling mimics the sampling variance under with replacement selection of primary stage clusters and without replacement subsampling of elements within the clusters.
 
 TRUE. Source describes that the ultimate cluster idea leads to an approximation of the sampling variance and notes that it is similar to a two-stage selection where the first stage (selection of clusters) is with replacement. While the term "mimics" is used, the core concept of ultimate clusters simplifies variance estimation by focusing on the variability between these ultimate clusters, which aligns with the variance estimation under with-replacement PSU selection.
+
+Ultimate cluster sampling approximates this scenario because it assumes with-replacement selection at higher stages and without-replacement subsampling at lower stages.
+
+
 ## j. (TRUE / FALSE) Varying the subsample size m in two-stage cluster sampling by design will impact the rate of homogeneity, design effects and thus effective sample sizes.
 
 TRUE. While the rate of homogeneity ($\rho$) is a characteristic of the population and the defined clusters, the design effect ($DEFF = 1 + (m-1) \rho$) is directly influenced by the subsample size $m$. Since the effective sample size is calculated considering the design effect (e.g., $n_{eff} \approx \frac{n \times m}{DEFF}$), varying $m$ will indeed impact the design effect and, consequently, the effective sample size.
