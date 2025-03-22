@@ -404,6 +404,9 @@ With an odd number of selections, one unit would be left unpaired, making the st
 ## h. (TRUE / FALSE) If one selects all possible elements within a cluster that has been selected using simple random sampling (i.e., clusters were selected with equal probability), but the clusters are of unequal sizes, selection probabilities will vary for different population elements.
 
 TRUE. If clusters of unequal sizes are selected with equal probability, and all elements within the selected clusters are included in the sample, then an element in a smaller cluster has a higher probability of being selected than an element in a larger cluster. This is because each cluster has the same probability of selection, but the number of elements contributed to the sample differs.
+
+
+
 ## i. (TRUE / FALSE) The sampling variance under “ultimate cluster” sampling mimics the sampling variance under with replacement selection of primary stage clusters and without replacement subsampling of elements within the clusters.
 
 TRUE. Source describes that the ultimate cluster idea leads to an approximation of the sampling variance and notes that it is similar to a two-stage selection where the first stage (selection of clusters) is with replacement. While the term "mimics" is used, the core concept of ultimate clusters simplifies variance estimation by focusing on the variability between these ultimate clusters, which aligns with the variance estimation under with-replacement PSU selection.
