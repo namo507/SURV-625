@@ -334,7 +334,9 @@ cost_var <- sum(Wh^2 * (1 - n_cost/Nh) * Sh2/n_cost)
 
 # Calculating design effect
 S2 <- 2905852006  # total element variance from part f
-deff_cost <- cost_var/S2
+# Calculating SRS variance
+srs_var <- ((1-f)/n) * S2
+deff_cost <- cost_var/srs_var
 
 cat("Cost Allocation Variance:", cost_var, "\n")
 cat("Design Effect:", deff_cost, "\n")
