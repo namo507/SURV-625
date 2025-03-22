@@ -33,7 +33,7 @@ mean_age <- mean(SRS_list$AGER)
 mean_age
 ```
 
-So to make inference, we also need the variance (specifically the standard error) of the sample mean.
+So to make inference, we also need the variance (specifically the standard error) of the sample mean and the critical value based on the sample size to obtain the confidence interval
 
 ```{r}
 var_age <- var(SRS_list$AGER, na.rm = TRUE)
