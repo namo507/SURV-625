@@ -114,7 +114,7 @@ upper_bound <- mean_partners + t_value * std_error
 c(lower_bound, upper_bound)
 ```
 
-I computed a 95% confidence interval for the sample mean number of male sexual partners in the past year. With 19 degrees of freedom, the interval ranges from approximately 0.556 to 1.044. This means we can be 95% confident that the true population mean lies within this range. This interval provides a measure of the uncertainty around our sample mean estimate.
+The correct interpretation of this confidence interval is based on repeated sampling properties: If we were to take many different random samples of size 20 from this population using the same sampling design, and calculate a 95% confidence interval for each sample, then about 95% of those intervals would contain the true population mean. Meaning it's a statement about the procedure we used to construct the interval and how reliable that procedure is over many hypothetical samples.
 
 ## 5e) Explain why the mean computed in a) will generally not be equal to the population mean.
 
