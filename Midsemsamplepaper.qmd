@@ -517,3 +517,36 @@ In practical terms, this result (needing 106,200 housing units) might indicate t
 The current cluster design is extremely inefficient and should be reconsidered
 We might want to use more clusters with fewer housing units per cluster
 We might need to consider alternative sampling approaches or stratification methods
+
+
+## d. The Department of Health suggests that it will cost $5000 per sampled block group and $100 per housing unit for data collection. What would the optimum subsample size per block group be? Given this information and the result in part c), how many block groups would you need to sample to produce an overall sample size that meets the stated precision objectives.
+
+
+We need to figure out:
+
+The optimal number of housing units to sample per block group
+How many block groups we need to sample in total
+We know:
+
+It costs $5,000 to sample each block group
+It costs $100 per housing unit
+The rate of homogeneity (roh) is 0.594
+We need 106,200 total housing units to meet our precision goals
+
+
+The optimal subsample size minimizes total cost while maintaining precision. The formula is:
+
+Optimal subsample size = √[(Cost per cluster ÷ Cost per unit) × (1-roh) ÷ roh]
+
+Plugging in our values:
+
+Cost per cluster (block group) = $5,000
+Cost per unit (housing unit) = $100
+roh = 0.594
+Calculation: m_opt = √[(5,000 ÷ 100) × (1-0.594) ÷ 0.594] m_opt = √[50 × 0.406 ÷ 0.594] m_opt = √[50 × 0.683] m_opt = √34.18 m_opt ≈ 5.85 ≈ 6 housing units per block group
+
+Step 2: Calculate Number of Block Groups Needed
+If we need 106,200 total housing units and will sample 6 units per block group:
+
+Number of block groups = Total units needed ÷ Units per block group Number of block groups = 106,200 ÷ 6 = 17,700 block groups
+
