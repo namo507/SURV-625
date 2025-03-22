@@ -130,25 +130,31 @@ For cluster sampling, the design effect is:
 
 $$deff = \frac{var_{cluster}(\bar{y})}{var_{srs}(\bar{y})}$$
 
-where: - $var_{cluster}(\bar{y})$ is the variance under cluster sampling - $var_{srs}(\bar{y}) = \frac{p(1-p)}{n}$ is the variance under SRS - $p$ is the proportion (mean) - $n$ is total sample size
+where:
 
+$var_{cluster}(\bar{y})$ is the variance under cluster sampling
+$var_{srs}(\bar{y})$ is the variance under SRS with the same sample size
+$p$ is the proportion (mean)
+$n$ is total sample size
 And the intraclass correlation (roh) is:
 
 $$roh = \frac{deff - 1}{b - 1}$$
 
-where: - $b$ is the cluster size - $deff$ is the design effect
+where:
 
+$b$ is the cluster size
+$deff$ is the design effect
 Now calculating:
 
 Proportion: $$p = \frac{87}{200} = 0.435$$
 
 Cluster sampling variance: $$var_{cluster}(\bar{y}) = \frac{0.0326}{20} = 0.00163$$
 
-SRS variance: $$var_{srs}(\bar{y}) = \frac{0.435(1-0.435)}{200} = 0.00114$$
+SRS variance (with FPC): $$var_{srs}(\bar{y}) = \left(1-\frac{200}{2920}\right)\frac{0.435(1-0.435)}{200-1} = 0.93151 \times \frac{0.245925}{199} = 0.00115$$
 
-Design Effect: $$deff = \frac{0.00163}{0.00114} = 1.425$$
+Design Effect: $$deff = \frac{0.00163}{0.00115} = 1.417$$
 
-Intraclass Correlation: $$roh = \frac{1.425 - 1}{10 - 1} = 0.0472$$
+Intraclass Correlation: $$roh = \frac{1.417 - 1}{10 - 1} = 0.0463$$
 
 ```{r}
 # Data
@@ -156,13 +162,16 @@ y_alpha <- c(4, 4, 3, 6, 4, 6, 3, 4, 4, 1, 1, 8, 3, 3, 5, 6, 4, 5, 8, 5)
 a <- 20      # number of clusters
 b <- 10      # cluster size
 n <- a * b   # total sample size
+N <- 2920    # population size
 
 # Calculating proportion (p)
-p <- sum(y_alpha)/(n)  # divide by ab*b since y_alpha are totals
+p <- sum(y_alpha)/n
 
 # Calculating variances
 var_cluster <- var(y_alpha/b)/a  # cluster sampling variance
-var_srs <- (p*(1-p))/n          # SRS variance
+
+# Correct SRS variance calculation with finite population correction
+var_srs <- (1 - n/N) * (p*(1-p))/(n-1)
 
 # Calculate deff and roh
 deff <- var_cluster/var_srs
@@ -172,7 +181,15 @@ cat("Design Effect (deff):", deff, "\n")
 cat("Intraclass Correlation (roh):", roh, "\n")
 ```
 
-Inferring this in layman terms, the design effect of 1.425 means that because of clustering, the variance is 42.5% higher than if one had sampled individuals completely at random. In other words, the effective sample size is reduced, and observations within the same cluster are somewhat similar; however, the intraclass correlation of about 4.7% indicates that this similarity is relatively low.
+he design effect of 1.42 means that our cluster sampling design is about 42% less efficient than if we had used simple random sampling of the same number of women. We can think of this in a few practical ways:
+
+Effective Sample Size: Although we sampled 200 women, the clustering makes our data behave as if we only had about 141 women (200 ÷ 1.42) in a simple random sample.
+
+Precision Loss: The standard errors from our cluster sample are about 19% larger (√1.42 ≈ 1.19) than what we would get from a simple random sample of the same size.
+
+Similarity Within Clusters: The rate of homogeneity (roh) of 0.046 indicates that women within the same cluster have a slight tendency to be similar regarding pregnancy status. This makes sense since women living in the same area might share similar social, economic, or cultural factors that influence pregnancy.
+
+The relatively low roh value (0.046) suggests that while there is some clustering effect, it's not extremely strong. If women within clusters were completely independent (like they would be in SRS), the roh would be 0. If they were all identical, the roh would be 1.
 
 ## d) Now, using the computed value of roh from part (c), estimate the standard error that you would expect from a sample of a = 40 clusters of b = 5 women each.
 
