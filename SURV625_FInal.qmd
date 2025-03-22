@@ -179,7 +179,7 @@ n_CV <- ceiling(n_CV)
 cat("The required sample size for CV(y) to be 0.10 is:\t", n_CV, "\n")
 
 # For CI width = 0.40 (using t =  2)
-n_CI <- (4*s2 / 0.40^2)
+n_CI <- ((4*sqrt(s2)) / 0.4)^2
 n_CI <- ceiling(n_CI)
 cat("The sample size for width of 0.4 with t = 2 is:\t", n_CI, "\n")
 
