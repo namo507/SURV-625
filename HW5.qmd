@@ -17,81 +17,98 @@ Where:
 $n_h$ is the number of sample blocks allocated to stratum $h$
 $a = 100$ is the total number of sample blocks to be selected
 $N_h$ is the number of occupied housing units in stratum $h$
-$N = 300,000$ is the total number of occupied housing units
+$N$ is the total number of occupied housing units
+For each stratum:
 
-Calculating for each stratum:
+$$n_1 = 100 \times \frac{8,521}{131,788} = 100 \times 0.0647 = 6.47$$
 
-$$n_1 = 100 \times \frac{25,000}{300,000} = 100 \times 0.0833 = 8.33$$
+$$n_2 = 100 \times \frac{28,744}{131,788} = 100 \times 0.2181 = 21.81$$
 
-$$n_2 = 100 \times \frac{175,000}{300,000} = 100 \times 0.5833 = 58.33$$
+$$n_3 = 100 \times \frac{17,224}{131,788} = 100 \times 0.1307 = 13.07$$
 
-$$n_3 = 100 \times \frac{20,000}{300,000} = 100 \times 0.0667 = 6.67$$
+$$n_4 = 100 \times \frac{77,299}{131,788} = 100 \times 0.5866 = 58.66$$
 
-$$n_4 = 100 \times \frac{80,000}{300,000} = 100 \times 0.2667 = 26.67$$
+Rounding to whole numbers:
 
-When I round to whole numbers:
+Allegan_River: 6.47 -> 6
+Allegan_NonRiver: 21.81 -> 22
+Kalamazoo_River: 13.07 -> 13
+Kalamazoo_NonRiver: 58.66 -> 59
+The sum is 6 + 22 + 13 + 59 = 100, which equals our target.
 
-Stratum 1: 8.33 -> 8
-Stratum 2: 58.33 -> 58
-Stratum 3: 6.67 -> 7
-Stratum 4: 26.67 -> 27
-Checking the sum: 8 + 58 + 7 + 27 = 100, which equals our target.
 
-In this case, standard rounding worked perfectly to give us exactly 100 blocks. If the sum after rounding had not equaled 100, I would have adjusted the allocations by:
-
-* Identifying the strata with the largest (or smallest) fractional parts
-
-* Adding (or subtracting) blocks to/from these strata until the total reached 100
+So the R code for this is:
 
 ```{r}
-# Defining data for strata
+# Creating data frame for the four strata
 strata_data <- data.frame(
-    stratum = c("County1_River", "County1_NonRiver", "County2_River", "County2_NonRiver"),
-    occupied_units = c(5000, 3000, 4000, 2000)
+  stratum = c("Allegan_River", "Allegan_NonRiver", "Kalamazoo_River", "Kalamazoo_NonRiver"),
+  occupied_units = c(8521, 37265-8521, 17224, 94523-17224),
+  blocks = c(940, 3593-940, 1318, 4494-1318)
 )
 
+# Calculating total number of occupied housing units
+strata_data$nonriver_units <- c(37265-8521, 0, 94523-17224, 0)
+strata_data$occupied_units <- c(8521, 37265-8521, 17224, 94523-17224)
+
+strata_data <- data.frame(
+  stratum = c("Allegan_River", "Allegan_NonRiver", "Kalamazoo_River", "Kalamazoo_NonRiver"),
+  occupied_units = c(8521, 37265-8521, 17224, 94523-17224),
+  blocks = c(940, 3593-940, 1318, 4494-1318)
+)
+
+print(strata_data)
+```
+
+Now let me allocate the 100 sample blocks proportionate to occupied housing units:
+
+```{r}
 # Total number of sample blocks
 total_sample_blocks <- 100
 
 # Calculating total occupied housing units
 total_occupied <- sum(strata_data$occupied_units)
 
-# Calculating initial allocation
-strata_data$initial_allocation <- (strata_data$occupied_units / total_occupied) * total_sample_blocks
-
-# Rounding allocations to nearest integer
+# Calculating proportionate allocation
+strata_data$proportion <- strata_data$occupied_units / total_occupied
+strata_data$initial_allocation <- strata_data$proportion * total_sample_blocks
+strata_data$fractional_part <- strata_data$initial_allocation - floor(strata_data$initial_allocation)
 strata_data$rounded_allocation <- round(strata_data$initial_allocation)
 
-# Checking if sum matches total sample blocks
+# Checking if sum equals target
 sum_allocations <- sum(strata_data$rounded_allocation)
 
 if (sum_allocations != total_sample_blocks) {
-    cat("Adjustments needed: Sum =", sum_allocations, "\n")
-    # Adjusting based on fractional parts
-    fractional_parts <- strata_data$initial_allocation - floor(strata_data$initial_allocation)
-    difference <- total_sample_blocks - sum_allocations
-    
-    if (difference > 0) {
-        order_fractional <- order(fractional_parts, decreasing = TRUE)
-        for (i in seq_len(difference)) {
-            strata_data$rounded_allocation[order_fractional[i]] <- strata_data$rounded_allocation[order_fractional[i]] + 1
-        }
-    } else if (difference < 0) {
-        order_fractional <- order(fractional_parts, decreasing = FALSE)
-        for (i in seq_len(abs(difference))) {
-            strata_data$rounded_allocation[order_fractional[i]] <- strata_data$rounded_allocation[order_fractional[i]] - 1
-        }
+  cat("Adjustments needed: Sum =", sum_allocations, "Target =", total_sample_blocks, "\n")
+  
+  # Adjusting based on fractional parts
+  difference <- total_sample_blocks - sum_allocations
+  
+  if (difference > 0) {
+    # Adding blocks to strata with largest fractional parts not rounded up
+    order_candidates <- order(strata_data$fractional_part, decreasing = TRUE)
+    for (i in seq_len(difference)) {
+      strata_data$rounded_allocation[order_candidates[i]] <- 
+        strata_data$rounded_allocation[order_candidates[i]] + 1
     }
+  } else if (difference < 0) {
+    # Removing blocks from strata with smallest fractional parts that were rounded up
+    order_candidates <- order(strata_data$fractional_part)
+    for (i in seq_len(abs(difference))) {
+      strata_data$rounded_allocation[order_candidates[i]] <- 
+        strata_data$rounded_allocation[order_candidates[i]] - 1
+    }
+  }
 }
 ```
+
 ```{r}
-print(strata_data)
+print(strata_data[, c("stratum", "occupied_units", "proportion", 
+                      "initial_allocation", "rounded_allocation")])
 ```
 
-Looking at my results of the proportionate allocation, I found that County1_River should receive 36 sample blocks, representing its 5,000 occupied housing units (about 36% of the total).
+Now based on my calculations, I allocated the 100 sample blocks proportionately across the four strata using the number of occupied housing units in each stratum. 
 
-County1_NonRiver gets 21 blocks for its 3,000 housing units (21% of total), while County2_River receives 29 blocks for its 4,000 housing units (29% of total). 
+Allegan River, with 8,521 occupied units, was allocated 6 blocks, while Allegan Non-River, which has 28,744 occupied units, received 22 blocks. Kalamazoo River, with 17,224 occupied units, was assigned 13 blocks, and Kalamazoo Non-River, the largest stratum with 77,299 occupied units, was allocated 59 blocks. 
 
-Finally, County2_NonRiver is allocated 14 blocks based on its 2,000 housing units (14% of total). I rounded the initial allocations to the nearest integer, which worked out perfectly as the sum equals exactly 100 blocks. 
-
-So this allocation ensures that each stratum is represented proportionally to its share of occupied housing units, which maintains the representativeness of my sample while allowing for stratified analysis. If the rounded values hadn't summed to 100, my code was prepared to make adjustments based on the fractional parts of the initial allocations.
+These allocations were rounded from their initial fractional values to ensure the total number of blocks summed exactly to 100.
