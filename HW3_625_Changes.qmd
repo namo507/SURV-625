@@ -191,6 +191,8 @@ Similarity Within Clusters: The rate of homogeneity (roh) of 0.046 indicates tha
 
 The relatively low roh value (0.046) suggests that while there is some clustering effect, it's not extremely strong. If women within clusters were completely independent (like they would be in SRS), the roh would be 0. If they were all identical, the roh would be 1.
 
+SRS with same sample size case it is overall.
+
 ## d) Now, using the computed value of roh from part (c), estimate the standard error that you would expect from a sample of a = 40 clusters of b = 5 women each.
 
 For a new design with different cluster size and number, we can use roh to calculate the design effect:
@@ -266,40 +268,46 @@ For ratio estimation, I will use:
 
 $$\hat{R} = \frac{\sum_{i=1}^n y_i}{\sum_{i=1}^n x_i}$$
 
-where: - $y_i$ is the volume of tree i - $x_i$ is the diameter of tree i
+where:
 
+$y_i$ is the volume of tree i
+$x_i$ is the diameter of tree i
 Then the estimated total is:
 
 $$\hat{Y} = \hat{R} \times X$$
 
-The variance of the ratio estimate is:
+The variance of the ratio estimator can be calculated as:
 
-$$V(\hat{Y}) = N^2(1-\frac{n}{N})\frac{1}{n(n-1)}\sum_{i=1}^n(y_i-\hat{R}x_i)^2$$
+$$V(\hat{R}) = (1-\frac{n}{N})\frac{s_e^2}{n(\bar{x})^2}$$
 
-The calculation is as follows:
+where:
 
-Ratio estimate: $$\hat{R} = \frac{\sum y_i}{\sum x_i} = \frac{635.1}{279.3} = 2.275$$
+$s_e^2 = \frac{\sum(y_i-\hat{R}x_i)^2}{n-1}$
+$\bar{x}$ is the sample mean of diameter
+Then the variance of the estimated total is:
 
-Estimated total volume: $$\hat{Y} = 2.275 \times 41,835 = 95,272.16\text{ cubic feet}$$
-
-Standard error: $$SE(\hat{Y}) = \sqrt{2967^2(1-\frac{31}{2967})\frac{1}{31(30)}\sum(y_i-2.275x_i)^2} = 5,140.93$$
-
-95% Confidence Interval: $$95,272.16 \pm 2.042 \times 5,140.93 = (84,773, 105,771)$$
+$$V(\hat{Y}) = X^2 \times V(\hat{R})$$
 
 ```{r}
 # Setting up the data first
 cherry <- read.csv("/Users/namomac/Downloads/cherry.csv")
 n <- nrow(cherry)      # sample size
-N <- 2967             # population size
-X <- 41835           # population total of diameters
+N <- 2967              # population size
+X <- 41835             # population total of diameters
 
 # Calculating ratio estimate
 R_hat <- sum(cherry$volume)/sum(cherry$diameter)
 Y_hat <- R_hat * X
 
-# Calculating standard error
-deviations <- cherry$volume - R_hat * cherry$diameter
-var_Y <- N^2 * (1-n/N) * sum(deviations^2)/(n*(n-1))
+# Calculating standard error using the corrected formula
+# Calculate squared errors
+s2_e <- sum((cherry$volume - R_hat * cherry$diameter)^2)/(n-1)
+
+# Calculate variance of the ratio estimator
+var_R <- (1 - n/N) * s2_e/n/(mean(cherry$diameter)^2)
+
+# Calculate variance of the total estimator
+var_Y <- var_R * X^2
 se_Y <- sqrt(var_Y)
 
 # Calculating 95% CI
@@ -312,9 +320,13 @@ cat("Standard Error:", se_Y, "\n")
 cat("95% CI:", c(ci_lower, ci_upper), "\n")
 ```
 
-Looking at the analysis of the black cherry trees data, I estimated that the total volume of all 2,967 trees in the forest is approximately 95,272 cubic feet.
+Based on my analysis of the black cherry trees data using ratio estimation, I estimated the total volume of all 2,967 trees in the forest to be approximately 95,272 cubic feet.
 
-To account for sampling uncertainty, I calculated a standard error of about 5,141 cubic feet. This led me to construct a 95% confidence interval ranging from about 84,773 to 105,771 cubic feet. This means I can be 95% confident that the true total volume of all trees in the forest falls within this range. The relatively wide confidence interval (spanning about 21,000 cubic feet) reflects the natural variability in tree volumes, even among trees with similar diameters.
+To quantify the precision of this estimate, I calculated the standard error using the correct formula for the variance of a ratio estimator. The standard error is approximately 5,823 cubic feet, which reflects the sampling variability in our estimate.
+
+Using this standard error, I constructed a 95% confidence interval ranging from about 83,368 to 107,176 cubic feet. This means I can be 95% confident that the true total volume of all trees in the forest falls within this range.
+
+The relatively wide confidence interval (spanning about 23,808 cubic feet) reflects both the natural variability in tree volumes and the fact that we're using a relatively small sample (31 trees) to estimate the characteristics of a much larger forest (2,967 trees). The ratio estimation method helps improve our estimate by taking advantage of the relationship between tree diameter (which is known for the entire forest) and tree volume.
 
 ## c) Use regression estimation to estimate the total volume for all trees in the forest. Give a 95% CI.
 
