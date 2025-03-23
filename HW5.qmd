@@ -396,3 +396,112 @@ Looking at my results from the PPS sampling, I found a very interesting situatio
 After recalculating the sampling interval for the non-oversized units, I selected the remaining blocks using a systematic PPS approach with a new random start and interval. My final sample includes this large unit plus 19 other blocks with varying sizes, many of which had fewer than 50 occupied housing units (and were therefore assigned the minimum size of 50). 
 
 The total number of occupied housing units in my final sample came to 93,760, with the oversized unit accounting for about 99.7% of this total. This actually demonstrates how a single extremely large unit can dominate a PPS sample, which is an important consideration when analyzing survey data with such uneven size distributions.
+
+
+## c) Suppose the following are the first five blocks selected.   
+
+## i) Implement the ‘linking after selection’ procedure described in the lecture notes for each  of these five selections, and describe the five resulting linked blocks that would be included in the sample. 
+
+So I remember in systematic PPS sampling with geographic ordering, "linking after selection" is a procedure to enhance geographical representation. When a block is selected, we replace it with a "linked" block based on geographic proximity to improve spatial distribution.
+
+Step 1: Identifying the Selected Blocks
+```{r}
+# Defining the five selected blocks from the problem statement
+selected_blocks_input <- data.frame(
+  ID = c(142, 349, 452, 655, 789),
+  STATE = rep("26", 5),
+  COUNTY = rep("077", 5),
+  TRACT = c("000201", "000500", "000600", "001000", "001300"),
+  BLKGRP = c("1", "2", "4", "6", "1"),
+  BLOCK = c("1064", "2002", "4001", "6013", "1016")
+)
+
+# Displaying the selected blocks
+print(selected_blocks_input)
+
+selected_blocks <- block_data[block_data$ID %in% selected_blocks_input$ID, ]
+cat("Number of selected blocks found in dataset:", nrow(selected_blocks), "\n")
+```
+
+Step 2: Defining Linking Rules
+
+For each selected block, I'll find a linked block based on these rules:
+
+* The linked block should be in the same census tract
+
+* It should be geographically adjacent (next block in sequence if possible)
+
+* It should have similar size (similar number of occupied housing units)
+
+```{r}
+# Applying linking procedure to each selected block
+linked_blocks <- list()
+
+for(i in 1:nrow(selected_blocks_input)) {
+  # Getting current block information
+  current_id <- selected_blocks_input$ID[i]
+  current_tract <- selected_blocks_input$TRACT[i]
+  current_blkgrp <- selected_blocks_input$BLKGRP[i]
+  current_block <- selected_blocks_input$BLOCK[i]
+  
+  # Finding blocks in the same tract
+  same_tract <- block_data[block_data$TRACT == current_tract, ]
+  
+  if(nrow(same_tract) > 0) {
+    # Finding blocks in the same block group but different block
+    same_bg_diff_block <- same_tract[
+      same_tract$BLKGRP == current_blkgrp & 
+      same_tract$BLOCK != current_block, 
+    ]
+    
+    if(nrow(same_bg_diff_block) > 0) {
+      # Finding block with closest ID (typically adjacent)
+      id_diff <- abs(same_bg_diff_block$ID - current_id)
+      linked <- same_bg_diff_block[which.min(id_diff), ]
+    } else {
+      # If no blocks in same block group, use closest block in same tract
+      id_diff <- abs(same_tract$ID - current_id)
+      # Excluding the selected block itself if present
+      id_diff[same_tract$ID == current_id] <- Inf
+      linked <- same_tract[which.min(id_diff), ]
+    }
+    
+    linked_blocks[[i]] <- linked
+  } else {
+    cat("No blocks found in tract", current_tract, "for selection", i, "\n")
+  }
+}
+
+linked_blocks_df <- do.call(rbind, linked_blocks)
+```
+
+Step 3: Displaying Results
+```{r}
+# Create a comparison table
+results <- data.frame(
+  Original_ID = selected_blocks_input$ID,
+  Original_TRACT = selected_blocks_input$TRACT,
+  Original_BLKGRP = selected_blocks_input$BLKGRP,
+  Original_BLOCK = selected_blocks_input$BLOCK,
+  Linked_ID = linked_blocks_df$ID,
+  Linked_TRACT = linked_blocks_df$TRACT,
+  Linked_BLKGRP = linked_blocks_df$BLKGRP,
+  Linked_BLOCK = linked_blocks_df$BLOCK,
+  Linked_OCC_HU = linked_blocks_df$OCC_HU
+)
+
+print(results)
+
+# Calculate summary statistics
+cat("\nSummary Statistics for Linked Blocks:\n")
+cat("Average Occupied Housing Units:", mean(linked_blocks_df$OCC_HU), "\n")
+cat("Total Occupied Housing Units:", sum(linked_blocks_df$OCC_HU), "\n")
+```
+
+Looking at my linking results, I found that each of the five originally selected blocks was successfully paired with a linked block from the same tract and block group. 
+
+For example, block ID 142 in tract 000201, block group 1 was linked to block 141 in the same tract and block group, just with a different block number (1063). 
+
+Similarly, block 349 was linked to block 348, which shares the same tract (000500) and block group (2). This pattern continued for all five selections, where I consistently found a geographically adjacent block (as indicated by similar ID numbers) to replace the original selection. Interestingly, the average number of occupied housing units in my linked blocks was only 17.2, with a total of 86 housing units across all five linked blocks. 
+
+The first linked block actually had zero occupied housing units, while the others ranged from 12 to 35 units. This linking procedure allowed me to maintain the geographic distribution of my sample at the tract level while potentially improving spatial coverage by selecting nearby blocks that might better represent different neighborhood characteristics.
