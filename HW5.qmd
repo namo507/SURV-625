@@ -181,3 +181,49 @@ Lastly, Kalamazoo Non-River, the largest stratum with 77,299 occupied units and 
 
 ## 2. Download the Excel file provided with this homework (a geographically sorted list of blocks). 
 
+## a) Select a systematic PPeS sample of a = 20 blocks from the list of A = 4,495 in the csv file. The minimum sufficient size for a block is 50 occupied housing units. Specify the sampling interval, and the random start. List selected blocks, the selection number (the random start plus interval), and the total number of occupied housing units in the sample blocks. Document how the random start was determined, in a way that would allow someone to replicate your selection process exactly.
+
+```{r}
+# Load necessary libraries
+library(readxl)
+
+# Step 1: Load the dataset
+file_path <- "SM-625-Homework-5-PPeS-Stratified-PPeS-frames-winter-2025.xlsx"
+data <- read_excel(file_path, sheet = "PPeS frame")
+
+# Step 2: Extract necessary columns
+# Assuming "Cumulative Size" column contains cumulative occupied housing units
+cumulative_size <- data$`Cumulative Size`
+block_ids <- data$ID
+
+# Step 3: Define parameters
+n_blocks <- 20 # Number of blocks to select
+total_size <- max(cumulative_size) # Total cumulative size
+interval <- total_size / n_blocks # Sampling interval
+
+# Random start between 1 and the interval
+set.seed(1234) # For reproducibility
+random_start <- runif(1, min = 1, max = interval)
+
+# Step 4: Generate selection numbers
+selection_numbers <- random_start + (0:(n_blocks - 1)) * interval
+
+# Step 5: Identify selected blocks based on selection numbers
+selected_blocks <- sapply(selection_numbers, function(x) {
+  which(cumulative_size >= x)[1]
+})
+
+# Extract block IDs and occupied housing units for selected blocks
+selected_block_ids <- block_ids[selected_blocks]
+selected_occupied_units <- cumulative_size[selected_blocks]
+
+# Step 6: Display results
+results <- data.frame(
+  Selection_Number = selection_numbers,
+  Block_ID = selected_block_ids,
+  Occupied_Units = selected_occupied_units
+)
+
+print(results)
+
+```
