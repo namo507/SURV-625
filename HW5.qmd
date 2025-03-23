@@ -1,0 +1,9 @@
+---
+title: "Homework 5: Namit Shrivastava"
+format: pdf
+editor: visual
+---
+
+## 1. The following is the distribution of occupied housing units and blocks for two counties in  Michigan.  A stratified PPeS sample of n = 3000 housing units in a = 100 blocks with  minimum sufficient size b* per block is to be selected across the counties. The counties and the subdivisions within each county of river and non-river blocks serve as four (4) strata.
+
+## a) Allocate the sample blocks across the four strata proportionate to occupied housing units. How have you handled rounding of sample blocks?
