@@ -339,27 +339,20 @@ This means the earlier calculations of standard errors and confidence intervals 
 
 ## a) Compute an estimate of the proportion with total cholesterol greater than 200, and its standard error (you can ignore the finite population corrections again in this case). Make sure that you are carefully accounting for this specific type of cluster sampling design in your variance estimation.
 
-For stratified two-stage cluster sampling with two PSUs per stratum, one can estimate the proportion as:
+For stratified two-stage cluster sampling with two PSUs per stratum, I'll estimate the proportion and its standard error using the appropriate variance estimation approach.
+
+First, the proportion estimate is calculated as:
 
 $$\hat{p} = \frac{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{y,h,i}}{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}}$$
 
-For the variance estimation, I will use the between-PSU variance formula with two PSUs per stratum:
+For the variance estimation with two PSUs per stratum, I'll use the correct formula:
 
-$$V(\hat{p}) = \sum_{h=1}^L \frac{(z_{h1} - z_{h2})^2}{4}$$
+$$V(\hat{p}) = \frac{1}{x^2} \sum_{h=1}^L \frac{(z_{h1} - z_{h2})^2}{4}$$
 
-where $z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$
+where:
 
-Now to calculate overall proportion: $$\hat{p} = \frac{\sum_{h=1}^5 \sum_{i=1}^{2} t_{y,h,i}}{\sum_{h=1}^5 \sum_{i=1}^{2} t_{x,h,i}} = \frac{96}{184} \approx 0.5217$$
-
-Calculate residuals for each PSU: $$z_{h,i} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$$
-
-So an example, for stratum 1, PSU 1: $$z_{1,1} = 16 - 0.5217 \cdot 23 = 16 - 12 = 4$$
-
-Calculating variance component for each stratum: $$v_h = \frac{(z_{h1} - z_{h2})^2}{4}$$ For example, for stratum 1: $$v_1 = \frac{(z_{1,1} - z_{1,2})^2}{4}$$
-
-Summing the variance components across strata: $$V(\hat{p}) = \sum_{h=1}^5 v_h$$
-
-Calculating the standard error: $$SE(\hat{p}) = \sqrt{V(\hat{p})}$$
+$z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$ are the residuals
+$x = \sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}$ is the total sample size
 
 ```{r}
 data <- data.frame(
@@ -374,8 +367,7 @@ total_y <- sum(data$t_y)
 total_x <- sum(data$t_x)
 p_hat <- total_y / total_x
 
-# Calculating variance using between-PSU formula
-# First I will calculate the residuals (z-values)
+# Calculating residuals (z-values)
 data$z <- data$t_y - p_hat * data$t_x
 
 # Calculating the between-PSU variance for each stratum
@@ -383,22 +375,38 @@ var_components <- tapply(data$z, data$stratum, function(z) {
   (z[1] - z[2])^2 / 4
 })
 
-# Sum variance components across strata
-var_p_hat <- sum(var_components)
+# Calculate sum of squared residuals
+sum_var_components <- sum(var_components)
 
-# Calculating standard error
-se_p_hat <- sqrt(var_p_hat / total_x)
+# Correct variance calculation
+var_p_hat <- sum_var_components / (total_x^2)
+
+# Standard error
+se_p_hat <- sqrt(var_p_hat)
 
 cat("Estimated proportion (p_hat):", p_hat, "\n")
-cat("Variance of p_hat:", var_p_hat, "\n")
+cat("Sum of variance components:", sum_var_components, "\n")
+cat("Correct variance of p_hat:", var_p_hat, "\n")
 cat("Standard error of p_hat:", se_p_hat, "\n")
 ```
 
+To verify the manual calculation approach, let me break down the steps:
+
+Calculate the proportion: $\hat{p} = \frac{96}{184} = 0.522$
+
+For each PSU, calculate the residual: $z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$
+
+For each stratum, calculate the variance component: $v_h = \frac{(z_{h1} - z_{h2})^2}{4}$
+
+Sum the variance components across strata: $\sum_{h=1}^L v_h$
+
+The correct variance is: $V(\hat{p}) = \frac{\sum_{h=1}^L v_h}{x^2} = \frac{sum_var_components}{total_x^2}$
+
 Based on my analysis of the stratified cluster data, I found that approximately 52.2% of individuals have total cholesterol levels greater than 200.
 
-The standard error of this estimate is about 0.25, which means one can expect the proportion estimate to vary by around 25 percentage points if one were to repeat the sampling process. This relatively large standard error reflects the variability inherent in the cluster sampling approach used before. The variance components across the five strata contributed to a total variance of 11.73, which is then appropriately scaled by the sample size to give me the standard error.
+The variance calculation yielded a value of approximately 0.00035, resulting in a standard error of 0.019 or about 1.9 percentage points. This means that if we were to repeat the sampling process multiple times, we would expect our proportion estimates to vary by about 1.9 percentage points due to sampling variability.
 
-So if greater precision is needed, one might want to consider increasing the number of PSUs within each stratum or exploring alternative sampling designs that could reduce this variability.
+This precision level is quite reasonable for a stratified cluster sample of this size. The relatively small standard error suggests that our sampling design is effective for estimating the proportion of individuals with high cholesterol levels. The stratification and two-stage cluster approach has provided us with a reasonably precise estimate despite the complexity of the design.
 
 ## b) Give a 95% confidence interval for the proportion, making sure to use the correct degrees of freedom according to this design.
 
