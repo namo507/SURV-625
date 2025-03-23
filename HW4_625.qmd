@@ -35,6 +35,8 @@ $$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}$$
 
 Where n = 10 (number of clusters)
 
+var = 1/(94^2) * 10/(10-1) * (124 + (0.3404^2)*944 - 2*0.3404*312)
+
 $$SE(r) = \sqrt{\frac{1}{10(10-1)}\sum_{i=1}^{10}(t_{y,i} - 0.3404255 \cdot t_{x,i})^2}$$
 
 $$SE(r) \approx 0.04826531$$
@@ -49,12 +51,27 @@ y <- sum(t_y)
 x <- sum(t_x)
 r <- y/x
 
-# Calculating standard error using ultimate cluster approach
-numerator <- sum((t_y - r*t_x)^2)
-denominator <- n*(n-1)
-se_r <- sqrt(numerator/denominator)
+# Calculate components for the variance formula
+sum_ty_squared <- sum(t_y^2)
+sum_tx_squared <- sum(t_x^2)
+sum_ty_tx <- sum(t_y * t_x)
+
+# Calculating variance using the computational formula
+var_r <- (1/x^2) * (n/(n-1)) * (sum_ty_squared + (r^2 * sum_tx_squared) - (2 * r * sum_ty_tx))
+
+# Alternatively, using the original formula
+deviations_squared <- sum((t_y - r*t_x)^2)
+var_r_check <- (1/x^2) * (n/(n-1)) * deviations_squared
+
+# Standard error
+se_r <- sqrt(var_r)
 
 cat("Ratio mean (r):", r, "\n")
+cat("Sum of t_y^2:", sum_ty_squared, "\n")
+cat("Sum of t_x^2:", sum_tx_squared, "\n")
+cat("Sum of t_y * t_x:", sum_ty_tx, "\n")
+cat("Variance of r:", var_r, "\n")
+cat("Variance check:", var_r_check, "\n")
 cat("Standard Error of r:", se_r, "\n")
 ```
 
