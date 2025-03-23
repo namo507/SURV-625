@@ -505,3 +505,119 @@ For example, block ID 142 in tract 000201, block group 1 was linked to block 141
 Similarly, block 349 was linked to block 348, which shares the same tract (000500) and block group (2). This pattern continued for all five selections, where I consistently found a geographically adjacent block (as indicated by similar ID numbers) to replace the original selection. Interestingly, the average number of occupied housing units in my linked blocks was only 17.2, with a total of 86 housing units across all five linked blocks. 
 
 The first linked block actually had zero occupied housing units, while the others ranged from 12 to 35 units. This linking procedure allowed me to maintain the geographic distribution of my sample at the tract level while potentially improving spatial coverage by selecting nearby blocks that might better represent different neighborhood characteristics.
+
+## ii) The overall sampling fraction is f = 0.001. What sampling rates should be used within each of the five sets of linked blocks to achieve epsem across the two stages (blocks, then occupied housing units)? (Hint: Remember that the housing units at the second stage will be randomly selected from all units in the set of linked blocks, not just the units in the five original selections above.)
+
+
+Now in a two-stage sampling design with PPS selection of blocks followed by sampling of housing units within blocks, I need to determine appropriate second-stage sampling rates to achieve EPSEM (Equal Probability of Selection Method) across the entire sample.
+
+The Mathematical Framework for EPSEM is that each housing unit in the population should have the same overall probability of selection. This probability is the product of:
+
+* The probability of selecting the block ($\pi_i$)
+
+* The probability of selecting a housing unit within the selected block ($\phi_i$)
+
+Given the overall sampling fraction $f = 0.001$, we need:
+
+$$f = \pi_i \times \phi_i$$
+
+Solving for the second-stage sampling rate:
+
+$$\phi_i = \frac{f}{\pi_i}$$
+
+In PPS sampling, the probability of selecting a block is proportional to its measure of size (MOS):
+
+$$\pi_i = \frac{M_i}{M} \times a$$
+
+Where:
+
+$M_i$ is the measure of size for block $i$
+$M$ is the total measure of size
+$a$ is the number of blocks to be selected
+
+
+Implementing this approach in R now:
+
+```{r}
+# Overall sampling fraction
+f <- 0.001
+
+# Defining the linked blocks from previous step
+linked_blocks <- data.frame(
+  ID = c(141, 348, 451, 654, 788),
+  TRACT = c("000201", "000500", "000600", "001000", "001300"),
+  BLKGRP = c("1", "2", "4", "6", "1"),
+  BLOCK = c("1063", "2001", "4000", "6012", "1015"),
+  OCC_HU = c(0, 21, 35, 18, 12)
+)
+
+# Calculating MOS for each linked block (using min. sufficient size of 50)
+linked_blocks$MOS <- pmax(linked_blocks$OCC_HU, 50)
+
+# Calculate first-stage selection probabilities
+# In PPS sampling with a minimum sufficient size (b*), the probability 
+# of selection is proportional to max(occupied_units, b*)
+total_MOS <- sum(block_data$MOS)  # From previous calculations
+a <- 20  # Number of blocks to select
+
+# Calculating first-stage selection probabilities
+linked_blocks$pi <- (linked_blocks$MOS / total_MOS) * a
+
+# Calculating second-stage sampling rates to achieve EPSEM
+linked_blocks$phi <- f / linked_blocks$pi
+
+# Handle special cases where OCC_HU = 0
+linked_blocks$sampling_rate <- ifelse(linked_blocks$OCC_HU > 0, 
+                                     linked_blocks$phi, 0)
+
+# Display results
+print(linked_blocks[, c("ID", "TRACT", "BLOCK", "OCC_HU", "MOS", "pi", "phi", "sampling_rate")])
+
+# Number of housing units to sample from each linked block
+linked_blocks$sample_size <- round(linked_blocks$OCC_HU * linked_blocks$phi)
+print(linked_blocks[, c("ID", "OCC_HU", "phi", "sample_size")])
+```
+
+For each linked block the step-by-step calculations are:
+
+
+## Block 1 (ID: 141, Tract: 000201)
+OCC_HU = 0
+MOS = max(0, 50) = 50
+$\pi_1 = \frac{50}{M} \times 20$
+$\phi_1 = \frac{0.001}{\pi_1}$
+Since OCC_HU = 0, no housing units can be sampled from this block
+
+## Block 2 (ID: 348, Tract: 000500)
+OCC_HU = 21
+MOS = max(21, 50) = 50
+$\pi_2 = \frac{50}{M} \times 20$
+$\phi_2 = \frac{0.001}{\pi_2}$
+Sample size = OCC_HU × $\phi_2$ = 21 × $\phi_2$
+
+## Block 3 (ID: 451, Tract: 000600)
+OCC_HU = 35
+MOS = max(35, 50) = 50
+$\pi_3 = \frac{50}{M} \times 20$
+$\phi_3 = \frac{0.001}{\pi_3}$
+Sample size = OCC_HU × $\phi_3$ = 35 × $\phi_3$
+
+## Block 4 (ID: 654, Tract: 001000)
+OCC_HU = 18
+MOS = max(18, 50) = 50
+$\pi_4 = \frac{50}{M} \times 20$
+$\phi_4 = \frac{0.001}{\pi_4}$
+Sample size = OCC_HU × $\phi_4$ = 18 × $\phi_4$
+
+## Block 5 (ID: 788, Tract: 001300)
+OCC_HU = 12
+MOS = max(12, 50) = 50
+$\pi_5 = \frac{50}{M} \times 20$
+$\phi_5 = \frac{0.001}{\pi_5}$
+Sample size = OCC_HU × $\phi_5$ = 12 × $\phi_5$
+
+So, looking at my EPSEM calculations for the two-stage sampling design, I found that all five linked blocks have the same first-stage selection probability (pi = 0.002912) because they all have the same measure of size (MOS = 50) due to the minimum sufficient size requirement. 
+
+So to achieve an overall sampling fraction of 0.001, I needed to set the second-stage sampling rate to approximately 0.343 for each block. This means I should sample about 34.3% of the occupied housing units within each linked block. When I applied this rate to the actual number of occupied units in each block, I determined I should select 0 units from the first block (which has no occupied units), 7 units from the second block (containing 21 units), 12 units from the third block (with 35 units), 6 units from the fourth block (with 18 units), and 4 units from the fifth block (with 12 units). 
+
+This gives me a total of 29 housing units in my final sample. The beauty of this approach is that every housing unit in the population ends up with exactly the same probability (0.001) of being included in my sample, which is crucial for obtaining unbiased estimates from my survey data.
