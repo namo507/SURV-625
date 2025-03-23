@@ -112,3 +112,33 @@ Now based on my calculations, I allocated the 100 sample blocks proportionately 
 Allegan River, with 8,521 occupied units, was allocated 6 blocks, while Allegan Non-River, which has 28,744 occupied units, received 22 blocks. Kalamazoo River, with 17,224 occupied units, was assigned 13 blocks, and Kalamazoo Non-River, the largest stratum with 77,299 occupied units, was allocated 59 blocks. 
 
 These allocations were rounded from their initial fractional values to ensure the total number of blocks summed exactly to 100.
+
+## b)  Give the overall sampling fraction f across the four strata.
+
+Now the overall sampling fraction represents the proportion of housing units selected:
+
+$$f = \frac{n}{N}$$
+
+Where:
+
+$n = 3,000$ is the total sample size (housing units)
+$N = 131,788$ is the total number of occupied housing units
+
+```{r}
+# Total sample size
+n <- 3000
+
+# Calculate overall sampling fraction
+f <- n / total_occupied
+
+cat("Total occupied housing units (N):", total_occupied, "\n")
+cat("Total sample size (n):", n, "\n")
+cat("Overall sampling fraction (f):", f, "\n")
+cat("As a percentage:", f * 100, "%\n")
+```
+
+
+$$f = \frac{3,000}{131,788} = 0.02277$$
+
+The overall sampling fraction is approximately 0.02277 or about 2.28%, meaning we'll sample roughly 2.28% of all occupied housing units across the four strata.
+
