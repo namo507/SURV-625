@@ -505,25 +505,15 @@ For stratified cluster sampling, the design effect and intracluster correlation 
 
 Design effect: $$deff = \frac{V_{cluster}(\hat{p})}{V_{SRS}(\hat{p})}$$
 
-Where: - $V_{cluster}(\hat{p})$ is the variance under cluster sampling - $V_{SRS}(\hat{p}) = \frac{p(1-p)}{n}$ is the variance under simple random sampling
+Where:
 
+$V_{cluster}(\hat{p})$ is the variance under cluster sampling from part (a)
+$V_{SRS}(\hat{p}) = \frac{p(1-p)}{n-1}$ is the variance under simple random sampling with the finite population correction
 Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1}$$
 
-Where: - $\bar{m}$ is the average cluster size
+Where:
 
-So the calculation will be:
-
-Total sample size: $$total_x = 23 + 25 + 17 + 15 + 20 + 21 + 16 + 19 + 12 + 16 = 184$$
-
-Average cluster size: $$\bar{m} = \frac{total_x}{n_{PSU}} = \frac{184}{10} = 18.4$$
-
-Variance under cluster sampling: $$V_{cluster}(\hat{p}) = \left(\frac{\sqrt{var_{p\_hat}}}{total_x}\right)^2 = \left(\frac{\sqrt{11.73}}{184}\right)^2 = 0.00035$$
-
-Variance under SRS: $$V_{SRS}(\hat{p}) = \frac{p(1-p)}{total_x} = \frac{0.5217(1-0.5217)}{184} = \frac{0.5217 \times 0.4783}{184} = 0.00136$$
-
-Design effect: $$deff = \frac{V_{cluster}(\hat{p})}{V_{SRS}(\hat{p})} = \frac{0.00035}{0.00136} = 0.255$$
-
-Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1} = \frac{0.255 - 1}{18.4 - 1} = \frac{-0.745}{17.4} = -0.043$$
+$\bar{m}$ is the average cluster size
 
 ```{r}
 data <- data.frame(
@@ -538,13 +528,20 @@ total_y <- sum(data$t_y)
 total_x <- sum(data$t_x)
 p_hat <- total_y / total_x
 
-# Calculating actual variance from previous steps
-var_p_hat <- sum(var_components)
-se_p_hat <- sqrt(var_p_hat) / total_x
-var_cluster <- se_p_hat^2
+# Calculating residuals (z-values)
+data$z <- data$t_y - p_hat * data$t_x
 
-# Calculating SRS variance
-var_srs <- p_hat * (1 - p_hat) / total_x
+# Calculating variance components by stratum
+var_components <- tapply(data$z, data$stratum, function(z) {
+  (z[1] - z[2])^2 / 4
+})
+
+# Sum variance components and calculate variance from part (a)
+sum_var_components <- sum(var_components)
+var_cluster <- sum_var_components / (total_x^2)
+
+# Calculating SRS variance (corrected with n-1 in denominator)
+var_srs <- p_hat * (1 - p_hat) / (total_x - 1)
 
 # Calculating design effect
 deff <- var_cluster / var_srs
@@ -557,17 +554,21 @@ roh <- (deff - 1) / (m_bar - 1)
 
 cat("Total sample size:", total_x, "\n")
 cat("Average cluster size:", m_bar, "\n")
-cat("Variance under cluster sampling:", var_cluster, "\n")
-cat("Variance under SRS:", var_srs, "\n")
+cat("Variance under cluster sampling (from part a):", var_cluster, "\n")
+cat("Variance under SRS (corrected):", var_srs, "\n")
 cat("Design effect (deff):", deff, "\n")
 cat("Intracluster correlation (roh):", roh, "\n")
 ```
 
-Looking at my analysis of the intracluster correlation and design effect, I found that my design effect calculation came out to about 0.255, which means the variance from the stratified cluster sampling design is actually smaller than what one would expect from simple random sampling. This is reflected in the negative intracluster correlation (roh) of approximately -0.043. A negative roh suggests that individuals within the same cluster tend to be more different from each other than individuals from different clusters when it comes to cholesterol levels.
+After correcting my calculations, I found that the design effect for this stratified cluster sample is approximately 0.25, indicating that the variance from our complex sampling design is actually about 75% smaller than what we would expect from simple random sampling of the same size.
 
-This could be happening because the stratification was particularly effective at capturing between-group differences. In practical terms, this means the complex sampling design actually improved precision compared to a simple random sample of the same size meaning I am getting a "design benefit" rather than a design effect penalty.
+This favorable result is reflected in the negative intracluster correlation (roh) of approximately -0.043. A negative roh suggests that individuals within the same cluster tend to be more different from each other than individuals from different clusters with respect to cholesterol levels above 200.
 
-This finding contradicts the common assumption that cluster sampling always reduces precision, and suggests that for this particular health measure, this sampling strategy was quite efficient.
+This unusual but beneficial finding can be attributed to the effectiveness of the stratification scheme. The strata appear to have been defined in a way that captures much of the variation in cholesterol levels, creating relatively homogeneous groups. When we then sample within these well-defined strata, we achieve better precision than we would with simple random sampling.
+
+In practical terms, this sampling design is providing a "design benefit" rather than a design effect penalty. This contradicts the common assumption that cluster sampling always reduces precision, and demonstrates that with well-constructed strata, complex sampling designs can actually improve estimation efficiency.
+
+For future studies of cholesterol levels in this population, maintaining a similar stratification approach would be advisable, as it clearly provides precision advantages over simpler sampling methods.
 
 ## d) Estimate the standard error expected if the sample size were doubled by doubling the number of primary selections from two to four in each stratum.
 
