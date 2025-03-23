@@ -621,3 +621,77 @@ So, looking at my EPSEM calculations for the two-stage sampling design, I found 
 So to achieve an overall sampling fraction of 0.001, I needed to set the second-stage sampling rate to approximately 0.343 for each block. This means I should sample about 34.3% of the occupied housing units within each linked block. When I applied this rate to the actual number of occupied units in each block, I determined I should select 0 units from the first block (which has no occupied units), 7 units from the second block (containing 21 units), 12 units from the third block (with 35 units), 6 units from the fourth block (with 18 units), and 4 units from the fifth block (with 12 units). 
 
 This gives me a total of 29 housing units in my final sample. The beauty of this approach is that every housing unit in the population ends up with exactly the same probability (0.001) of being included in my sample, which is crucial for obtaining unbiased estimates from my survey data.
+
+## iii) For the first “linked” selection, suppose that field canvassing procedures yield B1=90. What two possible values might you see for the achieved subsample size from the first selection?
+
+Right, so when field canvassing finds more housing units than expected in a selected block, we need to recalculate the subsample size to maintain EPSEM. This situation arises with the first linked block, where our frame showed 0 occupied housing units, but field canvassing found 90 units (B1 = 90).
+
+So the mathematical framework shows the key formulas for determining the subsample size which is:
+
+* For EPSEM, the overall selection probability must remain constant at $f = 0.001$
+
+* The first-stage selection probability (PPS) is: $$\pi_1 = \frac{MOS_1}{M} \times a$$
+
+* The second-stage sampling rate needed is: $$\phi_1 = \frac{f}{\pi_1}$$
+
+* The achieved subsample size is: $$b_1 = B_1 \times \phi_1$$
+
+However, there are two possible scenarios for interpreting the first-stage probability:
+
+1. Using original MOS from the frame
+
+The first linked block had $$MOS_1$$ = 50 in our sampling frame.
+
+First-stage selection probability: $$\pi_1 = \frac{50}{M} \times 20 = 0.002912$$
+
+Second-stage sampling rate: $$\phi_1 = \frac{0.001}{0.002912} = 0.343402$$
+
+Achieved subsample size: $$b_1 = 90 \times 0.343402 = 30.91$$
+
+Rounding to the nearest integer: 31 housing units
+
+2. Using actual number of occupied units
+
+First-stage selection probability (if I had known the actual count): $$\pi_1 = \frac{90}{M} \times 20 = 0.005242$$
+
+Second-stage sampling rate: $$\phi_1 = \frac{0.001}{0.005242} = 0.190779$$
+
+Achieved subsample size: $$b_1 = 90 \times 0.190779 = 17.17$$
+
+Rounding to the nearest integer: 17 housing units
+
+```{r}
+# Defining given values
+f <- 0.001  # Overall sampling fraction
+B1 <- 90    # Actual number of occupied housing units found
+total_MOS <- sum(block_data$MOS)  # From previous calculations
+a <- 20     # Number of blocks to select
+
+# Scenario 1: Using original MOS (minimum sufficient size)
+MOS1_original <- 50
+pi1_original <- (MOS1_original / total_MOS) * a
+phi1_original <- f / pi1_original
+b1_original <- round(B1 * phi1_original)
+
+# Scenario 2: Using actual occupied units
+MOS1_actual <- 90
+pi1_actual <- (MOS1_actual / total_MOS) * a
+phi1_actual <- f / pi1_actual
+b1_actual <- round(B1 * phi1_actual)
+
+results <- data.frame(
+  Scenario = c("Using original MOS", "Using actual units"),
+  MOS = c(MOS1_original, MOS1_actual),
+  pi = c(pi1_original, pi1_actual),
+  phi = c(phi1_original, phi1_actual),
+  Achieved_sample_size = c(b1_original, b1_actual)
+)
+
+print(results)
+```
+
+Looking at the results from my calculations for the first linked block's subsample size, I found two possible approaches when field canvassing revealed 90 occupied housing units instead of the zero units shown in the sampling frame. 
+
+Using the original measure of size (MOS=50) from the frame, I calculated a first-stage selection probability of 0.00291 and a corresponding sampling rate of 0.343. This means I'd need to select 31 housing units from this block to maintain EPSEM. However, if I recalculate using the actual number of occupied units (90) as the MOS, the first-stage probability increases to 0.00524, requiring a lower sampling rate of 0.191 to compensate, which results in a subsample of just 17 housing units. 
+
+This difference illustrates an important practical consideration in survey implementation like how to handle field discoveries that differ from the sampling frame. The first approach (31 units) maintains the original selection probabilities as designed, while the second approach (17 units) adjusts for what we would have done had we known the true count in advance. Either approach would maintain EPSEM, but they reflect different philosophies about handling frame discrepancies.
