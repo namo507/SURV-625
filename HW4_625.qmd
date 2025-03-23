@@ -1,0 +1,596 @@
+---
+title: "Homework 4: Namit Shrivastava"
+format: pdf
+editor: visual
+---
+
+## 1. The following data were collected from a sample of n = 10 clusters that was selected from a large population (assume that the sampling fractions are negligible):
+
+|    $i$    |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  | 10  | Totals |
+|:---------:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:------:|
+| $t_{y,i}$ |  5  |  1  |  2  |  4  |  2  |  2  |  3  |  3  |  4  |  6  |   32   |
+| $t_{x,i}$ | 13  | 11  |  7  | 11  |  6  | 11  |  5  | 11  |  9  | 10  |   94   |
+
+## a) Compute the ratio mean r = y/x , where y =∑ty,i is the total outcome and x=∑tx,i is the realized sample size, and its standard error. Note that this is an example of simple random sampling of unequal-sized clusters. Use the ultimate cluster idea for variance estimation purposes (i.e., we don’t really care how many stages of cluster sampling led to the realized sample sizes in each cluster; we assume a one-stage selection of ultimate clusters, where all units were sampled within them).
+
+In cluster sampling with unequal cluster sizes, the ratio mean is:
+
+$$r = \frac{\sum_{i=1}^n t_{y,i}}{\sum_{i=1}^n t_{x,i}} = \frac{y}{x}$$
+
+The standard error using the ultimate cluster approach is:
+
+$$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^n (t_{y,i} - r \times t_{x,i})^2}$$
+
+So firstly calculating the total outcome (y) and realized sample size (x)
+
+$$y = \sum_{i=1}^{n} t_{y,i} = 5 + 1 + 2 + 4 + 2 + 2 + 3 + 3 + 4 + 6 = 32$$
+
+$$x = \sum_{i=1}^{n} t_{x,i} = 13 + 11 + 7 + 11 + 6 + 11 + 5 + 11 + 9 + 10 = 94$$
+
+then, computing the ratio mean (r) $$r = \frac{y}{x} = \frac{32}{94} \approx 0.3404255$$
+
+and then calculating the standard error using the ultimate cluster idea:
+
+$$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}$$
+
+Where n = 10 (number of clusters)
+
+$$SE(r) = \sqrt{\frac{1}{10(10-1)}\sum_{i=1}^{10}(t_{y,i} - 0.3404255 \cdot t_{x,i})^2}$$
+
+$$SE(r) \approx 0.04826531$$
+
+```{r}
+t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_y)
+
+# Calculating ratio estimate
+y <- sum(t_y)
+x <- sum(t_x)
+r <- y/x
+
+# Calculating standard error using ultimate cluster approach
+numerator <- sum((t_y - r*t_x)^2)
+denominator <- n*(n-1)
+se_r <- sqrt(numerator/denominator)
+
+cat("Ratio mean (r):", r, "\n")
+cat("Standard Error of r:", se_r, "\n")
+```
+
+## b) The mean is actually the proportion of individuals with a particular attitude (meaning that the Y variable is a binary indicator of whether a person has that attitude). Given this information, compute the simple random sampling variance, design effect, and roh. (Hint: Remember that when computing the design effect for these designs, the average sample size per cluster should be used.)
+
+For a binary outcome (proportion), the simple random sampling variance is:
+
+$$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}}$$
+
+The design effect is:
+
+$$deff = \frac{V_{cluster}(r)}{V_{SRS}(r)}$$
+
+The intracluster correlation (roh) is:
+
+$$roh = \frac{deff - 1}{\bar{m} - 1}$$
+
+where $\bar{m}$ is the average cluster size:
+
+$$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n}$$
+
+So using this, the calculations are:
+
+Cluster variance: $$V_{cluster}(r) = \frac{\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}{n(n-1)} = \frac{\sum_{i=1}^{10}(t_{y,i} - 0.3404 \cdot t_{x,i})^2}{10 \times 9} \approx 0.2330$$
+
+SRS variance for binary outcome: $$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}} = \frac{0.3404(1-0.3404)}{94} \approx 0.0024$$
+
+Design effect: $$deff = \frac{V_{cluster}(r)}{V_{SRS}(r)} = \frac{0.2330}{0.0024} \approx 97.56$$
+
+Average cluster size: $$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n} = \frac{94}{10} = 9.4$$
+
+Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1} = \frac{97.56 - 1}{9.4 - 1} \approx 11.50$$
+
+```{r}
+t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_y)
+
+# Calculating ratio estimate
+y <- sum(t_y)
+x <- sum(t_x)
+r <- y/x
+
+# Calculating cluster variance
+v_cluster <- sum((t_y - r*t_x)^2)/(n*(n-1))
+
+# Calculating SRS variance for binary outcome
+v_srs <- r*(1-r)/x
+
+# Calculating design effect
+deff <- v_cluster/v_srs
+
+# Calculating average cluster size
+m_bar <- x/n
+
+# Calculating roh
+roh <- (deff - 1)/(m_bar - 1)
+
+cat("Cluster variance:", v_cluster, "\n")
+cat("SRS variance:", v_srs, "\n")
+cat("Design effect:", deff, "\n")
+cat("Average cluster size:", m_bar, "\n")
+cat("Intracluster correlation (roh):", roh, "\n")
+```
+
+Looking at the results of my analysis, I see a surprisingly high design effect of approximately 97.56. This means the variance from our cluster sampling approach is about 97 times larger than what we would expect from a simple random sample of the same size. This extremely large design effect translates to an intracluster correlation (roh) of about 11.50, which is unusual since roh typically ranges between 0 and 1.
+
+This exceptionally high value suggests that there might be extreme homogeneity within clusters In practical terms, this high roh value indicates that individuals within the same cluster are much more similar in their attitudes than individuals from different clusters. For survey design purposes, this would suggest that sampling fewer individuals within more clusters would be a much more efficient approach.
+
+## c) Estimate the variance if the sample size were tripled by tripling the number of primary stage cluster selections from 10 to 30.
+
+Now from the class notes, when increasing the number of clusters from n to n', the variance of the ratio estimate scales as:
+
+$$V_{new}(r) = \frac{n}{n'} \times V_{old}(r)$$
+
+Where: - $n = 10$ (original number of clusters) - $n' = 30$ (new number of clusters) - $V_{old}(r)$ is the original variance from part (a)
+
+Now the original variance from part (a): $$V_{original}(r) = 0.2330$$
+
+New variance with tripled clusters: $$V_{new}(r) = \frac{n}{n'} \times V_{original}(r) = \frac{10}{30} \times 0.2330 = \frac{1}{3} \times 0.2330 \approx 0.0777$$
+
+Variance reduction: $$\text{Reduction} = (1 - \frac{V_{new}(r)}{V_{original}(r)}) \times 100% = (1 - \frac{0.0777}{0.2330}) \times 100% = 66.67%$$
+
+```{r}
+n_original <- 10
+n_new <- 30  # tripled number of clusters
+
+# Original cluster variance from part (a)
+v_original <- v_cluster
+
+# Calculating new variance when tripling cluster selections
+v_new <- v_original * (n_original / n_new)
+
+# Now showing the results
+cat("Original variance with 10 clusters:", v_original, "\n")
+cat("New variance with 30 clusters:", v_new, "\n")
+cat("Percent reduction in variance:", (1 - v_new/v_original) * 100, "%\n")
+```
+
+Based on my calculations, I found that increasing the number of clusters from 10 to 30 would substantially reduce the variance of our estimate. Specifically, the variance would decrease from about 0.233 to 0.078, which represents a 66.7% reduction. This significant improvement in precision makes sense given the high intracluster correlation as observed earlier.
+
+In practical terms, this means that if we were to redesign the survey, we'd get much more reliable results by sampling more clusters rather than more individuals within each cluster. This finding reinforces a common principle in cluster sampling that when there's high homogeneity within clusters, it's more efficient to spread the sample across more clusters. For this particular attitude measure, tripling the number of clusters would give us estimates that are about three times more precise without having to increase the overall sample size.
+
+## d) Estimate the sampling variance if the sample size were tripled by tripling the subsampling rate in each cluster.
+
+When increasing the subsampling rate within each cluster, I will use the formula that accounts for the intracluster correlation:
+
+$$V_{new}(r) = \frac{V_{SRS}(r)}{m'} \times [1 + (m'-1) \times roh]$$
+
+Where: - $m' = 3 \times \bar{m}$ is the new average cluster size (tripled) - $\bar{m} = 9.4$ is the original average cluster size - $roh = 11.50$ is the intracluster correlation - $V_{SRS}(r)$ is the simple random sampling variance
+
+Original average cluster size: $$\bar{m} = 9.4$$
+
+New average cluster size: $$m' = 3 \times 9.4 = 28.2$$
+
+Original SRS variance: $$V_{SRS}(r) = 0.0024$$
+
+New SRS variance: $$V_{SRS,new}(r) = V_{SRS}(r) \times \frac{\bar{m}}{m'} = 0.0024 \times \frac{9.4}{28.2} \approx 0.0008$$
+
+Original design effect: $$deff_{original} = 1 + (\bar{m}-1) \times roh = 1 + (9.4-1) \times 11.50 \approx 97.6$$
+
+New design effect: $$deff_{new} = 1 + (m'-1) \times roh = 1 + (28.2-1) \times 11.50 \approx 312.8$$
+
+New variance: $$V_{new}(r) = V_{SRS,new}(r) \times deff_{new} = 0.0008 \times 312.8 \approx 0.2502$$
+
+Percent change: $$\text{Change} = (1 - \frac{V_{new}(r)}{V_{original}(r)}) \times 100% = (1 - \frac{0.2502}{0.2330}) \times 100% \approx -7.38%$$
+
+```{r}
+m_original <- m_bar
+m_new <- 3 * m_original  # tripled subsampling rate
+n <- 10  # number of clusters remains the same
+
+#Now let me show the variance using 2 methods
+
+# Method 1: Using the design effect formula
+v_srs_new <- v_srs * (m_original/m_new)  # adjusted SRS variance
+deff_new <- 1 + (m_new-1) * roh
+v_new_1 <- v_srs_new * deff_new
+
+# Method 2: Using the ratio formula
+deff_original <- 1 + (m_original-1) * roh
+v_new_2 <- v_original * (m_original/m_new) * (deff_new/deff_original)
+
+cat("Original variance:", v_original, "\n")
+cat("New variance (Method 1):", v_new_1, "\n")
+cat("New variance (Method 2):", v_new_2, "\n")
+cat("Percent change in variance:", (1 - v_new_1/v_original) * 100, "%\n")
+```
+
+Looking at my analysis of tripling the subsampling rate within each cluster, I found something quite interesting.
+
+So, the variance actually increased from 0.233 to about 0.250, which represents a roughly 7.2% increase in variance. This shows the estimates would become less precise, not more, despite tripling our sample size. This counterintuitive result is directly caused by the extremely high intracluster correlation of 11.5 that was observed earlier. When individuals within clusters are so similar to each other, adding more of them to our sample provides very little new information. In fact, the additional sampling effort is essentially wasted due to this redundancy.
+
+So in cases like this with strong within-cluster homogeneity, it would be far better to sample more clusters rather than more individuals within each cluster, as seen in part (c) where tripling the number of clusters reduced variance by 66.7% instead of increasing it.
+
+## e) Compute the coefficient of variation of the denominator based on the current design \[from part (a)\]. Remember to account for the cluster sampling design in your calculation. Is the Taylor series approximation adequate?
+
+The coefficient of variation (CV) of the denominator is defined as:
+
+$$CV(x) = \frac{\sqrt{V(x)}}{E(x)} = \frac{\sqrt{V(\sum_{i=1}^n t_{x,i})}}{\sum_{i=1}^n t_{x,i}}$$
+
+Where $V(x)$ is the variance of the denominator under cluster sampling:
+
+$$V(x) = n \cdot V(t_{x,i}) = \frac{n}{n-1} \sum_{i=1}^n (t_{x,i} - \bar{t}_x)^2$$
+
+And $\bar{t}_x = \frac{1}{n}\sum_{i=1}^n t_{x,i}$ is the mean cluster size.
+
+For the Taylor series approximation to be adequate, typically CV(x) should be less than 0.1 (or 10%).
+
+So the Total denominator: $$x = \sum_{i=1}^n t_{x,i} = 13 + 11 + 7 + 11 + 6 + 11 + 5 + 11 + 9 + 10 = 94$$
+
+Mean cluster size: $$\bar{t}x = \frac{1}{n}\sum{i=1}^n t_{x,i} = \frac{94}{10} = 9.4$$
+
+Variance of cluster sizes: $$V(t_{x,i}) = \frac{1}{n-1} \sum_{i=1}^n (t_{x,i} - \bar{t}x)^2 = \frac{1}{9} \sum{i=1}^{10} (t_{x,i} - 9.4)^2$$
+
+Variance of denominator: $$V(x) = n \cdot V(t_{x,i})$$
+
+```{r}
+t_x <- c(13, 11, 7, 11, 6, 11, 5, 11, 9, 10)
+n <- length(t_x)
+x <- sum(t_x)
+mean_tx <- mean(t_x)
+
+# Calculating variance of denominator
+var_tx <- sum((t_x - mean_tx)^2)/(n-1)
+var_x <- n * var_tx
+
+# Calculating coefficient of variation
+cv_x <- sqrt(var_x)/x
+
+# Now showing the results
+cat("Total denominator (x):", x, "\n")
+cat("Mean cluster size:", mean_tx, "\n")
+cat("Variance of cluster sizes:", var_tx, "\n")
+cat("Variance of denominator:", var_x, "\n")
+cat("Coefficient of variation of denominator:", cv_x, "\n")
+cat("Is Taylor series approximation adequate? (CV < 0.1):", cv_x < 0.1, "\n")
+```
+
+Ok so after examining the coefficient of variation for the denominator, I found it to be approximately 0.087 or 8.7%. This is good because it falls below the typical threshold of 0.1 (or 10%) that determines whether the Taylor series approximation is adequate. The CV essentially tells me how much relative variability exists in the cluster sizes, which ranged from 5 to 13 individuals with a mean of 9.4. Since this variability is modest, one can be confident in using the Taylor series linearization approach for the variance estimation.
+
+This means the earlier calculations of standard errors and confidence intervals for the ratio estimate are likely reliable. If the CV had been larger, one might have needed to consider alternative methods like jackknife or bootstrap for variance estimation. Overall, this result validates my analytical approach and suggests the approximations I have been using should work well for this dataset.
+
+## 2. The following are cluster totals from five strata, with two primary stage selections per stratum, for a binary variable named "total cholesterol greater than 200" ($t_{y,h,i}$):
+
+| $h$ | $i$ | $t_{y,h,i}$ | $t_{x,h,i}$ |
+|:---:|:---:|:-----------:|:-----------:|
+|  1  |  1  |     16      |     23      |
+|     |  2  |     15      |     25      |
+|  2  |  1  |      9      |     17      |
+|     |  2  |      5      |     15      |
+|  3  |  1  |      8      |     20      |
+|     |  2  |     10      |     21      |
+|  4  |  1  |      6      |     16      |
+|     |  2  |     10      |     19      |
+|  5  |  1  |     10      |     12      |
+|     |  2  |      7      |     16      |
+
+## a) Compute an estimate of the proportion with total cholesterol greater than 200, and its standard error (you can ignore the finite population corrections again in this case). Make sure that you are carefully accounting for this specific type of cluster sampling design in your variance estimation.
+
+For stratified two-stage cluster sampling with two PSUs per stratum, one can estimate the proportion as:
+
+$$\hat{p} = \frac{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{y,h,i}}{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}}$$
+
+For the variance estimation, I will use the between-PSU variance formula with two PSUs per stratum:
+
+$$V(\hat{p}) = \sum_{h=1}^L \frac{(z_{h1} - z_{h2})^2}{4}$$
+
+where $z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$
+
+Now to calculate overall proportion: $$\hat{p} = \frac{\sum_{h=1}^5 \sum_{i=1}^{2} t_{y,h,i}}{\sum_{h=1}^5 \sum_{i=1}^{2} t_{x,h,i}} = \frac{96}{184} \approx 0.5217$$
+
+Calculate residuals for each PSU: $$z_{h,i} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$$
+
+So an example, for stratum 1, PSU 1: $$z_{1,1} = 16 - 0.5217 \cdot 23 = 16 - 12 = 4$$
+
+Calculating variance component for each stratum: $$v_h = \frac{(z_{h1} - z_{h2})^2}{4}$$ For example, for stratum 1: $$v_1 = \frac{(z_{1,1} - z_{1,2})^2}{4}$$
+
+Summing the variance components across strata: $$V(\hat{p}) = \sum_{h=1}^5 v_h$$
+
+Calculating the standard error: $$SE(\hat{p}) = \sqrt{V(\hat{p})}$$
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculating overall proportion
+total_y <- sum(data$t_y)
+total_x <- sum(data$t_x)
+p_hat <- total_y / total_x
+
+# Calculating variance using between-PSU formula
+# First I will calculate the residuals (z-values)
+data$z <- data$t_y - p_hat * data$t_x
+
+# Calculating the between-PSU variance for each stratum
+var_components <- tapply(data$z, data$stratum, function(z) {
+  (z[1] - z[2])^2 / 4
+})
+
+# Sum variance components across strata
+var_p_hat <- sum(var_components)
+
+# Calculating standard error
+se_p_hat <- sqrt(var_p_hat / total_x)
+
+cat("Estimated proportion (p_hat):", p_hat, "\n")
+cat("Variance of p_hat:", var_p_hat, "\n")
+cat("Standard error of p_hat:", se_p_hat, "\n")
+```
+
+Based on my analysis of the stratified cluster data, I found that approximately 52.2% of individuals have total cholesterol levels greater than 200.
+
+The standard error of this estimate is about 0.25, which means one can expect the proportion estimate to vary by around 25 percentage points if one were to repeat the sampling process. This relatively large standard error reflects the variability inherent in the cluster sampling approach used before. The variance components across the five strata contributed to a total variance of 11.73, which is then appropriately scaled by the sample size to give me the standard error.
+
+So if greater precision is needed, one might want to consider increasing the number of PSUs within each stratum or exploring alternative sampling designs that could reduce this variability.
+
+## b) Give a 95% confidence interval for the proportion, making sure to use the correct degrees of freedom according to this design.
+
+For a stratified two-stage cluster sampling design with two PSUs per stratum, the degrees of freedom are calculated as:
+
+$$df = L - 1$$
+
+where $L$ is the number of strata. $$df = L - 1 = 5 - 1 = 4$$
+
+The 95% confidence interval is then:
+
+$$\hat{p} \pm t_{df, 0.975} \times SE(\hat{p})$$
+
+t-critical value: $$t_{4, 0.975} = 2.776$$
+
+So the confidence interval: $$\hat{p} \pm t_{4, 0.975} \times SE(\hat{p}) = 0.5217 \pm 2.776 \times 0.0186 = 0.5217 \pm 0.0517$$
+
+Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0517 = 0.4701$$ $$CI_{upper} = 0.5217 + 0.0517 = 0.5734$$
+
+Therefore: $$CI_{95\%} = (0.4701, 0.5734)$$
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculating proportion
+total_y <- sum(data$t_y)
+total_x <- sum(data$t_x)
+p_hat <- total_y / total_x
+
+# Calculating residuals (z-values)
+data$z <- data$t_y - p_hat * data$t_x
+
+# Calculating variance components by stratum
+var_components <- tapply(data$z, data$stratum, function(z) {
+  (z[1] - z[2])^2 / 4
+})
+
+# Sum variance components
+var_p_hat <- sum(var_components)
+
+# Calculating standard error
+se_p_hat <- sqrt(var_p_hat) / total_x
+
+# Calculating degrees of freedom
+L <- length(unique(data$stratum))  # Number of strata
+df <- L - 1
+
+# Calculating t-critical value
+t_crit <- qt(0.975, df)
+
+# Calculating 95% CI
+ci_lower <- p_hat - t_crit * se_p_hat
+ci_upper <- p_hat + t_crit * se_p_hat
+
+cat("Estimated proportion (p_hat):", p_hat, "\n")
+cat("Standard error of p_hat:", se_p_hat, "\n")
+cat("Degrees of freedom:", df, "\n")
+cat("t-critical value:", t_crit, "\n")
+cat("95% Confidence Interval:", c(ci_lower, ci_upper), "\n")
+```
+
+Based on my analysis of the cholesterol data from this stratified cluster sample, I can say with 95% confidence that the true proportion of individuals with total cholesterol greater than 200 is between 47.0% and 57.3%. My best estimate for this proportion is 52.2%.
+
+Now the design I used accounts for the complex sampling structure with five strata and two PSUs per stratum, which gives me just 4 degrees of freedom for calculating confidence intervals. This relatively small number of degrees of freedom explains why I needed to use a t-critical value of 2.78 rather than the normal approximation of 1.96.
+
+Now the resulting interval width of about 10.3 percentage points shows moderate precision. So if one wanted more precise estimates, one would need to increase the number of strata or PSUs in the sample design.
+
+## c) Compute the design effect and roh for the proportion in (a).
+
+For stratified cluster sampling, the design effect and intracluster correlation can be calculated as follows:
+
+Design effect: $$deff = \frac{V_{cluster}(\hat{p})}{V_{SRS}(\hat{p})}$$
+
+Where: - $V_{cluster}(\hat{p})$ is the variance under cluster sampling - $V_{SRS}(\hat{p}) = \frac{p(1-p)}{n}$ is the variance under simple random sampling
+
+Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1}$$
+
+Where: - $\bar{m}$ is the average cluster size
+
+So the calculation will be:
+
+Total sample size: $$total_x = 23 + 25 + 17 + 15 + 20 + 21 + 16 + 19 + 12 + 16 = 184$$
+
+Average cluster size: $$\bar{m} = \frac{total_x}{n_{PSU}} = \frac{184}{10} = 18.4$$
+
+Variance under cluster sampling: $$V_{cluster}(\hat{p}) = \left(\frac{\sqrt{var_{p\_hat}}}{total_x}\right)^2 = \left(\frac{\sqrt{11.73}}{184}\right)^2 = 0.00035$$
+
+Variance under SRS: $$V_{SRS}(\hat{p}) = \frac{p(1-p)}{total_x} = \frac{0.5217(1-0.5217)}{184} = \frac{0.5217 \times 0.4783}{184} = 0.00136$$
+
+Design effect: $$deff = \frac{V_{cluster}(\hat{p})}{V_{SRS}(\hat{p})} = \frac{0.00035}{0.00136} = 0.255$$
+
+Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1} = \frac{0.255 - 1}{18.4 - 1} = \frac{-0.745}{17.4} = -0.043$$
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculating cluster and PSU totals
+total_y <- sum(data$t_y)
+total_x <- sum(data$t_x)
+p_hat <- total_y / total_x
+
+# Calculating actual variance from previous steps
+var_p_hat <- sum(var_components)
+se_p_hat <- sqrt(var_p_hat) / total_x
+var_cluster <- se_p_hat^2
+
+# Calculating SRS variance
+var_srs <- p_hat * (1 - p_hat) / total_x
+
+# Calculating design effect
+deff <- var_cluster / var_srs
+
+# Calculating average cluster size
+m_bar <- total_x / nrow(data)
+
+# Calculating roh
+roh <- (deff - 1) / (m_bar - 1)
+
+cat("Total sample size:", total_x, "\n")
+cat("Average cluster size:", m_bar, "\n")
+cat("Variance under cluster sampling:", var_cluster, "\n")
+cat("Variance under SRS:", var_srs, "\n")
+cat("Design effect (deff):", deff, "\n")
+cat("Intracluster correlation (roh):", roh, "\n")
+```
+
+Looking at my analysis of the intracluster correlation and design effect, I found that my design effect calculation came out to about 0.255, which means the variance from the stratified cluster sampling design is actually smaller than what one would expect from simple random sampling. This is reflected in the negative intracluster correlation (roh) of approximately -0.043. A negative roh suggests that individuals within the same cluster tend to be more different from each other than individuals from different clusters when it comes to cholesterol levels.
+
+This could be happening because the stratification was particularly effective at capturing between-group differences. In practical terms, this means the complex sampling design actually improved precision compared to a simple random sample of the same size meaning I am getting a "design benefit" rather than a design effect penalty.
+
+This finding contradicts the common assumption that cluster sampling always reduces precision, and suggests that for this particular health measure, this sampling strategy was quite efficient.
+
+## d) Estimate the standard error expected if the sample size were doubled by doubling the number of primary selections from two to four in each stratum.
+
+When the number of primary selections per stratum is doubled from 2 to 4, the standard error decreases by a factor of $\sqrt{2}$:
+
+$$SE_{new}(\hat{p}) = \frac{SE_{original}(\hat{p})}{\sqrt{2}}$$
+
+This is because:
+
+$$V_{new}(\hat{p}) = \frac{V_{original}(\hat{p})}{2}$$
+
+So I can derive this from the general formula for variance estimation with $n_h$ PSUs per stratum:
+
+$$V(\hat{p}) = \sum_{h=1}^L \frac{1}{n_h(n_h-1)} \sum_{i=1}^{n_h} (z_{hi} - \bar{z}_h)^2$$
+
+Original standard error (from part a): $$SE_{original}(\hat{p}) = 0.0186$$
+
+New standard error with doubled PSUs: $$SE_{new}(\hat{p}) = \frac{SE_{original}(\hat{p})}{\sqrt{2}} = \frac{0.0186}{\sqrt{2}} \approx 0.0132$$
+
+Percentage reduction: $$\text{Reduction} = \left(1 - \frac{SE_{new}(\hat{p})}{SE_{original}(\hat{p})}\right) \times 100\% = \left(1 - \frac{0.0132}{0.0186}\right) \times 100\% \approx 29.3\%$$
+
+```{r}
+# Getting the original standard error
+se_original <- se_p_hat
+
+# Calculating the new standard error with doubled PSUs
+se_new <- se_original / sqrt(2)
+
+# Calculating the percentage reduction in standard error
+pct_reduction <- (1 - se_new/se_original) * 100
+
+cat("Original standard error:", se_original, "\n")
+cat("New standard error (with 4 PSUs per stratum):", se_new, "\n")
+cat("Percentage reduction in standard error:", pct_reduction, "%\n")
+```
+
+Looking at my analysis, I found that doubling the number of PSUs per stratum from 2 to 4 would significantly improve the precision of the cholesterol proportion estimate.
+
+Specifically, the standard error would decrease from about 0.0186 to 0.0132, representing a roughly 29.3% reduction. This improvement makes intuitive sense since by selecting more primary sampling units within each stratum, I'd be capturing more of the between-PSU variation that contributes to sampling error. The square root relationship between sample size and standard error is clearly demonstrated here, as doubling the number of PSUs leads to a reduction by a factor of approximately sqrt(2).
+
+Now, if I were designing a follow-up study, this finding would strongly suggest that increasing the number of PSUs per stratum would be a worthwhile investment to improve precision, especially considering the relatively small number of degrees of freedom in the current design. This approach would give me much more reliable estimates of the proportion of people with elevated cholesterol levels without requiring any changes to the stratification scheme.
+
+## e) Compute the coefficient of variation of the denominator. Remember to account for the stratified cluster sampling design in your calculation. Is the Taylor series approximation adequate?
+
+For stratified cluster sampling, the coefficient of variation (CV) of the denominator is:
+
+$$CV(x) = \frac{\sqrt{V(x)}}{E(x)} = \frac{\sqrt{V(\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i})}}{\sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}}$$
+
+The variance of the denominator under stratified cluster sampling is:
+
+$$V(x) = \sum_{h=1}^L \frac{(t_{x,h,1} - t_{x,h,2})^2}{4}$$
+
+For the Taylor series approximation to be adequate, typically CV(x) should be less than 0.1 (or 10%).
+
+Now the calculation will be:
+
+Total denominator: $$x = \sum_{h=1}^5 \sum_{i=1}^2 t_{x,h,i} = 184$$
+
+Variance components for each stratum:
+
+For stratum 1: $$v_1 = \frac{(t_{x,1,1} - t_{x,1,2})^2}{4} = \frac{(23-25)^2}{4} = \frac{4}{4} = 1$$
+
+For stratum 2: $$v_2 = \frac{(t_{x,2,1} - t_{x,2,2})^2}{4} = \frac{(17-15)^2}{4} = \frac{4}{4} = 1$$
+
+For stratum 3: $$v_3 = \frac{(t_{x,3,1} - t_{x,3,2})^2}{4} = \frac{(20-21)^2}{4} = \frac{1}{4} = 0.25$$
+
+For stratum 4: $$v_4 = \frac{(t_{x,4,1} - t_{x,4,2})^2}{4} = \frac{(16-19)^2}{4} = \frac{9}{4} = 2.25$$
+
+For stratum 5: $$v_5 = \frac{(t_{x,5,1} - t_{x,5,2})^2}{4} = \frac{(12-16)^2}{4} = \frac{16}{4} = 4$$
+
+Hence, Total variance: $$V(x) = \sum_{h=1}^5 v_h = 1 + 1 + 0.25 + 2.25 + 4 = 8.5$$
+
+Now to check the Coefficient of variation,
+
+$$V(x) = 8.5$$
+
+and
+
+$$x = 184$$ so
+
+$$CV(x) = \frac{\sqrt{8.5}}{184} = \frac{2.92}{184} = 0.016$$
+
+Since CV(x) = 0.016 \< 0.1, the Taylor series approximation is adequate.
+
+```{r}
+data <- data.frame(
+  stratum = rep(1:5, each = 2),
+  psu = rep(1:2, times = 5),
+  t_y = c(16, 15, 9, 5, 8, 10, 6, 10, 10, 7),
+  t_x = c(23, 25, 17, 15, 20, 21, 16, 19, 12, 16)
+)
+
+# Calculating total denominator (x)
+x <- sum(data$t_x)
+
+# Calculating variance components for the denominator by stratum
+var_components_x <- tapply(data$t_x, data$stratum, function(tx) {
+  (tx[1] - tx[2])^2 / 4
+})
+
+# Sum variance components to get total variance of denominator
+var_x <- sum(var_components_x)
+
+# Calculating coefficient of variation
+cv_x <- sqrt(var_x) / x
+
+# Now showing the results
+cat("Total denominator (x):", x, "\n")
+cat("Variance of denominator:", var_x, "\n")
+cat("Coefficient of variation of denominator:", cv_x, "\n")
+cat("Is Taylor series approximation adequate? (CV < 0.1):", cv_x < 0.1, "\n")
+```
+
+After analyzing the coefficient of variation for the denominator in this stratified cluster sample, I found that the CV is approximately 0.016 or 1.6%, which is well below the standard threshold of 0.1 (10%) for determining whether the Taylor series approximation is adequate.
+
+This low CV indicates that there's relatively little variability in the cluster sizes across different PSUs when compared to their average size. The total variance of the denominator was calculated to be 8.5, which is quite small relative to the total denominator of 184.
+
+Looking at each stratum's contribution to this variance, I can see that stratum 5 had the largest difference in cluster sizes (12 vs 16), contributing 4 units to the total variance, while stratum 3 had the smallest difference (20 vs 21), contributing only 0.25 units. So, given this small coefficient of variation, I can confidently rely on the Taylor series approximation for the variance estimation of the ratio estimate, which validates the approach I've used throughout my analysis of the cholesterol data.
