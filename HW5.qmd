@@ -267,3 +267,132 @@ So the selected blocks correspond to the selection numbers when matched with the
 
 Hence, this systematic approach ensures that each block had a probability proportional to its size of being included in the sample.
 
+
+## b) Do you have oversized units? If any, describe how you have handled oversized units.
+
+Now from the lectures, in PPS sampling, an oversized unit occurs when a block's measure of size (MOS) is larger than the sampling interval. This causes the block to be selected with certainty and can distort the sample.
+
+Step 1: Identifying if there are oversized units
+First, let me examine if any blocks have a MOS larger than our sampling interval:
+
+```{r}
+# Calculating sampling interval (from part a)
+a <- 20  # Number of blocks to select
+total_MOS <- sum(block_data$MOS)
+I <- total_MOS / a
+
+# Identifying oversized units
+oversized_blocks <- block_data[block_data$MOS > I, ]
+
+# Counting oversized units
+num_oversized <- nrow(oversized_blocks)
+
+cat("Sampling interval (I):", I, "\n")
+cat("Number of oversized units:", num_oversized, "\n")
+
+if(num_oversized > 0) {
+  # Displaying oversized blocks
+  print(oversized_blocks[, c("ID", "COUNTY", "TRACT", "BLOCK", "OCC_HU", "MOS")])
+  
+  # Calculating sum of MOS for oversized units
+  sum_oversized_MOS <- sum(oversized_blocks$MOS)
+  cat("Sum of MOS for oversized units:", sum_oversized_MOS, "\n")
+}
+```
+
+So my analysis shows that there is 1 oversized block in the frame. This block has a MOS of 93,479, which significantly exceeds our sampling interval of 17,170.1. According to PPS sampling theory, this block should be selected with certainty.
+
+Step 2: Handling the oversized unit
+The proper approach for handling oversized units is:
+
+* Select all oversized units with certainty (probability = 1)
+
+* Adjust the sample size for the remaining units
+
+* Apply PPS sampling to the non-oversized units
+
+```{r}
+# Separating oversized and non-oversized units
+non_oversized_blocks <- block_data[block_data$MOS <= I, ]
+
+# Calculating adjusted sample size
+a_adjusted <- a - num_oversized
+
+# Calculating new total MOS for non-oversized units
+total_MOS_adjusted <- sum(non_oversized_blocks$MOS)
+
+# Calculating adjusted sampling interval
+I_adjusted <- total_MOS_adjusted / a_adjusted
+
+# Recalculating cumulative MOS for non-oversized units
+non_oversized_blocks$CUM_MOS_adjusted <- cumsum(non_oversized_blocks$MOS)
+
+cat("Original sample size (a):", a, "\n")
+cat("Number of oversized units selected with certainty:", num_oversized, "\n")
+cat("Adjusted sample size for non-oversized units (a_adjusted):", a_adjusted, "\n")
+cat("Original sampling interval:", I, "\n")
+cat("Adjusted sampling interval:", I_adjusted, "\n")
+```
+
+Step 3: Now selecting the adjusted sample from non-oversized units
+
+```{r}
+# Setting seed for reproducibility (same as part a)
+set.seed(625)
+
+# Generating random start for adjusted sampling
+R_adjusted <- runif(1, 0, I_adjusted)
+cat("Adjusted random start:", R_adjusted, "\n")
+
+# Calculating adjusted selection numbers
+selection_numbers_adjusted <- R_adjusted + (0:(a_adjusted-1)) * I_adjusted
+
+# Selecting blocks from non-oversized units
+selected_indices_adjusted <- sapply(
+  selection_numbers_adjusted, 
+  function(s) which(non_oversized_blocks$CUM_MOS_adjusted >= s)[1]
+)
+
+selected_blocks_adjusted <- non_oversized_blocks[selected_indices_adjusted, ]
+
+# Creating final results table
+selection_results_adjusted <- data.frame(
+  Selection_Type = rep("PPS", nrow(selected_blocks_adjusted)),
+  Selection_Number = selection_numbers_adjusted,
+  Block_ID = selected_blocks_adjusted$ID,
+  County = selected_blocks_adjusted$COUNTY,
+  Tract = selected_blocks_adjusted$TRACT,
+  Block = selected_blocks_adjusted$BLOCK,
+  Occupied_HU = selected_blocks_adjusted$OCC_HU,
+  MOS = selected_blocks_adjusted$MOS
+)
+```
+```{r}
+# Adding oversized unit to final selection
+selection_results_final <- rbind(
+  data.frame(
+    Selection_Type = "Certainty (Oversized)",
+    Selection_Number = NA,
+    Block_ID = oversized_blocks$ID,
+    County = oversized_blocks$COUNTY,
+    Tract = oversized_blocks$TRACT,
+    Block = oversized_blocks$BLOCK,
+    Occupied_HU = oversized_blocks$OCC_HU,
+    MOS = oversized_blocks$MOS
+  ),
+  selection_results_adjusted
+)
+
+# Displaying final results
+print(selection_results_final)
+
+# Calculating total occupied housing units in final sample
+total_selected_OCC_HU_final <- sum(selection_results_final$Occupied_HU, na.rm = TRUE)
+cat("Total occupied housing units in final sample:", total_selected_OCC_HU_final, "\n")
+```
+
+Looking at my results from the PPS sampling, I found a very interesting situation with one oversized unit. This unit has 93,479 occupied housing units, which is more than 5 times larger than my sampling interval of 17,170.1. Since this unit would have a selection probability greater than 1 using standard PPS methods, I had to select it with certainty and adjust my approach for the remaining 19 selections. 
+
+After recalculating the sampling interval for the non-oversized units, I selected the remaining blocks using a systematic PPS approach with a new random start and interval. My final sample includes this large unit plus 19 other blocks with varying sizes, many of which had fewer than 50 occupied housing units (and were therefore assigned the minimum size of 50). 
+
+The total number of occupied housing units in my final sample came to 93,760, with the oversized unit accounting for about 99.7% of this total. This actually demonstrates how a single extremely large unit can dominate a PPS sample, which is an important consideration when analyzing survey data with such uneven size distributions.
