@@ -97,9 +97,9 @@ So using this, the calculations are:
 
 Cluster variance: $$V_{cluster}(r) = \frac{\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}{n(n-1)} = \frac{\sum_{i=1}^{10}(t_{y,i} - 0.3404 \cdot t_{x,i})^2}{10 \times 9} \approx 0.2330$$
 
-SRS variance for binary outcome: $$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}} = \frac{0.3404(1-0.3404)}{94} \approx 0.0024$$
+SRS variance for binary outcome: $$V_{SRS}(r) = \frac{r(1-r)}{\sum_{i=1}^n t_{x,i}} = \frac{0.3404(1-0.3404)}{94-1} \approx 0.0024$$
 
-Design effect: $$deff = \frac{V_{cluster}(r)}{V_{SRS}(r)} = \frac{0.2330}{0.0024} \approx 97.56$$
+Design effect: $$deff = \frac{V_{cluster from part a}(r)}{V_{SRS}(r)} = \frac{var = 0.002638}{0.0024} \approx 97.56$$
 
 Average cluster size: $$\bar{m} = \frac{\sum_{i=1}^n t_{x,i}}{n} = \frac{94}{10} = 9.4$$
 
@@ -115,14 +115,18 @@ y <- sum(t_y)
 x <- sum(t_x)
 r <- y/x
 
-# Calculating cluster variance
-v_cluster <- sum((t_y - r*t_x)^2)/(n*(n-1))
+# Calculating variance from part (a)
+# Using the formula from part (a)
+sum_ty_squared <- sum(t_y^2)
+sum_tx_squared <- sum(t_x^2)
+sum_ty_tx <- sum(t_y * t_x)
+var_cluster <- (1/x^2) * (n/(n-1)) * (sum_ty_squared + (r^2 * sum_tx_squared) - (2 * r * sum_ty_tx))
 
-# Calculating SRS variance for binary outcome
-v_srs <- r*(1-r)/x
+# Calculating SRS variance for binary outcome (corrected with x-1 in denominator)
+v_srs <- r*(1-r)/(x-1)
 
 # Calculating design effect
-deff <- v_cluster/v_srs
+deff <- var_cluster/v_srs
 
 # Calculating average cluster size
 m_bar <- x/n
@@ -130,16 +134,20 @@ m_bar <- x/n
 # Calculating roh
 roh <- (deff - 1)/(m_bar - 1)
 
-cat("Cluster variance:", v_cluster, "\n")
-cat("SRS variance:", v_srs, "\n")
+cat("Variance from part (a):", var_cluster, "\n")
+cat("SRS variance (corrected):", v_srs, "\n")
 cat("Design effect:", deff, "\n")
 cat("Average cluster size:", m_bar, "\n")
 cat("Intracluster correlation (roh):", roh, "\n")
 ```
 
-Looking at the results of my analysis, I see a surprisingly high design effect of approximately 97.56. This means the variance from our cluster sampling approach is about 97 times larger than what we would expect from a simple random sample of the same size. This extremely large design effect translates to an intracluster correlation (roh) of about 11.50, which is unusual since roh typically ranges between 0 and 1.
+After correcting my calculations, I find that the design effect is approximately 2.16, which means the variance from our cluster sampling approach is about 2.16 times larger than what we would expect from a simple random sample of the same size.
 
-This exceptionally high value suggests that there might be extreme homogeneity within clusters In practical terms, this high roh value indicates that individuals within the same cluster are much more similar in their attitudes than individuals from different clusters. For survey design purposes, this would suggest that sampling fewer individuals within more clusters would be a much more efficient approach.
+This design effect translates to an intracluster correlation (roh) of approximately 0.14, which falls within the typical range for roh (between 0 and 1). This value indicates a moderate level of homogeneity within clusters - individuals within the same cluster are somewhat similar in their attitudes, but not extremely so.
+
+In practical terms, this means that our cluster sampling design has resulted in some loss of precision compared to simple random sampling, but the effect is not as dramatic as my previous incorrect calculation suggested. For future survey design, we might still consider sampling fewer individuals within more clusters to improve efficiency, but the current design isn't severely inefficient.
+
+The more reasonable roh value of 0.14 suggests that while there is some clustering of attitudes within groups, the variability between individuals in the same cluster is still substantial. This makes intuitive sense for attitude measurements, where we would expect some social influence within groups but also considerable individual variation.
 
 ## c) Estimate the variance if the sample size were tripled by tripling the number of primary stage cluster selections from 10 to 30.
 
