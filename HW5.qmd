@@ -142,3 +142,39 @@ $$f = \frac{3,000}{131,788} = 0.02277$$
 
 The overall sampling fraction is approximately 0.02277 or about 2.28%, meaning we'll sample roughly 2.28% of all occupied housing units across the four strata.
 
+## c) Maintaining epsem, what value of b* should be used in each of the four strata?
+
+For a PPS design to maintain equal probability of selection (epsem), we need to determine the appropriate b* (minimum sufficient size) for each stratum.
+
+The sampling fraction within each stratum should equal the overall sampling fraction:
+
+$$\frac{b^*_h \times n_h}{N_h} = f$$
+
+Solving for $b^*_h$:
+
+$$b^*_h = \frac{f \times N_h}{n_h}$$
+
+```{r}
+# Calculating b* for each stratum
+strata_data$b_star <- (f * strata_data$occupied_units) / strata_data$rounded_allocation
+
+# Display results
+print(strata_data[, c("stratum", "occupied_units", "rounded_allocation", "b_star")])
+```
+
+For each stratum:
+
+$$b^*_1 = \frac{0.02277 \times 8,521}{6} = \frac{194.02}{6} \approx 32.34$$
+
+$$b^*_2 = \frac{0.02277 \times 28,744}{22} = \frac{654.51}{22} \approx 29.75$$
+
+$$b^*_3 = \frac{0.02277 \times 17,224}{13} = \frac{392.19}{13} \approx 30.17$$
+
+$$b^*_4 = \frac{0.02277 \times 77,299}{59} = \frac{1,760.20}{59} \approx 29.83$$
+
+
+After calculating the values of $b^*_h$ for each stratum, I found that Allegan River, with 8,521 occupied housing units and 6 allocated blocks, has a $b^*$ value of approximately 32.33. 
+
+Allegan Non-River, which includes 28,744 occupied units and was allocated 22 blocks, has a $b^*$ value of about 29.74. For Kalamazoo River, with 17,224 occupied units and 13 blocks, the $b^*$ value came out to roughly 30.16. 
+
+Lastly, Kalamazoo Non-River, the largest stratum with 77,299 occupied units and 59 blocks, has a $b^*$ value of around 29.82. These values represent the minimum sufficient size per block to maintain equal probability sampling across all strata.
