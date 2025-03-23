@@ -178,3 +178,6 @@ After calculating the values of $b^*_h$ for each stratum, I found that Allegan R
 Allegan Non-River, which includes 28,744 occupied units and was allocated 22 blocks, has a $b^*$ value of about 29.74. For Kalamazoo River, with 17,224 occupied units and 13 blocks, the $b^*$ value came out to roughly 30.16. 
 
 Lastly, Kalamazoo Non-River, the largest stratum with 77,299 occupied units and 59 blocks, has a $b^*$ value of around 29.82. These values represent the minimum sufficient size per block to maintain equal probability sampling across all strata.
+
+## 2. Download the Excel file provided with this homework (a geographically sorted list of blocks). 
+
