@@ -412,21 +412,21 @@ This precision level is quite reasonable for a stratified cluster sample of this
 
 For a stratified two-stage cluster sampling design with two PSUs per stratum, the degrees of freedom are calculated as:
 
-$$df = L - 1$$
+$$df = L$$
 
-where $L$ is the number of strata. $$df = L - 1 = 5 - 1 = 4$$
+where $L$ is the number of strata. $$df = L = 5$$
 
 The 95% confidence interval is then:
 
 $$\hat{p} \pm t_{df, 0.975} \times SE(\hat{p})$$
 
-t-critical value: $$t_{4, 0.975} = 2.776$$
+t-critical value: $$t_{5, 0.975} = 2.571$$
 
-So the confidence interval: $$\hat{p} \pm t_{4, 0.975} \times SE(\hat{p}) = 0.5217 \pm 2.776 \times 0.0186 = 0.5217 \pm 0.0517$$
+So the confidence interval: $$\hat{p} \pm t_{5, 0.975} \times SE(\hat{p}) = 0.5217 \pm 2.571 \times 0.0186 = 0.5217 \pm 0.0478$$
 
-Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0517 = 0.4701$$ $$CI_{upper} = 0.5217 + 0.0517 = 0.5734$$
+Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0478 = 0.4739$$ $$CI_{upper} = 0.5217 + 0.0478 = 0.5695$$
 
-Therefore: $$CI_{95\%} = (0.4701, 0.5734)$$
+Therefore: $$CI_95%$ = $$(0.4739, 0.5695)$$
 
 ```{r}
 data <- data.frame(
@@ -455,9 +455,9 @@ var_p_hat <- sum(var_components)
 # Calculating standard error
 se_p_hat <- sqrt(var_p_hat) / total_x
 
-# Calculating degrees of freedom
+# Calculating correct degrees of freedom
 L <- length(unique(data$stratum))  # Number of strata
-df <- L - 1
+df <- L  # Correct df is L, not L-1
 
 # Calculating t-critical value
 t_crit <- qt(0.975, df)
@@ -473,11 +473,31 @@ cat("t-critical value:", t_crit, "\n")
 cat("95% Confidence Interval:", c(ci_lower, ci_upper), "\n")
 ```
 
-Based on my analysis of the cholesterol data from this stratified cluster sample, I can say with 95% confidence that the true proportion of individuals with total cholesterol greater than 200 is between 47.0% and 57.3%. My best estimate for this proportion is 52.2%.
 
-Now the design I used accounts for the complex sampling structure with five strata and two PSUs per stratum, which gives me just 4 degrees of freedom for calculating confidence intervals. This relatively small number of degrees of freedom explains why I needed to use a t-critical value of 2.78 rather than the normal approximation of 1.96.
+$$df = L$$
 
-Now the resulting interval width of about 10.3 percentage points shows moderate precision. So if one wanted more precise estimates, one would need to increase the number of strata or PSUs in the sample design.
+where $L$ is the number of strata. $$df = L = 5$$
+
+The 95% confidence interval is then:
+
+$$\hat{p} \pm t_{df, 0.975} \times SE(\hat{p})$$
+
+t-critical value: $$t_{5, 0.975} = 2.571$$
+
+So the confidence interval: $$\hat{p} \pm t_{5, 0.975} \times SE(\hat{p}) = 0.5217 \pm 2.571 \times 0.0186 = 0.5217 \pm 0.0478$$
+
+Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0478 = 0.4739$$ $$CI_{upper} = 0.5217 + 0.0478 = 0.5695$$
+
+Therefore: $$CI_95%$= $$(0.4739, 0.5695)$$
+
+Based on my analysis of the cholesterol data from this stratified cluster sample, I can say with 95% confidence that the true proportion of individuals with total cholesterol greater than 200 is between 47.4% and 57.0%. My best estimate for this proportion is 52.2%.
+
+The complex sampling design with five strata and two PSUs per stratum gives us 5 degrees of freedom for calculating confidence intervals, not 4 as I incorrectly stated earlier. With 5 degrees of freedom, the appropriate t-critical value is 2.571 (rather than 2.776), which results in a slightly narrower confidence interval.
+
+The resulting interval width of about 9.6 percentage points still reflects moderate precision, which is reasonable given the sample size and design. If greater precision were needed, increasing the number of strata or PSUs in the sample design would be beneficial.
+
+This confidence interval properly accounts for the complex survey design, including the clustering of observations and the stratification structure, giving us a valid statistical inference about the population proportion of individuals with elevated cholesterol levels.
+
 
 ## c) Compute the design effect and roh for the proportion in (a).
 
