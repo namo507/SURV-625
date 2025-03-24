@@ -4,7 +4,7 @@ format: pdf
 editor: visual
 ---
 
-## 1. The following is the distribution of occupied housing units and blocks for two counties in  Michigan.  A stratified PPeS sample of n = 3000 housing units in a = 100 blocks with  minimum sufficient size b* per block is to be selected across the counties. The counties and the subdivisions within each county of river and non-river blocks serve as four (4) strata.
+## 1. The following is the distribution of occupied housing units and blocks for two counties in Michigan. A stratified PPeS sample of n = 3000 housing units in a = 100 blocks with minimum sufficient size b\* per block is to be selected across the counties. The counties and the subdivisions within each county of river and non-river blocks serve as four (4) strata.
 
 ## a) Allocate the sample blocks across the four strata proportionate to occupied housing units. How have you handled rounding of sample blocks?
 
@@ -14,11 +14,7 @@ $$n_h = a \times \frac{N_h}{N}$$
 
 Where:
 
-$n_h$ is the number of sample blocks allocated to stratum $h$
-$a = 100$ is the total number of sample blocks to be selected
-$N_h$ is the number of occupied housing units in stratum $h$
-$N$ is the total number of occupied housing units
-For each stratum:
+$n_h$ is the number of sample blocks allocated to stratum $h$ $a = 100$ is the total number of sample blocks to be selected $N_h$ is the number of occupied housing units in stratum $h$ $N$ is the total number of occupied housing units For each stratum:
 
 $$n_1 = 100 \times \frac{8,521}{131,788} = 100 \times 0.0647 = 6.47$$
 
@@ -30,12 +26,7 @@ $$n_4 = 100 \times \frac{77,299}{131,788} = 100 \times 0.5866 = 58.66$$
 
 Rounding to whole numbers:
 
-Allegan_River: 6.47 -> 6
-Allegan_NonRiver: 21.81 -> 22
-Kalamazoo_River: 13.07 -> 13
-Kalamazoo_NonRiver: 58.66 -> 59
-The sum is 6 + 22 + 13 + 59 = 100, which equals our target.
-
+Allegan_River: 6.47 -\> 6 Allegan_NonRiver: 21.81 -\> 22 Kalamazoo_River: 13.07 -\> 13 Kalamazoo_NonRiver: 58.66 -\> 59 The sum is 6 + 22 + 13 + 59 = 100, which equals our target.
 
 So the R code for this is:
 
@@ -107,13 +98,13 @@ print(strata_data[, c("stratum", "occupied_units", "proportion",
                       "initial_allocation", "rounded_allocation")])
 ```
 
-Now based on my calculations, I allocated the 100 sample blocks proportionately across the four strata using the number of occupied housing units in each stratum. 
+Now based on my calculations, I allocated the 100 sample blocks proportionately across the four strata using the number of occupied housing units in each stratum.
 
-Allegan River, with 8,521 occupied units, was allocated 6 blocks, while Allegan Non-River, which has 28,744 occupied units, received 22 blocks. Kalamazoo River, with 17,224 occupied units, was assigned 13 blocks, and Kalamazoo Non-River, the largest stratum with 77,299 occupied units, was allocated 59 blocks. 
+Allegan River, with 8,521 occupied units, was allocated 6 blocks, while Allegan Non-River, which has 28,744 occupied units, received 22 blocks. Kalamazoo River, with 17,224 occupied units, was assigned 13 blocks, and Kalamazoo Non-River, the largest stratum with 77,299 occupied units, was allocated 59 blocks.
 
 These allocations were rounded from their initial fractional values to ensure the total number of blocks summed exactly to 100.
 
-## b)  Give the overall sampling fraction f across the four strata.
+## b) Give the overall sampling fraction f across the four strata.
 
 Now the overall sampling fraction represents the proportion of housing units selected:
 
@@ -121,8 +112,7 @@ $$f = \frac{n}{N}$$
 
 Where:
 
-$n = 3,000$ is the total sample size (housing units)
-$N = 131,788$ is the total number of occupied housing units
+$n = 3,000$ is the total sample size (housing units) $N = 131,788$ is the total number of occupied housing units
 
 ```{r}
 # Total sample size
@@ -137,14 +127,13 @@ cat("Overall sampling fraction (f):", f, "\n")
 cat("As a percentage:", f * 100, "%\n")
 ```
 
-
 $$f = \frac{3,000}{131,788} = 0.02277$$
 
 The overall sampling fraction is approximately 0.02277 or about 2.28%, meaning we'll sample roughly 2.28% of all occupied housing units across the four strata.
 
-## c) Maintaining epsem, what value of b* should be used in each of the four strata?
+## c) Maintaining epsem, what value of b\* should be used in each of the four strata?
 
-For a PPS design to maintain equal probability of selection (epsem), we need to determine the appropriate b* (minimum sufficient size) for each stratum.
+For a PPS design to maintain equal probability of selection (epsem), we need to determine the appropriate b\* (minimum sufficient size) for each stratum.
 
 The sampling fraction within each stratum should equal the overall sampling fraction:
 
@@ -172,18 +161,18 @@ $$b^*_3 = \frac{0.02277 \times 17,224}{13} = \frac{392.19}{13} \approx 30.17$$
 
 $$b^*_4 = \frac{0.02277 \times 77,299}{59} = \frac{1,760.20}{59} \approx 29.83$$
 
+After calculating the values of $b^*_h$ for each stratum, I found that Allegan River, with 8,521 occupied housing units and 6 allocated blocks, has a $b^*$ value of approximately 32.33.
 
-After calculating the values of $b^*_h$ for each stratum, I found that Allegan River, with 8,521 occupied housing units and 6 allocated blocks, has a $b^*$ value of approximately 32.33. 
-
-Allegan Non-River, which includes 28,744 occupied units and was allocated 22 blocks, has a $b^*$ value of about 29.74. For Kalamazoo River, with 17,224 occupied units and 13 blocks, the $b^*$ value came out to roughly 30.16. 
+Allegan Non-River, which includes 28,744 occupied units and was allocated 22 blocks, has a $b^*$ value of about 29.74. For Kalamazoo River, with 17,224 occupied units and 13 blocks, the $b^*$ value came out to roughly 30.16.
 
 Lastly, Kalamazoo Non-River, the largest stratum with 77,299 occupied units and 59 blocks, has a $b^*$ value of around 29.82. These values represent the minimum sufficient size per block to maintain equal probability sampling across all strata.
 
-## 2. Download the Excel file provided with this homework (a geographically sorted list of blocks). 
+## 2. Download the Excel file provided with this homework (a geographically sorted list of blocks).
 
 ## a) Select a systematic PPeS sample of a = 20 blocks from the list of A = 4,495 in the csv file. The minimum sufficient size for a block is 50 occupied housing units. Specify the sampling interval, and the random start. List selected blocks, the selection number (the random start plus interval), and the total number of occupied housing units in the sample blocks. Document how the random start was determined, in a way that would allow someone to replicate your selection process exactly.
 
 Step 1: Preparing and checking the data
+
 ```{r}
 library(readxl)
 file_path <- "SM 625 Homework 5 PPeS & Stratified PPeS frames winter 2025.xlsx"
@@ -194,7 +183,7 @@ head(block_data)
 
 Step 2: Calculating the measure of size (MOS) for each block
 
-For PPS sampling, I need to determine the measure of size (MOS) for each block. Since the minimum sufficient size (b*) is 50 housing units, I'll use:
+For PPS sampling, I need to determine the measure of size (MOS) for each block. Since the minimum sufficient size (b\*) is 50 housing units, I'll use:
 
 ```{r}
 names(block_data)[names(block_data) == "Housing units:  Occupied"] <- "OCC_HU"
@@ -227,6 +216,7 @@ cat("Random Start (R):", R, "\n")
 ```
 
 Step 4: Determining the selection numbers
+
 ```{r}
 # Calculating selection numbers
 selection_numbers <- R + (0:(a-1)) * I
@@ -234,6 +224,7 @@ selection_numbers
 ```
 
 Step 5: Selecting the blocks:
+
 ```{r}
 # Function to find the block corresponding to a selection number
 find_block <- function(sel_num, data) {
@@ -267,13 +258,11 @@ So the selected blocks correspond to the selection numbers when matched with the
 
 Hence, this systematic approach ensures that each block had a probability proportional to its size of being included in the sample.
 
-
 ## b) Do you have oversized units? If any, describe how you have handled oversized units.
 
 Now from the lectures, in PPS sampling, an oversized unit occurs when a block's measure of size (MOS) is larger than the sampling interval. This causes the block to be selected with certainty and can distort the sample.
 
-Step 1: Identifying if there are oversized units
-First, let me examine if any blocks have a MOS larger than our sampling interval:
+Step 1: Identifying if there are oversized units First, let me examine if any blocks have a MOS larger than our sampling interval:
 
 ```{r}
 # Calculating sampling interval (from part a)
@@ -302,14 +291,13 @@ if(num_oversized > 0) {
 
 So my analysis shows that there is 1 oversized block in the frame. This block has a MOS of 93,479, which significantly exceeds our sampling interval of 17,170.1. According to PPS sampling theory, this block should be selected with certainty.
 
-Step 2: Handling the oversized unit
-The proper approach for handling oversized units is:
+Step 2: Handling the oversized unit The proper approach for handling oversized units is:
 
-* Select all oversized units with certainty (probability = 1)
+-   Select all oversized units with certainty (probability = 1)
 
-* Adjust the sample size for the remaining units
+-   Adjust the sample size for the remaining units
 
-* Apply PPS sampling to the non-oversized units
+-   Apply PPS sampling to the non-oversized units
 
 ```{r}
 # Separating oversized and non-oversized units
@@ -367,6 +355,7 @@ selection_results_adjusted <- data.frame(
   MOS = selected_blocks_adjusted$MOS
 )
 ```
+
 ```{r}
 # Adding oversized unit to final selection
 selection_results_final <- rbind(
@@ -391,20 +380,20 @@ total_selected_OCC_HU_final <- sum(selection_results_final$Occupied_HU, na.rm = 
 cat("Total occupied housing units in final sample:", total_selected_OCC_HU_final, "\n")
 ```
 
-Looking at my results from the PPS sampling, I found a very interesting situation with one oversized unit. This unit has 93,479 occupied housing units, which is more than 5 times larger than my sampling interval of 17,170.1. Since this unit would have a selection probability greater than 1 using standard PPS methods, I had to select it with certainty and adjust my approach for the remaining 19 selections. 
+Looking at my results from the PPS sampling, I found a very interesting situation with one oversized unit. This unit has 93,479 occupied housing units, which is more than 5 times larger than my sampling interval of 17,170.1. Since this unit would have a selection probability greater than 1 using standard PPS methods, I had to select it with certainty and adjust my approach for the remaining 19 selections.
 
-After recalculating the sampling interval for the non-oversized units, I selected the remaining blocks using a systematic PPS approach with a new random start and interval. My final sample includes this large unit plus 19 other blocks with varying sizes, many of which had fewer than 50 occupied housing units (and were therefore assigned the minimum size of 50). 
+After recalculating the sampling interval for the non-oversized units, I selected the remaining blocks using a systematic PPS approach with a new random start and interval. My final sample includes this large unit plus 19 other blocks with varying sizes, many of which had fewer than 50 occupied housing units (and were therefore assigned the minimum size of 50).
 
 The total number of occupied housing units in my final sample came to 93,760, with the oversized unit accounting for about 99.7% of this total. This actually demonstrates how a single extremely large unit can dominate a PPS sample, which is an important consideration when analyzing survey data with such uneven size distributions.
 
+## c) Suppose the following are the first five blocks selected.
 
-## c) Suppose the following are the first five blocks selected.   
-
-## i) Implement the ‘linking after selection’ procedure described in the lecture notes for each  of these five selections, and describe the five resulting linked blocks that would be included in the sample. 
+## i) Implement the ‘linking after selection’ procedure described in the lecture notes for each of these five selections, and describe the five resulting linked blocks that would be included in the sample.
 
 So I remember in systematic PPS sampling with geographic ordering, "linking after selection" is a procedure to enhance geographical representation. When a block is selected, we replace it with a "linked" block based on geographic proximity to improve spatial distribution.
 
 Step 1: Identifying the Selected Blocks
+
 ```{r}
 # Defining the five selected blocks from the problem statement
 selected_blocks_input <- data.frame(
@@ -427,11 +416,11 @@ Step 2: Defining Linking Rules
 
 For each selected block, I'll find a linked block based on these rules:
 
-* The linked block should be in the same census tract
+-   The linked block should be in the same census tract
 
-* It should be geographically adjacent (next block in sequence if possible)
+-   It should be geographically adjacent (next block in sequence if possible)
 
-* It should have similar size (similar number of occupied housing units)
+-   It should have similar size (similar number of occupied housing units)
 
 ```{r}
 # Applying linking procedure to each selected block
@@ -476,6 +465,7 @@ linked_blocks_df <- do.call(rbind, linked_blocks)
 ```
 
 Step 3: Displaying Results
+
 ```{r}
 # Create a comparison table
 results <- data.frame(
@@ -498,24 +488,23 @@ cat("Average Occupied Housing Units:", mean(linked_blocks_df$OCC_HU), "\n")
 cat("Total Occupied Housing Units:", sum(linked_blocks_df$OCC_HU), "\n")
 ```
 
-Looking at my linking results, I found that each of the five originally selected blocks was successfully paired with a linked block from the same tract and block group. 
+Looking at my linking results, I found that each of the five originally selected blocks was successfully paired with a linked block from the same tract and block group.
 
-For example, block ID 142 in tract 000201, block group 1 was linked to block 141 in the same tract and block group, just with a different block number (1063). 
+For example, block ID 142 in tract 000201, block group 1 was linked to block 141 in the same tract and block group, just with a different block number (1063).
 
-Similarly, block 349 was linked to block 348, which shares the same tract (000500) and block group (2). This pattern continued for all five selections, where I consistently found a geographically adjacent block (as indicated by similar ID numbers) to replace the original selection. Interestingly, the average number of occupied housing units in my linked blocks was only 17.2, with a total of 86 housing units across all five linked blocks. 
+Similarly, block 349 was linked to block 348, which shares the same tract (000500) and block group (2). This pattern continued for all five selections, where I consistently found a geographically adjacent block (as indicated by similar ID numbers) to replace the original selection. Interestingly, the average number of occupied housing units in my linked blocks was only 17.2, with a total of 86 housing units across all five linked blocks.
 
 The first linked block actually had zero occupied housing units, while the others ranged from 12 to 35 units. This linking procedure allowed me to maintain the geographic distribution of my sample at the tract level while potentially improving spatial coverage by selecting nearby blocks that might better represent different neighborhood characteristics.
 
 ## ii) The overall sampling fraction is f = 0.001. What sampling rates should be used within each of the five sets of linked blocks to achieve epsem across the two stages (blocks, then occupied housing units)? (Hint: Remember that the housing units at the second stage will be randomly selected from all units in the set of linked blocks, not just the units in the five original selections above.)
 
-
 Now in a two-stage sampling design with PPS selection of blocks followed by sampling of housing units within blocks, I need to determine appropriate second-stage sampling rates to achieve EPSEM (Equal Probability of Selection Method) across the entire sample.
 
 The Mathematical Framework for EPSEM is that each housing unit in the population should have the same overall probability of selection. This probability is the product of:
 
-* The probability of selecting the block ($\pi_i$)
+-   The probability of selecting the block ($\pi_i$)
 
-* The probability of selecting a housing unit within the selected block ($\phi_i$)
+-   The probability of selecting a housing unit within the selected block ($\phi_i$)
 
 Given the overall sampling fraction $f = 0.001$, we need:
 
@@ -531,10 +520,7 @@ $$\pi_i = \frac{M_i}{M} \times a$$
 
 Where:
 
-$M_i$ is the measure of size for block $i$
-$M$ is the total measure of size
-$a$ is the number of blocks to be selected
-
+$M_i$ is the measure of size for block $i$ $M$ is the total measure of size $a$ is the number of blocks to be selected
 
 Implementing this approach in R now:
 
@@ -580,45 +566,29 @@ print(linked_blocks[, c("ID", "OCC_HU", "phi", "sample_size")])
 
 For each linked block the step-by-step calculations are:
 
-
 ## Block 1 (ID: 141, Tract: 000201)
-OCC_HU = 0
-MOS = max(0, 50) = 50
-$\pi_1 = \frac{50}{M} \times 20$
-$\phi_1 = \frac{0.001}{\pi_1}$
-Since OCC_HU = 0, no housing units can be sampled from this block
+
+OCC_HU = 0 MOS = max(0, 50) = 50 $\pi_1 = \frac{50}{M} \times 20$ $\phi_1 = \frac{0.001}{\pi_1}$ Since OCC_HU = 0, no housing units can be sampled from this block
 
 ## Block 2 (ID: 348, Tract: 000500)
-OCC_HU = 21
-MOS = max(21, 50) = 50
-$\pi_2 = \frac{50}{M} \times 20$
-$\phi_2 = \frac{0.001}{\pi_2}$
-Sample size = OCC_HU × $\phi_2$ = 21 × $\phi_2$
+
+OCC_HU = 21 MOS = max(21, 50) = 50 $\pi_2 = \frac{50}{M} \times 20$ $\phi_2 = \frac{0.001}{\pi_2}$ Sample size = OCC_HU × $\phi_2$ = 21 × $\phi_2$
 
 ## Block 3 (ID: 451, Tract: 000600)
-OCC_HU = 35
-MOS = max(35, 50) = 50
-$\pi_3 = \frac{50}{M} \times 20$
-$\phi_3 = \frac{0.001}{\pi_3}$
-Sample size = OCC_HU × $\phi_3$ = 35 × $\phi_3$
+
+OCC_HU = 35 MOS = max(35, 50) = 50 $\pi_3 = \frac{50}{M} \times 20$ $\phi_3 = \frac{0.001}{\pi_3}$ Sample size = OCC_HU × $\phi_3$ = 35 × $\phi_3$
 
 ## Block 4 (ID: 654, Tract: 001000)
-OCC_HU = 18
-MOS = max(18, 50) = 50
-$\pi_4 = \frac{50}{M} \times 20$
-$\phi_4 = \frac{0.001}{\pi_4}$
-Sample size = OCC_HU × $\phi_4$ = 18 × $\phi_4$
+
+OCC_HU = 18 MOS = max(18, 50) = 50 $\pi_4 = \frac{50}{M} \times 20$ $\phi_4 = \frac{0.001}{\pi_4}$ Sample size = OCC_HU × $\phi_4$ = 18 × $\phi_4$
 
 ## Block 5 (ID: 788, Tract: 001300)
-OCC_HU = 12
-MOS = max(12, 50) = 50
-$\pi_5 = \frac{50}{M} \times 20$
-$\phi_5 = \frac{0.001}{\pi_5}$
-Sample size = OCC_HU × $\phi_5$ = 12 × $\phi_5$
 
-So, looking at my EPSEM calculations for the two-stage sampling design, I found that all five linked blocks have the same first-stage selection probability (pi = 0.002912) because they all have the same measure of size (MOS = 50) due to the minimum sufficient size requirement. 
+OCC_HU = 12 MOS = max(12, 50) = 50 $\pi_5 = \frac{50}{M} \times 20$ $\phi_5 = \frac{0.001}{\pi_5}$ Sample size = OCC_HU × $\phi_5$ = 12 × $\phi_5$
 
-So to achieve an overall sampling fraction of 0.001, I needed to set the second-stage sampling rate to approximately 0.343 for each block. This means I should sample about 34.3% of the occupied housing units within each linked block. When I applied this rate to the actual number of occupied units in each block, I determined I should select 0 units from the first block (which has no occupied units), 7 units from the second block (containing 21 units), 12 units from the third block (with 35 units), 6 units from the fourth block (with 18 units), and 4 units from the fifth block (with 12 units). 
+So, looking at my EPSEM calculations for the two-stage sampling design, I found that all five linked blocks have the same first-stage selection probability (pi = 0.002912) because they all have the same measure of size (MOS = 50) due to the minimum sufficient size requirement.
+
+So to achieve an overall sampling fraction of 0.001, I needed to set the second-stage sampling rate to approximately 0.343 for each block. This means I should sample about 34.3% of the occupied housing units within each linked block. When I applied this rate to the actual number of occupied units in each block, I determined I should select 0 units from the first block (which has no occupied units), 7 units from the second block (containing 21 units), 12 units from the third block (with 35 units), 6 units from the fourth block (with 18 units), and 4 units from the fifth block (with 12 units).
 
 This gives me a total of 29 housing units in my final sample. The beauty of this approach is that every housing unit in the population ends up with exactly the same probability (0.001) of being included in my sample, which is crucial for obtaining unbiased estimates from my survey data.
 
@@ -628,17 +598,17 @@ Right, so when field canvassing finds more housing units than expected in a sele
 
 So the mathematical framework shows the key formulas for determining the subsample size which is:
 
-* For EPSEM, the overall selection probability must remain constant at $f = 0.001$
+-   For EPSEM, the overall selection probability must remain constant at $f = 0.001$
 
-* The first-stage selection probability (PPS) is: $$\pi_1 = \frac{MOS_1}{M} \times a$$
+-   The first-stage selection probability (PPS) is: $$\pi_1 = \frac{MOS_1}{M} \times a$$
 
-* The second-stage sampling rate needed is: $$\phi_1 = \frac{f}{\pi_1}$$
+-   The second-stage sampling rate needed is: $$\phi_1 = \frac{f}{\pi_1}$$
 
-* The achieved subsample size is: $$b_1 = B_1 \times \phi_1$$
+-   The achieved subsample size is: $$b_1 = B_1 \times \phi_1$$
 
 However, there are two possible scenarios for interpreting the first-stage probability:
 
-1. Using original MOS from the frame
+1.  Using original MOS from the frame
 
 The first linked block had $$MOS_1$$ = 50 in our sampling frame.
 
@@ -650,7 +620,7 @@ Achieved subsample size: $$b_1 = 90 \times 0.343402 = 30.91$$
 
 Rounding to the nearest integer: 31 housing units
 
-2. Using actual number of occupied units
+2.  Using actual number of occupied units
 
 First-stage selection probability (if I had known the actual count): $$\pi_1 = \frac{90}{M} \times 20 = 0.005242$$
 
@@ -690,8 +660,8 @@ results <- data.frame(
 print(results)
 ```
 
-Looking at the results from my calculations for the first linked block's subsample size, I found two possible approaches when field canvassing revealed 90 occupied housing units instead of the zero units shown in the sampling frame. 
+Looking at the results from my calculations for the first linked block's subsample size, I found two possible approaches when field canvassing revealed 90 occupied housing units instead of the zero units shown in the sampling frame.
 
-Using the original measure of size (MOS=50) from the frame, I calculated a first-stage selection probability of 0.00291 and a corresponding sampling rate of 0.343. This means I'd need to select 31 housing units from this block to maintain EPSEM. However, if I recalculate using the actual number of occupied units (90) as the MOS, the first-stage probability increases to 0.00524, requiring a lower sampling rate of 0.191 to compensate, which results in a subsample of just 17 housing units. 
+Using the original measure of size (MOS=50) from the frame, I calculated a first-stage selection probability of 0.00291 and a corresponding sampling rate of 0.343. This means I'd need to select 31 housing units from this block to maintain EPSEM. However, if I recalculate using the actual number of occupied units (90) as the MOS, the first-stage probability increases to 0.00524, requiring a lower sampling rate of 0.191 to compensate, which results in a subsample of just 17 housing units.
 
 This difference illustrates an important practical consideration in survey implementation like how to handle field discoveries that differ from the sampling frame. The first approach (31 units) maintains the original selection probabilities as designed, while the second approach (17 units) adjusts for what we would have done had we known the true count in advance. Either approach would maintain EPSEM, but they reflect different philosophies about handling frame discrepancies.

@@ -35,7 +35,7 @@ $$SE(r) = \sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}(t_{y,i} - r \cdot t_{x,i})^2}$$
 
 Where n = 10 (number of clusters)
 
-var = 1/(94^2) * 10/(10-1) * (124 + (0.3404^2)*944 - 2*0.3404*312)
+var = 1/(94\^2) \* 10/(10-1) \* (124 + (0.3404\^2)*944 - 2*0.3404\*312)
 
 $$SE(r) = \sqrt{\frac{1}{10(10-1)}\sum_{i=1}^{10}(t_{y,i} - 0.3404255 \cdot t_{x,i})^2}$$
 
@@ -207,7 +207,6 @@ New variance:
 
 $$V_{new}(r) = V_{SRS,new}(r) \times deff_{new} = 0.0008 \times 4.81 \approx 0.0038$$
 
-
 ```{r}
 # Setup
 t_y <- c(5, 1, 2, 4, 2, 2, 3, 3, 4, 6)
@@ -265,10 +264,7 @@ After correcting my calculations, I found that tripling the subsampling rate wit
 
 This substantial improvement occurs because:
 
-The intraclass correlation (roh) is actually around 0.14, not 11.5 as incorrectly calculated earlier
-With this moderate level of within-cluster homogeneity, increasing the sample size within clusters still provides valuable new information
-The SRS variance decreases substantially when the total sample size increases from 94 to 282
-The design effect does increase from 2.17 to 4.81 when we triple the cluster sizes, which reflects the diminishing returns of adding more units within the same clusters. However, this increase in design effect is more than offset by the reduction in the base SRS variance.
+The intraclass correlation (roh) is actually around 0.14, not 11.5 as incorrectly calculated earlier With this moderate level of within-cluster homogeneity, increasing the sample size within clusters still provides valuable new information The SRS variance decreases substantially when the total sample size increases from 94 to 282 The design effect does increase from 2.17 to 4.81 when we triple the cluster sizes, which reflects the diminishing returns of adding more units within the same clusters. However, this increase in design effect is more than offset by the reduction in the base SRS variance.
 
 This finding aligns with sampling theory expectations: when the intraclass correlation is moderate (as is the case here with roh ≈ 0.14), increasing sample size within clusters still improves precision significantly, though not as efficiently as adding more clusters would.
 
@@ -351,8 +347,7 @@ $$V(\hat{p}) = \frac{1}{x^2} \sum_{h=1}^L \frac{(z_{h1} - z_{h2})^2}{4}$$
 
 where:
 
-$z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$ are the residuals
-$x = \sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}$ is the total sample size
+$z_{hi} = t_{y,h,i} - \hat{p} \cdot t_{x,h,i}$ are the residuals $x = \sum_{h=1}^L \sum_{i=1}^{n_h} t_{x,h,i}$ is the total sample size
 
 ```{r}
 data <- data.frame(
@@ -426,7 +421,7 @@ So the confidence interval: $$\hat{p} \pm t_{5, 0.975} \times SE(\hat{p}) = 0.52
 
 Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0478 = 0.4739$$ $$CI_{upper} = 0.5217 + 0.0478 = 0.5695$$
 
-Therefore: $$CI_95%$ = $$(0.4739, 0.5695)$$
+Therefore: $$CI_95%$ = $$(0.4739, 0.5695)\$\$
 
 ```{r}
 data <- data.frame(
@@ -473,7 +468,6 @@ cat("t-critical value:", t_crit, "\n")
 cat("95% Confidence Interval:", c(ci_lower, ci_upper), "\n")
 ```
 
-
 $$df = L$$
 
 where $L$ is the number of strata. $$df = L = 5$$
@@ -488,7 +482,7 @@ So the confidence interval: $$\hat{p} \pm t_{5, 0.975} \times SE(\hat{p}) = 0.52
 
 Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0478 = 0.4739$$ $$CI_{upper} = 0.5217 + 0.0478 = 0.5695$$
 
-Therefore: $$CI_95%$= $$(0.4739, 0.5695)$$
+Therefore: $$CI_95%$= $$(0.4739, 0.5695)\$\$
 
 Based on my analysis of the cholesterol data from this stratified cluster sample, I can say with 95% confidence that the true proportion of individuals with total cholesterol greater than 200 is between 47.4% and 57.0%. My best estimate for this proportion is 52.2%.
 
@@ -498,7 +492,6 @@ The resulting interval width of about 9.6 percentage points still reflects moder
 
 This confidence interval properly accounts for the complex survey design, including the clustering of observations and the stratification structure, giving us a valid statistical inference about the population proportion of individuals with elevated cholesterol levels.
 
-
 ## c) Compute the design effect and roh for the proportion in (a).
 
 For stratified cluster sampling, the design effect and intracluster correlation can be calculated as follows:
@@ -507,9 +500,7 @@ Design effect: $$deff = \frac{V_{cluster}(\hat{p})}{V_{SRS}(\hat{p})}$$
 
 Where:
 
-$V_{cluster}(\hat{p})$ is the variance under cluster sampling from part (a)
-$V_{SRS}(\hat{p}) = \frac{p(1-p)}{n-1}$ is the variance under simple random sampling with the finite population correction
-Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1}$$
+$V_{cluster}(\hat{p})$ is the variance under cluster sampling from part (a) $V_{SRS}(\hat{p}) = \frac{p(1-p)}{n-1}$ is the variance under simple random sampling with the finite population correction Intracluster correlation: $$roh = \frac{deff - 1}{\bar{m} - 1}$$
 
 Where:
 
@@ -662,7 +653,6 @@ $$CV(x) = \frac{\sqrt{V(x)}}{E(x)}$$
 Where $V(x)$ is the variance of the denominator. For this specific design with paired selections within strata, the correct variance calculation accounting for the paired design is:
 
 $$V(x) = \sum_{h=1}^L \frac{(t_{x,h,1} - t_{x,h,2})^2}{4}$$
-
 
 ```{r}
 data <- data.frame(

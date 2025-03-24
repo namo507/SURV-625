@@ -132,19 +132,13 @@ $$deff = \frac{var_{cluster}(\bar{y})}{var_{srs}(\bar{y})}$$
 
 where:
 
-$var_{cluster}(\bar{y})$ is the variance under cluster sampling
-$var_{srs}(\bar{y})$ is the variance under SRS with the same sample size
-$p$ is the proportion (mean)
-$n$ is total sample size
-And the intraclass correlation (roh) is:
+$var_{cluster}(\bar{y})$ is the variance under cluster sampling $var_{srs}(\bar{y})$ is the variance under SRS with the same sample size $p$ is the proportion (mean) $n$ is total sample size And the intraclass correlation (roh) is:
 
 $$roh = \frac{deff - 1}{b - 1}$$
 
 where:
 
-$b$ is the cluster size
-$deff$ is the design effect
-Now calculating:
+$b$ is the cluster size $deff$ is the design effect Now calculating:
 
 Proportion: $$p = \frac{87}{200} = 0.435$$
 
@@ -270,9 +264,7 @@ $$\hat{R} = \frac{\sum_{i=1}^n y_i}{\sum_{i=1}^n x_i}$$
 
 where:
 
-$y_i$ is the volume of tree i
-$x_i$ is the diameter of tree i
-Then the estimated total is:
+$y_i$ is the volume of tree i $x_i$ is the diameter of tree i Then the estimated total is:
 
 $$\hat{Y} = \hat{R} \times X$$
 
@@ -282,9 +274,7 @@ $$V(\hat{R}) = (1-\frac{n}{N})\frac{s_e^2}{n(\bar{x})^2}$$
 
 where:
 
-$s_e^2 = \frac{\sum(y_i-\hat{R}x_i)^2}{n-1}$
-$\bar{x}$ is the sample mean of diameter
-Then the variance of the estimated total is:
+$s_e^2 = \frac{\sum(y_i-\hat{R}x_i)^2}{n-1}$ $\bar{x}$ is the sample mean of diameter Then the variance of the estimated total is:
 
 $$V(\hat{Y}) = X^2 \times V(\hat{R})$$
 
