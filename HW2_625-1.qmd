@@ -145,7 +145,7 @@ $$var(\bar{y}_w) = \sum_h W_h^2\frac{1-f_h}{n_h}s_h^2\text{ where }f_h=\frac{n_h
 
 where:
 
-W_h = N_h/N (stratum weight) n_h = allocated sample size for stratum h N_h = population size for stratum h S_h\^2 = variance in stratum h
+$W_h = N_h/N$ (stratum weight) $n_h$ = allocated sample size for stratum h $N_h$ = population size for stratum h $S_h^2$ = variance in stratum h
 
 ### Step-by-step calculations:
 
