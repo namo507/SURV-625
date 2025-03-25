@@ -8,7 +8,28 @@ A Probability Proportionate to estimated Size (PPeS) selection of clusters from 
 
 ## a. Ensure that each cluster has a minimum Measure of Size (MOS) of at least 35. Fill in the “Cluster Number” column to show how you have formed linked clusters.
 
-To ensure that each cluster has a minimum Measure of Size (MOS) of at least 35, we need to form linked clusters for any block with an MOS below this threshold. We will iterate through the list and combine consecutive blocks until the cumulative MOS for a cluster is 35 or greater. Here's how we can form the linked clusters and fill in the “Cluster Number” column: • Block 1: MOS = 50 (\>= 35). This forms Cluster 1. • Block 2: MOS = 20 (\< 35). This needs to be linked with subsequent blocks. ◦ Block 2 (MOS 20) + Block 3 (MOS 25) = Cumulative MOS 45 (\>= 35). These two blocks form Cluster 2. • Block 4: MOS = 70 (\>= 35). This forms Cluster 3. • Block 5: MOS = 100 (\>= 35). This forms Cluster 4. • Block 6: MOS = 80 (\>= 35). This forms Cluster 5. • Block 7: MOS = 55 (\>= 35). This forms Cluster 6. • Block 8: MOS = 50 (\>= 35). This forms Cluster 7. • Block 9: MOS = 40 (\>= 35). This forms Cluster 8. • Block 10: MOS = 60 (\>= 35). This forms Cluster 9. Now, let's fill in the "Cluster Number" column based on these linked clusters:
+To ensure that each cluster has a minimum Measure of Size (MOS) of at least 35, we need to form linked clusters for any block with an MOS below this threshold. We will iterate through the list and combine consecutive blocks until the cumulative MOS for a cluster is 35 or greater. Here's how we can form the linked clusters and fill in the “Cluster Number” column: 
+• Block 1: MOS = 50 (\>= 35). This forms Cluster 1. 
+
+• Block 2: MOS = 20 (\< 35). This needs to be linked with subsequent blocks. 
+◦ Block 2 (MOS 20) + Block 3 (MOS 25) = Cumulative MOS 45 (\>= 35). These two blocks form Cluster 2.
+
+
+• Block 4: MOS = 70 (\>= 35). This forms Cluster 3. 
+
+• Block 5: MOS = 100 (\>= 35). This forms Cluster 4. 
+
+• Block 6: MOS = 80 (\>= 35). This forms Cluster 5. 
+
+• Block 7: MOS = 55 (\>= 35). This forms Cluster 6. 
+
+• Block 8: MOS = 50 (\>= 35). This forms Cluster 7. 
+
+• Block 9: MOS = 40 (\>= 35). This forms Cluster 8. 
+
+• Block 10: MOS = 60 (\>= 35). This forms Cluster 9. 
+
+Now, let's fill in the "Cluster Number" column based on these linked clusters:
 
 Block Cluster Number MOS Cumulative 1 1 50 50 2 2 20 70 3 2 25 95 4 3 70 165 5 4 100 265 6 5 80 345 7 6 55 400 8 7 50 450 9 8 40 490 10 9 60 550
 
