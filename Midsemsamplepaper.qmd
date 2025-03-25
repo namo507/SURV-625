@@ -39,7 +39,10 @@ As discussed in the sources regarding undersized units in PPeS sampling, one app
 
 To perform a Probability Proportionate to estimated Size (PPeS) selection of 3 clusters from the linked clusters we formed, we will use systematic sampling.
 
-Calculate the selection interval (k): The total Measure of Size (MOS) for all the blocks is 550 \[previous turn\]. We want to select 3 clusters. The selection interval (k) is calculated as: $k = \frac{\text{Total MOS}}{\text{Number of selected clusters}} = \frac{550}{3} = 183.33$
+Calculate the selection interval (k): 
+The total Measure of Size (MOS) for all the blocks is 550 \[previous turn\]. 
+We want to select 3 clusters. 
+The selection interval (k) is calculated as: $k = \frac{\text{Total MOS}}{\text{Number of selected clusters}} = \frac{550}{3} = 183.33$
 
 Determine the valid range for a random start: The valid range for a random start (RN) is from 1 to k, inclusive. Therefore, the valid range is 1 to 183.33. Since the random start should be an integer, the valid range for the random start is 1 to 183.
 
