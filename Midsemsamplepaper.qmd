@@ -4,84 +4,27 @@ format: pdf
 editor: visual
 ---
 
-A Probability Proportionate to estimated Size (PPeS) selection of clusters from the following
-list of blocks is needed. The measure of size (MOS) is the number of housing units in the
-block at the last Census. The “Cumulative” column is the cumulated sum of measures of size.
-Block Cluster Number MOS Cumulative
-1 50 50
-2 20 70
-3 25 95
-4 70 165
-5 100 265
-6 80 345
-7 55 400
-8 50 450
-9 40 490
-10 60 550
-550
+A Probability Proportionate to estimated Size (PPeS) selection of clusters from the following list of blocks is needed. The measure of size (MOS) is the number of housing units in the block at the last Census. The “Cumulative” column is the cumulated sum of measures of size. Block Cluster Number MOS Cumulative 1 50 50 2 20 70 3 25 95 4 70 165 5 100 265 6 80 345 7 55 400 8 50 450 9 40 490 10 60 550 550
 
 ## a. Ensure that each cluster has a minimum Measure of Size (MOS) of at least 35. Fill in the “Cluster Number” column to show how you have formed linked clusters.
 
-To ensure that each cluster has a minimum Measure of Size (MOS) of at least 35, we need to form linked clusters for any block with an MOS below this threshold. We will iterate through the list and combine consecutive blocks until the cumulative MOS for a cluster is 35 or greater.
-Here's how we can form the linked clusters and fill in the “Cluster Number” column:
-•
-Block 1: MOS = 50 (>= 35). This forms Cluster 1.
-•
-Block 2: MOS = 20 (< 35). This needs to be linked with subsequent blocks.
-◦
-Block 2 (MOS 20) + Block 3 (MOS 25) = Cumulative MOS 45 (>= 35). These two blocks form Cluster 2.
-•
-Block 4: MOS = 70 (>= 35). This forms Cluster 3.
-•
-Block 5: MOS = 100 (>= 35). This forms Cluster 4.
-•
-Block 6: MOS = 80 (>= 35). This forms Cluster 5.
-•
-Block 7: MOS = 55 (>= 35). This forms Cluster 6.
-•
-Block 8: MOS = 50 (>= 35). This forms Cluster 7.
-•
-Block 9: MOS = 40 (>= 35). This forms Cluster 8.
-•
-Block 10: MOS = 60 (>= 35). This forms Cluster 9.
-Now, let's fill in the "Cluster Number" column based on these linked clusters:
+To ensure that each cluster has a minimum Measure of Size (MOS) of at least 35, we need to form linked clusters for any block with an MOS below this threshold. We will iterate through the list and combine consecutive blocks until the cumulative MOS for a cluster is 35 or greater. Here's how we can form the linked clusters and fill in the “Cluster Number” column: • Block 1: MOS = 50 (\>= 35). This forms Cluster 1. • Block 2: MOS = 20 (\< 35). This needs to be linked with subsequent blocks. ◦ Block 2 (MOS 20) + Block 3 (MOS 25) = Cumulative MOS 45 (\>= 35). These two blocks form Cluster 2. • Block 4: MOS = 70 (\>= 35). This forms Cluster 3. • Block 5: MOS = 100 (\>= 35). This forms Cluster 4. • Block 6: MOS = 80 (\>= 35). This forms Cluster 5. • Block 7: MOS = 55 (\>= 35). This forms Cluster 6. • Block 8: MOS = 50 (\>= 35). This forms Cluster 7. • Block 9: MOS = 40 (\>= 35). This forms Cluster 8. • Block 10: MOS = 60 (\>= 35). This forms Cluster 9. Now, let's fill in the "Cluster Number" column based on these linked clusters:
 
-Block	Cluster Number	MOS	Cumulative
-1	1	50	50
-2	2	20	70
-3	2	25	95
-4	3	70	165
-5	4	100	265
-6	5	80	345
-7	6	55	400
-8	7	50	450
-9	8	40	490
-10	9	60	550
+Block Cluster Number MOS Cumulative 1 1 50 50 2 2 20 70 3 2 25 95 4 3 70 165 5 4 100 265 6 5 80 345 7 6 55 400 8 7 50 450 9 8 40 490 10 9 60 550
 
-
-As discussed in the sources regarding undersized units in PPeS sampling, one approach is to link undersize units to form linked units of minimum sufficient size. In area sampling, this often involves linking geographically contiguous units. Here, since we don't have geographical information, we've linked consecutive blocks based on their position in the list.
-This process ensures that all formed clusters now have an MOS of at least 35, which is a prerequisite for proceeding with PPeS selection. The total number of clusters has been reduced from 10 to 9 through this linking process.
-
-
+As discussed in the sources regarding undersized units in PPeS sampling, one approach is to link undersize units to form linked units of minimum sufficient size. In area sampling, this often involves linking geographically contiguous units. Here, since we don't have geographical information, we've linked consecutive blocks based on their position in the list. This process ensures that all formed clusters now have an MOS of at least 35, which is a prerequisite for proceeding with PPeS selection. The total number of clusters has been reduced from 10 to 9 through this linking process.
 
 ## b. What is the selection interval (k)? What range of numbers is valid for a random start in this case? Select 3 clusters using a random start of 12. Which three clusters did you select?
 
 To perform a Probability Proportionate to estimated Size (PPeS) selection of 3 clusters from the linked clusters we formed, we will use systematic sampling.
 
-Calculate the selection interval (k): The total Measure of Size (MOS) for all the blocks is 550 [previous turn]. We want to select 3 clusters. The selection interval (k) is calculated as: $k = \frac{\text{Total MOS}}{\text{Number of selected clusters}} = \frac{550}{3} = 183.33$
+Calculate the selection interval (k): The total Measure of Size (MOS) for all the blocks is 550 \[previous turn\]. We want to select 3 clusters. The selection interval (k) is calculated as: $k = \frac{\text{Total MOS}}{\text{Number of selected clusters}} = \frac{550}{3} = 183.33$
 
 Determine the valid range for a random start: The valid range for a random start (RN) is from 1 to k, inclusive. Therefore, the valid range is 1 to 183.33. Since the random start should be an integer, the valid range for the random start is 1 to 183.
 
-
-Select 3 clusters using a random start of 12: Our random start (RN) is 12. We will now select the clusters based on the cumulative MOS of the linked clusters:
-◦First selected cluster: The random start is 12. This falls within the cumulative MOS range of 1 to 50, which corresponds to Cluster 1.
-◦Second selected cluster: We add the selection interval (k) to the random start: $12 + 183.33 = 195.33$. This value falls within the cumulative MOS range of 166 to 235 (hypothetically extending the cumulative MOS of Cluster 3 by k), which corresponds to Cluster 3.
-◦Third selected cluster: We add the selection interval (k) again: $195.33 + 183.33 = 378.66$. This value falls within the cumulative MOS range of 266 to 365 (hypothetically extending the cumulative MOS of Cluster 4 by k), which corresponds to Cluster 4.
-Therefore, the three clusters selected using a random start of 12 are Cluster 1, Cluster 3, and Cluster 4.
-
+Select 3 clusters using a random start of 12: Our random start (RN) is 12. We will now select the clusters based on the cumulative MOS of the linked clusters: ◦First selected cluster: The random start is 12. This falls within the cumulative MOS range of 1 to 50, which corresponds to Cluster 1. ◦Second selected cluster: We add the selection interval (k) to the random start: $12 + 183.33 = 195.33$. This value falls within the cumulative MOS range of 166 to 235 (hypothetically extending the cumulative MOS of Cluster 3 by k), which corresponds to Cluster 3. ◦Third selected cluster: We add the selection interval (k) again: $195.33 + 183.33 = 378.66$. This value falls within the cumulative MOS range of 266 to 365 (hypothetically extending the cumulative MOS of Cluster 4 by k), which corresponds to Cluster 4. Therefore, the three clusters selected using a random start of 12 are Cluster 1, Cluster 3, and Cluster 4.
 
 ## c. Calculate the probability of selection for each of the three selected clusters.
-
 
 The formula is straightforward:
 
@@ -89,278 +32,131 @@ Probability of selection = (Number of clusters we're selecting × Size of the cl
 
 Using the formula: Probability = (n × MOS_i) ÷ (Total MOS)
 
-
-Cluster 1:
-Size (MOS) = 50
-Calculation: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727 (or about 27%)
-This means Cluster 1 had about a 27% chance of being selected
-Cluster 3:
-Size (MOS) = 70
-Calculation: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818 (or about 38%)
-This means Cluster 3 had about a 38% chance of being selected
-Cluster 4:
-Size (MOS) = 100
-Calculation: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455 (or about 55%)
-This means Cluster 4 had about a 55% chance of being selected.
-
+Cluster 1: Size (MOS) = 50 Calculation: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727 (or about 27%) This means Cluster 1 had about a 27% chance of being selected Cluster 3: Size (MOS) = 70 Calculation: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818 (or about 38%) This means Cluster 3 had about a 38% chance of being selected Cluster 4: Size (MOS) = 100 Calculation: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455 (or about 55%) This means Cluster 4 had about a 55% chance of being selected.
 
 ## d. The desired overall sampling rate (f) is 48/550. Calculate the required subsampling rate for each of the selected clusters that will produce an epsem sample of housing units.
 
-The Basic Formula
-The overall chance of selecting any housing unit = (Chance of selecting its cluster) × (Chance of selecting that unit within its cluster)
+The Basic Formula The overall chance of selecting any housing unit = (Chance of selecting its cluster) × (Chance of selecting that unit within its cluster)
 
 For EPSEM, we want this overall chance to be the same (48/550) for every housing unit.
 
-How We Do It
-We know the desired overall sampling rate: 48/550 (about 8.7%)
+How We Do It We know the desired overall sampling rate: 48/550 (about 8.7%)
 
-We know each cluster's selection probability (π)
-We calculate each cluster's subsampling rate (r) using: r = (overall rate) ÷ (cluster probability)
+We know each cluster's selection probability (π) We calculate each cluster's subsampling rate (r) using: r = (overall rate) ÷ (cluster probability)
 
-In Simple Terms for Each Cluster
-Cluster 1:
-Was selected with 27% probability (3/11)
+In Simple Terms for Each Cluster Cluster 1: Was selected with 27% probability (3/11)
 
-To achieve our target 8.7% overall rate:
-We need to sample 32% of housing units within this cluster
-Because: 27% × 32% ≈ 8.7%
+To achieve our target 8.7% overall rate: We need to sample 32% of housing units within this cluster Because: 27% × 32% ≈ 8.7%
 
-Cluster 3:
-Was selected with 38% probability (21/55)
-To achieve our target 8.7% overall rate:
-We need to sample about 23% of housing units within this cluster
-Because: 38% × 23% ≈ 8.7%
+Cluster 3: Was selected with 38% probability (21/55) To achieve our target 8.7% overall rate: We need to sample about 23% of housing units within this cluster Because: 38% × 23% ≈ 8.7%
 
-Cluster 4:
-Was selected with 55% probability (6/11)
-To achieve our target 8.7% overall rate:
-We need to sample 16% of housing units within this cluster
-Because: 55% × 16% ≈ 8.7%
+Cluster 4: Was selected with 55% probability (6/11) To achieve our target 8.7% overall rate: We need to sample 16% of housing units within this cluster Because: 55% × 16% ≈ 8.7%
 
-
-
-
-
-2. Consider the following frame of blocks
-Block Cluster Number MOS Cumulative MOS
-1 50 50
-2 10 60
-3 63 123
-4 0 123
-5 22 145
-6 52 197
-7 0 197
-8 28 225
-9 100 325
-10 75 400
-
+2.  Consider the following frame of blocks Block Cluster Number MOS Cumulative MOS 1 50 50 2 10 60 3 63 123 4 0 123 5 22 145 6 52 197 7 0 197 8 28 225 9 100 325 10 75 400
 
 ## a. Select 2 blocks with probabilities proportionate to size, using a minimum size of 50. Use systematic selections with a random start of 75.0. If linking is necessary, identify the linked units in the appropriate column.
 
-Step 1: Link Small Blocks Together
-Some blocks are too small (less than 50 MOS), so we need to link them with neighbors until they reach our minimum size:
+Step 1: Link Small Blocks Together Some blocks are too small (less than 50 MOS), so we need to link them with neighbors until they reach our minimum size:
 
-Block 1 (MOS = 50): Already big enough → Cluster 1
-Blocks 2+3 (MOS = 10+63 = 73): Linked together → Cluster 2
-Blocks 4+5+6 (MOS = 0+22+52 = 74): Linked together → Cluster 3
-Blocks 7+8+9 (MOS = 0+28+100 = 128): Linked together → Cluster 4
-Block 10 (MOS = 75): Already big enough → Cluster 5
+Block 1 (MOS = 50): Already big enough → Cluster 1 Blocks 2+3 (MOS = 10+63 = 73): Linked together → Cluster 2 Blocks 4+5+6 (MOS = 0+22+52 = 74): Linked together → Cluster 3 Blocks 7+8+9 (MOS = 0+28+100 = 128): Linked together → Cluster 4 Block 10 (MOS = 75): Already big enough → Cluster 5
 
-## So here, you have to combine with the adjacent next wala accordingly 
+## So here, you have to combine with the adjacent next wala accordingly
+
 Now instead of 10 possibly undersized blocks, we have 5 clusters all meeting our minimum size requirement.
 
-Step 2: Set Up the Systematic Selection
-Total MOS = 400
-We need to select 2 clusters
-Selection interval = 400 ÷ 2 = 200
-Random start = 75 (given in the problem)
-Step 3: Make the Selections
-Think of the MOS as stretching along a number line from 1 to 400. Each cluster occupies a portion:
+Step 2: Set Up the Systematic Selection Total MOS = 400 We need to select 2 clusters Selection interval = 400 ÷ 2 = 200 Random start = 75 (given in the problem) Step 3: Make the Selections Think of the MOS as stretching along a number line from 1 to 400. Each cluster occupies a portion:
 
-Cluster 1: 1-50
-Cluster 2: 51-123
-Cluster 3: 124-197
-Cluster 4: 198-325
-Cluster 5: 326-400
-
+Cluster 1: 1-50 Cluster 2: 51-123 Cluster 3: 124-197 Cluster 4: 198-325 Cluster 5: 326-400
 
 Now we place our selection points:
 
-First selection point = 75 → Falls in range 51-123 → Select Cluster 2 (Blocks 2 & 3)
-Second selection point = 75 + 200 = 275 → Falls in range 198-325 → Select Cluster 4 (Blocks 7, 8 & 9)
-Summary
-We selected:
+First selection point = 75 → Falls in range 51-123 → Select Cluster 2 (Blocks 2 & 3) Second selection point = 75 + 200 = 275 → Falls in range 198-325 → Select Cluster 4 (Blocks 7, 8 & 9) Summary We selected:
 
-Cluster 2: Blocks 2 and 3 (MOS = 73)
-Cluster 4: Blocks 7, 8, and 9 (MOS = 128)
-The linking was necessary because of our minimum size requirement. By linking smaller blocks together, we ensured that each potential selection had a sufficient size, while still maintaining the probability proportionate to size principle.
-
+Cluster 2: Blocks 2 and 3 (MOS = 73) Cluster 4: Blocks 7, 8, and 9 (MOS = 128) The linking was necessary because of our minimum size requirement. By linking smaller blocks together, we ensured that each potential selection had a sufficient size, while still maintaining the probability proportionate to size principle.
 
 ## b. Give the probability of selection for the primary selections (i.e., the clusters formed from the blocks) made in problem (i).
 
-The Simple Formula
-The formula for finding the probability of selecting a cluster is:
+The Simple Formula The formula for finding the probability of selecting a cluster is:
 
 Probability = (Number of clusters we're selecting × Size of the cluster) ÷ (Total size of all clusters)
 
-For Our Selected Clusters
-We selected 2 clusters out of 5 possible clusters, with a total MOS of 400.
+For Our Selected Clusters We selected 2 clusters out of 5 possible clusters, with a total MOS of 400.
 
-Cluster 2 (Blocks 2 & 3):
-Size (MOS) = 73
-Calculation: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365 (about 36.5%)
-This means Cluster 2 had about a 36.5% chance of being selected
-Cluster 4 (Blocks 7, 8 & 9):
-Size (MOS) = 128
-Calculation: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64 (64%)
-This means Cluster 4 had a 64% chance of being selected
-Why This Makes Sense
-Cluster 4 is almost twice as large as Cluster 2 (128 vs 73), so it had almost twice the chance of being selected (64% vs 36.5%). This shows how PPS sampling works - larger clusters have proportionally larger chances of being selected.
+Cluster 2 (Blocks 2 & 3): Size (MOS) = 73 Calculation: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365 (about 36.5%) This means Cluster 2 had about a 36.5% chance of being selected Cluster 4 (Blocks 7, 8 & 9): Size (MOS) = 128 Calculation: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64 (64%) This means Cluster 4 had a 64% chance of being selected Why This Makes Sense Cluster 4 is almost twice as large as Cluster 2 (128 vs 73), so it had almost twice the chance of being selected (64% vs 36.5%). This shows how PPS sampling works - larger clusters have proportionally larger chances of being selected.
 
 These probabilities are important because they help us understand how representative our sample is and how to properly weight the results when analyzing the data.
 
-
 ## c. The overall probability of selection is f = 0.05. Give the within-cluster selection rate for each cluster selected in Part 2a that will result in an epsem sample of housing units.
 
-
-The Simple Formula
-For EPSEM sampling, we use this formula: Within-cluster selection rate = Overall sampling rate ÷ Cluster selection probability
+The Simple Formula For EPSEM sampling, we use this formula: Within-cluster selection rate = Overall sampling rate ÷ Cluster selection probability
 
 Since the overall sampling rate (f) is given as 0.05 (or 5%), and we know the selection probabilities for each cluster from part b, we can calculate:
 
-For Our Selected Clusters
-Cluster 2 (Blocks 2 & 3):
-Selection probability: 0.365 (36.5%)
-Within-cluster rate = 0.05 ÷ 0.365 = 0.137 (about 13.7%)
-This means we need to sample about 13.7% of housing units in Cluster 2
-Cluster 4 (Blocks 7, 8 & 9):
-Selection probability: 0.64 (64%)
-Within-cluster rate = 0.05 ÷ 0.64 = 0.078 (about 7.8%)
-This means we need to sample about 7.8% of housing units in Cluster 4
-Why This Makes Sense
-Cluster 4 had a higher chance of being selected (64% vs 36.5%), so we need to sample a smaller percentage of its units to balance things out. This creates our EPSEM design where every housing unit in the population ends up with the same 5% chance of being in our final sample.
+For Our Selected Clusters Cluster 2 (Blocks 2 & 3): Selection probability: 0.365 (36.5%) Within-cluster rate = 0.05 ÷ 0.365 = 0.137 (about 13.7%) This means we need to sample about 13.7% of housing units in Cluster 2 Cluster 4 (Blocks 7, 8 & 9): Selection probability: 0.64 (64%) Within-cluster rate = 0.05 ÷ 0.64 = 0.078 (about 7.8%) This means we need to sample about 7.8% of housing units in Cluster 4 Why This Makes Sense Cluster 4 had a higher chance of being selected (64% vs 36.5%), so we need to sample a smaller percentage of its units to balance things out. This creates our EPSEM design where every housing unit in the population ends up with the same 5% chance of being in our final sample.
 
 The final result:
 
-We sample 13.7% of units from Cluster 2
-We sample 7.8% of units from Cluster 4
-This ensures every housing unit in the population has exactly a 5% chance of being selected, regardless of which cluster it belongs to.
+We sample 13.7% of units from Cluster 2 We sample 7.8% of units from Cluster 4 This ensures every housing unit in the population has exactly a 5% chance of being selected, regardless of which cluster it belongs to.
 
+## d. After selecting clusters, field staff are sent to selected blocks to count the number of housing units that are actually there. Suppose the (potentially linked) cluster 2 is selected and the real \# of housing units is 95, calculate the expected number of housing units to be selected in cluster 2 given the actual counts.
 
-## d. After selecting clusters, field staff are sent to selected blocks to count the number of housing units that are actually there. Suppose the (potentially linked) cluster 2 is selected and the real # of housing units is 95, calculate the expected number of housing units to be selected in cluster 2 given the actual counts.
+The Basic Approach We already determined in part (c) that we need to sample 13.7% of housing units in Cluster 2 to maintain an EPSEM design. Now we just apply this percentage to the actual count.
 
+Simple Calculation Steps We know:
 
-The Basic Approach
-We already determined in part (c) that we need to sample 13.7% of housing units in Cluster 2 to maintain an EPSEM design. Now we just apply this percentage to the actual count.
+The actual number of housing units in Cluster 2 = 95 The within-cluster selection rate for Cluster 2 = 13.7% (or 0.137) To calculate the number of housing units to select:
 
-Simple Calculation Steps
-We know:
+Number of units to select = Actual count × Selection rate Number of units to select = 95 × 0.137 = 13.01 Since we can't select a partial housing unit, we would round to 13 housing units.
 
-The actual number of housing units in Cluster 2 = 95
-The within-cluster selection rate for Cluster 2 = 13.7% (or 0.137)
-To calculate the number of housing units to select:
+## 3. Tables in Question 1 and Question 2 are the sample frame from two strata.
 
-Number of units to select = Actual count × Selection rate
-Number of units to select = 95 × 0.137 = 13.01
-Since we can't select a partial housing unit, we would round to 13 housing units.
+## • For Stratum 1: three clusters were selected, i.e., 𝑛! = 3
 
-
-
-## 3. Tables in Question 1 and Question 2 are the sample frame from two strata. 
-## • For Stratum 1: three clusters were selected, i.e., 𝑛! = 3 
-## • For Stratum 2: two clusters were selected, i.e., 𝑛" = 2 
+## • For Stratum 2: two clusters were selected, i.e., 𝑛" = 2
 
 ## a. What are stratum-specific zone size?
 
-
 We have sample frames from two strata:
 
-Stratum 1: Table in Question 1 (10 blocks with total MOS = 550)
-Stratum 2: Table in Question 2 (10 blocks with total MOS = 400)
-We need to determine the "zone size" for each stratum, knowing:
+Stratum 1: Table in Question 1 (10 blocks with total MOS = 550) Stratum 2: Table in Question 2 (10 blocks with total MOS = 400) We need to determine the "zone size" for each stratum, knowing:
 
-For Stratum 1: Three clusters were selected (n₁ = 3)
-For Stratum 2: Two clusters were selected (n₂ = 2)
-What is Zone Size?
-In PPS/PPeS sampling, the "zone size" is the selection interval (k), which is calculated as: Zone Size (k) = Total MOS ÷ Number of selections
+For Stratum 1: Three clusters were selected (n₁ = 3) For Stratum 2: Two clusters were selected (n₂ = 2) What is Zone Size? In PPS/PPeS sampling, the "zone size" is the selection interval (k), which is calculated as: Zone Size (k) = Total MOS ÷ Number of selections
 
-Simple Calculation Steps
-For Stratum 1:
-Total MOS = 550 (sum of all MOS values in Question 1)
-Number of selections (n₁) = 3
-Zone Size = 550 ÷ 3 = 183.33
-For Stratum 2:
-Total MOS = 400 (sum of all MOS values in Question 2)
-Number of selections (n₂) = 2
-Zone Size = 400 ÷ 2 = 200
-Answer
-The stratum-specific zone sizes are:
+Simple Calculation Steps For Stratum 1: Total MOS = 550 (sum of all MOS values in Question 1) Number of selections (n₁) = 3 Zone Size = 550 ÷ 3 = 183.33 For Stratum 2: Total MOS = 400 (sum of all MOS values in Question 2) Number of selections (n₂) = 2 Zone Size = 400 ÷ 2 = 200 Answer The stratum-specific zone sizes are:
 
-Stratum 1: 183.33
-Stratum 2: 200
-
+Stratum 1: 183.33 Stratum 2: 200
 
 ## b. To retain epsem with the desired overall sampling rate (f = 0.1), what is the targeted subsample size for each cluster in Stratum 1?
 
-Part B: Targeted Subsample Size for Each Cluster in Stratum 1
-Step 1: Identify the Selected Clusters
-From part 1b, we selected Clusters 1, 3, and 4 in Stratum 1 with:
+Part B: Targeted Subsample Size for Each Cluster in Stratum 1 Step 1: Identify the Selected Clusters From part 1b, we selected Clusters 1, 3, and 4 in Stratum 1 with:
 
-Cluster 1: MOS = 50
-Cluster 3: MOS = 70
-Cluster 4: MOS = 100
-Step 2: Calculate the Selection Probability for Each Cluster
-Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
+Cluster 1: MOS = 50 Cluster 3: MOS = 70 Cluster 4: MOS = 100 Step 2: Calculate the Selection Probability for Each Cluster Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
 
-Cluster 1: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727
-Cluster 3: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818
-Cluster 4: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455
-Step 3: Calculate the Within-Cluster Sampling Rate
-Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
+Cluster 1: (3 × 50) ÷ 550 = 150 ÷ 550 = 0.2727 Cluster 3: (3 × 70) ÷ 550 = 210 ÷ 550 = 0.3818 Cluster 4: (3 × 100) ÷ 550 = 300 ÷ 550 = 0.5455 Step 3: Calculate the Within-Cluster Sampling Rate Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
 
-Cluster 1: 0.1 ÷ 0.2727 = 0.3667 (36.67%)
-Cluster 3: 0.1 ÷ 0.3818 = 0.2619 (26.19%)
-Cluster 4: 0.1 ÷ 0.5455 = 0.1833 (18.33%)
-Step 4: Calculate the Subsample Size for Each Cluster
-Since we're asked for the targeted subsample size, we multiply the within-cluster rate by the MOS:
+Cluster 1: 0.1 ÷ 0.2727 = 0.3667 (36.67%) Cluster 3: 0.1 ÷ 0.3818 = 0.2619 (26.19%) Cluster 4: 0.1 ÷ 0.5455 = 0.1833 (18.33%) Step 4: Calculate the Subsample Size for Each Cluster Since we're asked for the targeted subsample size, we multiply the within-cluster rate by the MOS:
 
-Cluster 1: 50 × 0.3667 = 18.33 ≈ 18 units
-Cluster 3: 70 × 0.2619 = 18.33 ≈ 18 units
-Cluster 4: 100 × 0.1833 = 18.33 ≈ 18 units
+Cluster 1: 50 × 0.3667 = 18.33 ≈ 18 units Cluster 3: 70 × 0.2619 = 18.33 ≈ 18 units Cluster 4: 100 × 0.1833 = 18.33 ≈ 18 units
 
 ## c. To retain epsem with the desired overall sampling rate (f = 0.1), what is the targeted subsample size for each cluster in Stratum 2?
 
-Step 1: Identify the Selected Clusters
-From part 2a, we selected Clusters 2 and 4 in Stratum 2 with:
+Step 1: Identify the Selected Clusters From part 2a, we selected Clusters 2 and 4 in Stratum 2 with:
 
-Cluster 2: MOS = 73 (Blocks 2 & 3)
-Cluster 4: MOS = 128 (Blocks 7, 8 & 9)
-Step 2: Calculate the Selection Probability for Each Cluster
-Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
+Cluster 2: MOS = 73 (Blocks 2 & 3) Cluster 4: MOS = 128 (Blocks 7, 8 & 9) Step 2: Calculate the Selection Probability for Each Cluster Using the formula: Selection probability = (n × Cluster MOS) ÷ Total MOS
 
-Cluster 2: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365
-Cluster 4: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64
-Step 3: Calculate the Within-Cluster Sampling Rate
-Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
+Cluster 2: (2 × 73) ÷ 400 = 146 ÷ 400 = 0.365 Cluster 4: (2 × 128) ÷ 400 = 256 ÷ 400 = 0.64 Step 3: Calculate the Within-Cluster Sampling Rate Using the formula: Within-cluster rate = Overall rate ÷ Selection probability
 
-Cluster 2: 0.1 ÷ 0.365 = 0.2740 (27.40%)
-Cluster 4: 0.1 ÷ 0.64 = 0.1563 (15.63%)
-Step 4: Calculate the Subsample Size for Each Cluster
-Multiplying the within-cluster rate by the MOS:
+Cluster 2: 0.1 ÷ 0.365 = 0.2740 (27.40%) Cluster 4: 0.1 ÷ 0.64 = 0.1563 (15.63%) Step 4: Calculate the Subsample Size for Each Cluster Multiplying the within-cluster rate by the MOS:
 
-Cluster 2: 73 × 0.2740 = 20 units
-Cluster 4: 128 × 0.1563 = 20 units
-
-
+Cluster 2: 73 × 0.2740 = 20 units Cluster 4: 128 × 0.1563 = 20 units
 
 ## True or False
-## a. (TRUE / FALSE) The Taylor Series Linearization method for estimating the sampling variance of an estimated mean is necessary when selecting a simple random sample of n clusters from a total population of N clusters, and a simple random sample of m elements from the M population elements in each of the n randomly sampled clusters.
 
+## a. (TRUE / FALSE) The Taylor Series Linearization method for estimating the sampling variance of an estimated mean is necessary when selecting a simple random sample of n clusters from a total population of N clusters, and a simple random sample of m elements from the M population elements in each of the n randomly sampled clusters.
 
 FALSE. While Taylor Series Linearization is a method for variance estimation in complex surveys, the sources indicate that for two-stage cluster sampling with equal-sized clusters, the sampling variance can be estimated using formulas that consider the between-cluster and within-cluster variances. These formulas are derived without explicitly stating the necessity of Taylor Series Linearization for this specific design.
 
 Taylor Series Linearization is typically necessary for more complex statistics (like ratios, regression coefficients) or complex sampling designs.
-
 
 ## b. (TRUE / FALSE) The use of weights in analyses (whatever introduced the need to use them) will generally tend to increase the sampling variance of estimates, and the more variable the weights are, the higher the increase.
 
@@ -368,14 +164,11 @@ TRUE. Source explicitly states that "The use of weights in estimation can increa
 
 The design effect due to weighting is approximately 1 + CV² (where CV is the coefficient of variation of the weights). More variable weights lead to larger increases in variance.
 
-
 ## c. (TRUE / FALSE) Under certain assumptions, one can compute the size of a simple random sample needed to achieve a certain level of sampling variance for a given estimated mean if the only two pieces of information provided are 1) the desired level of sampling variance and 2) an estimate of the element variance.
 
 TRUE. Source discusses sample size projection for Simple Random Sampling (SRS). It mentions that the desired precision is often expressed in terms of the margin of error ($e$), which is related to the desired sampling variance. The formula $n_0 = z^2_{\alpha/2} \hat{S}^2 / e^2$ shows that if we have a desired level of precision (related to sampling variance via $e$) and an estimate of the element variance ($\hat{S}^2$), we can calculate the required sample size ($n_0$).
 
-
 For simple random sampling, the formula n = S²/V (where S² is the element variance and V is the desired sampling variance) can be used to determine the required sample size. This assumes the population is large relative to the sample size.
-
 
 ## d. (TRUE / FALSE) With unequal-sized clusters and a fixed subsample size b within each cluster, the simple unweighted mean can still be used as an unbiased estimate of the population mean.
 
@@ -399,13 +192,9 @@ FALSE. Source indicates that if the elements in the list are approximately conti
 
 With an odd number of selections, one unit would be left unpaired, making the standard paired selection approach difficult to apply directly.
 
-
-
 ## h. (TRUE / FALSE) If one selects all possible elements within a cluster that has been selected using simple random sampling (i.e., clusters were selected with equal probability), but the clusters are of unequal sizes, selection probabilities will vary for different population elements.
 
 TRUE. If clusters of unequal sizes are selected with equal probability, and all elements within the selected clusters are included in the sample, then an element in a smaller cluster has a higher probability of being selected than an element in a larger cluster. This is because each cluster has the same probability of selection, but the number of elements contributed to the sample differs.
-
-
 
 ## i. (TRUE / FALSE) The sampling variance under “ultimate cluster” sampling mimics the sampling variance under with replacement selection of primary stage clusters and without replacement subsampling of elements within the clusters.
 
@@ -413,57 +202,45 @@ TRUE. Source describes that the ultimate cluster idea leads to an approximation 
 
 Ultimate cluster sampling approximates this scenario because it assumes with-replacement selection at higher stages and without-replacement subsampling at lower stages.
 
-
 ## j. (TRUE / FALSE) Varying the subsample size m in two-stage cluster sampling by design will impact the rate of homogeneity, design effects and thus effective sample sizes.
 
 TRUE. While the rate of homogeneity ($\rho$) is a characteristic of the population and the defined clusters, the design effect ($DEFF = 1 + (m-1) \rho$) is directly influenced by the subsample size $m$. Since the effective sample size is calculated considering the design effect (e.g., $n_{eff} \approx \frac{n \times m}{DEFF}$), varying $m$ will indeed impact the design effect and, consequently, the effective sample size.
 
 The subsample size within clusters directly affects the design effect through its relationship with the intraclass correlation coefficient (ICC). Varying subsample sizes across clusters can change how the ICC impacts the effective sample size.
 
-
-
 ## k. (TRUE / FALSE) In theory, the estimate of sampling variance in two-stage cluster sampling includes the between-cluster and within-cluster sampling.
+
 TRUE. Source explicitly states that the estimation of sampling variance in two-stage cluster sampling (with equal sizes) involves both the between-cluster variance and the average within-cluster sampling variance. Similarly, source for unequal-sized clusters shows variance formulas that account for variability at both stages.
 
 Variance estimation in two-stage cluster sampling accounts for both between-cluster variability (first stage) and within-cluster variability (second stage)
 
 ## l. (TRUE / FALSE) A proportionate allocation design is epsem (ignoring rounding error).
-TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
 
+TRUE. Source clearly states that under proportionate allocation, the sampling fraction ($n_h/N_h = n/N$) is the same across all strata, leading to an epsem design, where each element has an equal probability of selection. This holds true when ignoring rounding errors in sample sizes.
 
 ## 5.The Michigan Department of Health has hired you to evaluate design alternatives for a new sample of housing units in the state of Michigan. The objective of the larger study is to estimate the proportion of adults between the ages of 18 and 29 with private health insurance. A two-stage cluster sample is under consideration, featuring the selection of housing units within Census block groups.
 
-
 ## a. Compute the size of a simple random sample of housing units (assuming one respondent per housing unit) needed to obtain a 99% confidence interval with half-width 0.025 for an expected proportion of 0.5. Assume that the degrees of freedom will be larger than 30 for this calculation, and ignore the FPC.Step 1: Find the Z-value for 99% Confidence
 
-Step 1: Find the Z-value for 99% Confidence
-For 99% confidence, we need z = 2.576 (from statistical tables)
+Step 1: Find the Z-value for 99% Confidence For 99% confidence, we need z = 2.576 (from statistical tables)
 
-Step 2: Set Up Our Formula
-The standard formula for sample size when estimating a proportion is:
+Step 2: Set Up Our Formula The standard formula for sample size when estimating a proportion is:
 
 n = (z²) × p(1-p) ÷ (margin of error)²
 
 Where:
 
-n is the sample size we need
-z is our confidence level value (2.576)
-p is our expected proportion (0.5)
-margin of error is our precision (0.025)
+n is the sample size we need z is our confidence level value (2.576) p is our expected proportion (0.5) margin of error is our precision (0.025)
 
 n = (2.576)² × 0.5(1-0.5) ÷ (0.025)² n = 6.636 × 0.25 ÷ 0.000625 n = 1.659 ÷ 0.000625 n = 2,654.4
 
 Since we can't sample a fraction of a housing unit, we round up to 2,655 housing units.
 
-What This Means
-By sampling 2,655 housing units, the Michigan Department of Health can be 99% confident that their estimate of the proportion of young adults with private health insurance will be within ±2.5 percentage points of the true value.
+What This Means By sampling 2,655 housing units, the Michigan Department of Health can be 99% confident that their estimate of the proportion of young adults with private health insurance will be within ±2.5 percentage points of the true value.
 
 This is a relatively large sample because:
 
-We want high confidence (99% rather than 95%)
-We want good precision (±2.5 percentage points)
-We're assuming maximum variance (50% proportion)
-
+We want high confidence (99% rather than 95%) We want good precision (±2.5 percentage points) We're assuming maximum variance (50% proportion)
 
 ## b. Assuming the ultimate cluster model for a previous sample of 1,000 housing units selected from a sample of 15 block groups, the estimated between-cluster variance in proportions was 0.01. For a proportion estimated to be 0.5, what was the design effect associated with this previous design? What is the estimated value of roh for this indicator of having private health insurance?
 
@@ -477,214 +254,107 @@ You correctly solved for roh using the formula: $DEFF = 1 + (\bar{m} - 1) \times
 
 Design Effect = 40
 
-This means their cluster sample was about 40 times less efficient than a simple random sample of the same size
-Put another way, they would need 40 times as many observations in their cluster sample to get the same precision as a simple random sample
+This means their cluster sample was about 40 times less efficient than a simple random sample of the same size Put another way, they would need 40 times as many observations in their cluster sample to get the same precision as a simple random sample
 
-
-Rate of Homogeneity (roh) = 0.594
-This is a measure of how similar people are within the same neighborhood (block group)
-A value of 0.594 is quite high - it means people in the same neighborhood tend to have very similar health insurance status
-Values close to 0 would mean people in the same neighborhood are very different from each other
-Values close to 1 mean people in the same neighborhood are nearly identical
-
-
+Rate of Homogeneity (roh) = 0.594 This is a measure of how similar people are within the same neighborhood (block group) A value of 0.594 is quite high - it means people in the same neighborhood tend to have very similar health insurance status Values close to 0 would mean people in the same neighborhood are very different from each other Values close to 1 mean people in the same neighborhood are nearly identical
 
 ## c. Assuming that this design effect will also apply to the new cluster sample design under consideration, how many housing units would you need to select overall in the new cluster sample to meet the same precision objectives from part 5a?
 
-The Basic Formula
-When using cluster sampling instead of simple random sampling, we need to adjust our sample size by multiplying by the design effect:
+The Basic Formula When using cluster sampling instead of simple random sampling, we need to adjust our sample size by multiplying by the design effect:
 
 Cluster sample size = SRS sample size × Design effect
 
-Simple Step-by-Step Calculation
-Start with what we know:
+Simple Step-by-Step Calculation Start with what we know:
 
-We need 2,655 housing units for a simple random sample (from part a)
-Our cluster sample has a design effect of 40 (from part b)
-Multiply to get the needed cluster sample size:
+We need 2,655 housing units for a simple random sample (from part a) Our cluster sample has a design effect of 40 (from part b) Multiply to get the needed cluster sample size:
 
 Cluster sample size = 2,655 × 40 = 106,200 housing units
-
 
 The design effect of 40 means that our cluster sample is about 40 times less efficient than a simple random sample. This happens because:
 
 People within the same neighborhood (block group) tend to be similar (high roh of 0.594)
 
-This similarity means that each additional person in the same neighborhood gives us less new information
-To compensate for this loss of efficiency, we need to sample many more housing units
-In practical terms, this result (needing 106,200 housing units) might indicate that:
+This similarity means that each additional person in the same neighborhood gives us less new information To compensate for this loss of efficiency, we need to sample many more housing units In practical terms, this result (needing 106,200 housing units) might indicate that:
 
-The current cluster design is extremely inefficient and should be reconsidered
-We might want to use more clusters with fewer housing units per cluster
-We might need to consider alternative sampling approaches or stratification methods
+The current cluster design is extremely inefficient and should be reconsidered We might want to use more clusters with fewer housing units per cluster We might need to consider alternative sampling approaches or stratification methods
 
-
-## d. The Department of Health suggests that it will cost $5000 per sampled block group and $100 per housing unit for data collection. What would the optimum subsample size per block group be? Given this information and the result in part c), how many block groups would you need to sample to produce an overall sample size that meets the stated precision objectives.
-
+## d. The Department of Health suggests that it will cost \$5000 per sampled block group and \$100 per housing unit for data collection. What would the optimum subsample size per block group be? Given this information and the result in part c), how many block groups would you need to sample to produce an overall sample size that meets the stated precision objectives.
 
 We need to figure out:
 
-The optimal number of housing units to sample per block group
-How many block groups we need to sample in total
-We know:
+The optimal number of housing units to sample per block group How many block groups we need to sample in total We know:
 
-It costs $5,000 to sample each block group
-It costs $100 per housing unit
-The rate of homogeneity (roh) is 0.594
-We need 106,200 total housing units to meet our precision goals
-
+It costs \$5,000 to sample each block group It costs \$100 per housing unit The rate of homogeneity (roh) is 0.594 We need 106,200 total housing units to meet our precision goals
 
 The optimal subsample size minimizes total cost while maintaining precision. The formula is:
 
-Optimal subsample size = √[(Cost per cluster ÷ Cost per unit) × (1-roh) ÷ roh]
+Optimal subsample size = √\[(Cost per cluster ÷ Cost per unit) × (1-roh) ÷ roh\]
 
 Plugging in our values:
 
-Cost per cluster (block group) = $5,000
-Cost per unit (housing unit) = $100
-roh = 0.594
-Calculation: m_opt = √[(5,000 ÷ 100) × (1-0.594) ÷ 0.594] m_opt = √[50 × 0.406 ÷ 0.594] m_opt = √[50 × 0.683] m_opt = √34.18 m_opt ≈ 5.85 ≈ 6 housing units per block group
+Cost per cluster (block group) = \$5,000 Cost per unit (housing unit) = \$100 roh = 0.594 Calculation: m_opt = √\[(5,000 ÷ 100) × (1-0.594) ÷ 0.594\] m_opt = √\[50 × 0.406 ÷ 0.594\] m_opt = √\[50 × 0.683\] m_opt = √34.18 m_opt ≈ 5.85 ≈ 6 housing units per block group
 
-Step 2: Calculate Number of Block Groups Needed
-If we need 106,200 total housing units and will sample 6 units per block group:
+Step 2: Calculate Number of Block Groups Needed If we need 106,200 total housing units and will sample 6 units per block group:
 
 Number of block groups = Total units needed ÷ Units per block group Number of block groups = 106,200 ÷ 6 = 17,700 block groups
 
-
-
 ## e. Assume that you have the budget to purchase a commercial list of addresses within each selected block group. List two potential problems with the overall sampling frame that you can construct based on the list of block groups and the purchased commercial data. What could you do to solve these problems?
 
+Problem 1: Missing Addresses (Undercoverage) The Problem: Commercial address lists often don't include all housing units. They might miss:
 
-Problem 1: Missing Addresses (Undercoverage)
-The Problem: Commercial address lists often don't include all housing units. They might miss:
-
-New buildings or recently constructed homes
-Certain apartment buildings
-Housing in lower-income areas
-Temporary or non-traditional housing
-This means some people have zero chance of being selected for your survey, which can bias your results about health insurance coverage.
+New buildings or recently constructed homes Certain apartment buildings Housing in lower-income areas Temporary or non-traditional housing This means some people have zero chance of being selected for your survey, which can bias your results about health insurance coverage.
 
 Solutions:
 
-Use multiple sources: Combine the commercial list with other lists (like utility records, tax assessor data, or postal service data)
-On-site listing: Have field staff create a complete list of all housing units in selected block groups
-Adjust your weights: Give more statistical weight to respondents from groups that are likely underrepresented due to missing addresses
+Use multiple sources: Combine the commercial list with other lists (like utility records, tax assessor data, or postal service data) On-site listing: Have field staff create a complete list of all housing units in selected block groups Adjust your weights: Give more statistical weight to respondents from groups that are likely underrepresented due to missing addresses
 
+Problem 2: Duplicate Addresses The Problem: Some housing units might appear multiple times in commercial lists because:
 
-
-Problem 2: Duplicate Addresses
-The Problem: Some housing units might appear multiple times in commercial lists because:
-
-The same address is formatted differently (123 Main St vs. 123 Main Street)
-Both a physical address and PO Box are listed for the same household
-Errors in the database creation or maintenance
-Unit numbers might be inconsistently recorded
-Duplicates give some households a higher chance of selection, potentially biasing your results.
+The same address is formatted differently (123 Main St vs. 123 Main Street) Both a physical address and PO Box are listed for the same household Errors in the database creation or maintenance Unit numbers might be inconsistently recorded Duplicates give some households a higher chance of selection, potentially biasing your results.
 
 Solutions:
 
-De-duplication software: Use specialized software to identify and remove likely duplicates before sampling
-Field verification: Have staff check selected addresses to identify duplicates during data collection
-Statistical correction: Adjust the sampling weights for any units that were found to be duplicated in the frame
-
+De-duplication software: Use specialized software to identify and remove likely duplicates before sampling Field verification: Have staff check selected addresses to identify duplicates during data collection Statistical correction: Adjust the sampling weights for any units that were found to be duplicated in the frame
 
 ## f. The vendor of the commercial data advertises the ability to purchase additional auxiliary variables for the addresses in each selected block group, and you have the budget to do this. What auxiliary information should you request? For what might you use this auxiliary information?
 
-1. Demographic Information
-Ages of household members (especially whether 18-29 year olds live there)
-Household income level
-Education levels
-Race/ethnicity of household members
-Household size/composition
+1.  Demographic Information Ages of household members (especially whether 18-29 year olds live there) Household income level Education levels Race/ethnicity of household members Household size/composition
 
-2. Health-Related Information
-Insurance status indicators (if available)
-Presence of health conditions (if available)
-Previous healthcare utilization
+2.  Health-Related Information Insurance status indicators (if available) Presence of health conditions (if available) Previous healthcare utilization
 
-3. Housing Characteristics
-Home ownership status (owner vs. renter)
-Housing type (apartment, house, etc.)
-Housing value or rent amount
-Length of residence at address
+3.  Housing Characteristics Home ownership status (owner vs. renter) Housing type (apartment, house, etc.) Housing value or rent amount Length of residence at address
 
-4. Geographic Information
-Neighborhood characteristics
-Proximity to healthcare facilities
-Urban/suburban/rural classification
+4.  Geographic Information Neighborhood characteristics Proximity to healthcare facilities Urban/suburban/rural classification
 
-How to Use This Information
-1. For Better Sampling Design
-Stratification: Create more efficient samples by dividing addresses into groups with similar characteristics before sampling
-Targeted sampling: Focus more on demographics likely to include your key population (18-29 year olds)
-Sample size adjustment: Allocate larger samples to areas with more variability in health insurance coverage
+How to Use This Information 1. For Better Sampling Design Stratification: Create more efficient samples by dividing addresses into groups with similar characteristics before sampling Targeted sampling: Focus more on demographics likely to include your key population (18-29 year olds) Sample size adjustment: Allocate larger samples to areas with more variability in health insurance coverage
 
-2. For Non-Response Adjustments
-Create detailed non-response weight adjustments when certain groups are less likely to participate
-Form adjustment cells based on combinations of auxiliary variables
-Compare respondents to non-respondents to assess potential bias
+2.  For Non-Response Adjustments Create detailed non-response weight adjustments when certain groups are less likely to participate Form adjustment cells based on combinations of auxiliary variables Compare respondents to non-respondents to assess potential bias
 
-3. For Post-Survey Weighting
-Adjust final sample weights to match known population totals
-Implement poststratification or calibration procedures
-Reduce biases from unequal response rates across demographic groups
+3.  For Post-Survey Weighting Adjust final sample weights to match known population totals Implement poststratification or calibration procedures Reduce biases from unequal response rates across demographic groups
 
-4. For Validation and Analysis
-Compare your sample to known population characteristics to verify representativeness
-Use as control variables in regression models to improve precision of estimates
-Create meaningful subgroup analyses for targeted policy recommendations
+4.  For Validation and Analysis Compare your sample to known population characteristics to verify representativeness Use as control variables in regression models to improve precision of estimates Create meaningful subgroup analyses for targeted policy recommendations
 
-
-Why This Matters
-Auxiliary variables help reduce sampling variance, improve representativeness, and address issues like nonresponse or noncoverage bias.
-Prioritize variables that are strongly correlated with your survey outcomes (e.g., private health insurance coverage) and are reliably available from the vendor.
-By strategically using auxiliary information, you can enhance the accuracy and efficiency of your survey design while staying within budget.
-
+Why This Matters Auxiliary variables help reduce sampling variance, improve representativeness, and address issues like nonresponse or noncoverage bias. Prioritize variables that are strongly correlated with your survey outcomes (e.g., private health insurance coverage) and are reliably available from the vendor. By strategically using auxiliary information, you can enhance the accuracy and efficiency of your survey design while staying within budget.
 
 ## g. For the overall sample, there is budget available for the selection of 30 block groups. Proportionately allocate the block groups to be sampled from each of the five counties (strata) defining the target population below. You should round your answers in a way that maintains the total sample size of 30 block groups. County Number of Block Groups Number of Housing Units Wayne 250 900,000 Washtenaw 50 180,000 Oakland 150 600,000 Livingston 25 90,000 Genesee 45 200,000
 
-Step 1: Find the total number of block groups in the population
-Add up all block groups across the five counties:
+Step 1: Find the total number of block groups in the population Add up all block groups across the five counties:
 
 Total = 250 + 50 + 150 + 25 + 45 = 520 block groups
 
-Step 2: Calculate the proportion of block groups in each county
-Wayne: 250 ÷ 520 = 0.481 (48.1%)
-Washtenaw: 50 ÷ 520 = 0.096 (9.6%)
-Oakland: 150 ÷ 520 = 0.288 (28.8%)
-Livingston: 25 ÷ 520 = 0.048 (4.8%)
-Genesee: 45 ÷ 520 = 0.087 (8.7%)
-Step 3: Calculate the number of block groups to sample from each county
-Multiply each proportion by the total sample size (30):
+Step 2: Calculate the proportion of block groups in each county Wayne: 250 ÷ 520 = 0.481 (48.1%) Washtenaw: 50 ÷ 520 = 0.096 (9.6%) Oakland: 150 ÷ 520 = 0.288 (28.8%) Livingston: 25 ÷ 520 = 0.048 (4.8%) Genesee: 45 ÷ 520 = 0.087 (8.7%) Step 3: Calculate the number of block groups to sample from each county Multiply each proportion by the total sample size (30):
 
-Wayne: 0.481 × 30 = 14.43
-Washtenaw: 0.096 × 30 = 2.88
-Oakland: 0.288 × 30 = 8.64
-Livingston: 0.048 × 30 = 1.44
-Genesee: 0.087 × 30 = 2.61
+Wayne: 0.481 × 30 = 14.43 Washtenaw: 0.096 × 30 = 2.88 Oakland: 0.288 × 30 = 8.64 Livingston: 0.048 × 30 = 1.44 Genesee: 0.087 × 30 = 2.61
 
-Step 4: Round to whole numbers while maintaining total sample size
-Wayne: 14.43 → 14
-Washtenaw: 2.88 → 3
-Oakland: 8.64 → 9
-Livingston: 1.44 → 1
-Genesee: 2.61 → 3
-Step 5: Verify the total equals 30
-14 + 3 + 9 + 1 + 3 = 30
+Step 4: Round to whole numbers while maintaining total sample size Wayne: 14.43 → 14 Washtenaw: 2.88 → 3 Oakland: 8.64 → 9 Livingston: 1.44 → 1 Genesee: 2.61 → 3 Step 5: Verify the total equals 30 14 + 3 + 9 + 1 + 3 = 30
 
 ## h. What is your proposed sampling error estimation plan for data analysts based on this allocation in the previous answer (g)
 
-1. Recognize the Design Structure
-Our sample has a stratified design with:
+1.  Recognize the Design Structure Our sample has a stratified design with:
 
-5 counties (strata): Wayne, Washtenaw, Oakland, Livingston, and Genesee
-30 block groups selected proportionally across these counties
-Block groups are the primary sampling units (PSUs)
+5 counties (strata): Wayne, Washtenaw, Oakland, Livingston, and Genesee 30 block groups selected proportionally across these counties Block groups are the primary sampling units (PSUs)
 
-
-
-Step 2: Use Stratified Variance Estimation Formulas
-For estimating the population mean or proportion, use variance formulas specific to stratified sampling:
+Step 2: Use Stratified Variance Estimation Formulas For estimating the population mean or proportion, use variance formulas specific to stratified sampling:
 
 Variance of Population Mean ($\hat{\bar{y}}_{str}$):
 
@@ -692,58 +362,31 @@ $$v(\hat{\bar{y}}{str}) = \sum{h=1}^{H} W_h^2 \cdot \frac{1-f_h}{n_h} \cdot s_h^
 
 Where:
 
-$H$ = Number of strata (5 counties)
-$W_h = N_h/N$ = Weight of stratum $h$, based on the proportion of total block groups in stratum $h$
-$N_h$ = Total block groups in stratum $h$
-$N$ = Total block groups across all strata (520)
-$n_h$ = Number of sampled block groups in stratum $h$ (Wayne = 14, Washtenaw = 3, Oakland = 9, Livingston = 1, Genesee = 3)
-$f_h = n_h/N_h$ = Sampling fraction within stratum $h$
-$s_h^2$ = Sample variance within stratum $h$, calculated from survey data
+$H$ = Number of strata (5 counties) $W_h = N_h/N$ = Weight of stratum $h$, based on the proportion of total block groups in stratum $h$ $N_h$ = Total block groups in stratum $h$ $N$ = Total block groups across all strata (520) $n_h$ = Number of sampled block groups in stratum $h$ (Wayne = 14, Washtenaw = 3, Oakland = 9, Livingston = 1, Genesee = 3) $f_h = n_h/N_h$ = Sampling fraction within stratum $h$ $s_h^2$ = Sample variance within stratum $h$, calculated from survey data
 
-For means and proportions, use stratified sampling variance formulas:
-Var(estimate) = Sum across strata [ Weight²ₕ × (1-fₕ) × Variance within stratum ÷ nₕ ]
+For means and proportions, use stratified sampling variance formulas: Var(estimate) = Sum across strata \[ Weight²ₕ × (1-fₕ) × Variance within stratum ÷ nₕ \]
 
-Where:
-Weight₍ₕ₎ = Number of block groups in county h ÷ Total block groups (520)
-f₍ₕ₎ = Sampling fraction in county h (number selected ÷ total in county)
-n₍ₕ₎ = Number of block groups sampled in county h
+Where: Weight₍ₕ₎ = Number of block groups in county h ÷ Total block groups (520) f₍ₕ₎ = Sampling fraction in county h (number selected ÷ total in county) n₍ₕ₎ = Number of block groups sampled in county h
 
+Step 3: Calculate Within-Stratum Variances Compute the sample variance ($s_h^2$) for each variable of interest within each county using data collected from sampled block groups. These variances are crucial for estimating overall sampling error.
 
+Step 4: Apply Finite Population Correction (FPC) Include the term $(1-f_h)$ to adjust for the finite population size within each stratum. This is particularly important for strata where the sampling fraction is substantial.
 
-Step 3: Calculate Within-Stratum Variances
-Compute the sample variance ($s_h^2$) for each variable of interest within each county using data collected from sampled block groups. These variances are crucial for estimating overall sampling error.
-
-Step 4: Apply Finite Population Correction (FPC)
-Include the term $(1-f_h)$ to adjust for the finite population size within each stratum. This is particularly important for strata where the sampling fraction is substantial.
-
-Step 5: Determine Degrees of Freedom
-For confidence intervals, approximate degrees of freedom as:
+Step 5: Determine Degrees of Freedom For confidence intervals, approximate degrees of freedom as:
 
 $$df = \sum_{h=1}^{H} (n_h-1)$$
 
 Using your allocation:
 
-Wayne: $14-1=13$
-Washtenaw: $3-1=2$
-Oakland: $9-1=8$
-Livingston: $1-1=0$
-Genesee: $3-1=2$
-Total degrees of freedom: $df = 13+2+8+0+2=25$
+Wayne: $14-1=13$ Washtenaw: $3-1=2$ Oakland: $9-1=8$ Livingston: $1-1=0$ Genesee: $3-1=2$ Total degrees of freedom: $df = 13+2+8+0+2=25$
 
-Use approximately 25 degrees of freedom (sum of n₍ₕ₎-1 across counties)
-For 95% confidence intervals, use t-distribution critical values rather than normal distribution
+Use approximately 25 degrees of freedom (sum of n₍ₕ₎-1 across counties) For 95% confidence intervals, use t-distribution critical values rather than normal distribution
 
-The proportional allocation used (Wayne: 14, Washtenaw: 3, Oakland: 9, Livingston: 1, Genesee: 3)
-How to properly account for this design in their analyses
-Why ignoring the design would lead to incorrect confidence intervals and p-values
+The proportional allocation used (Wayne: 14, Washtenaw: 3, Oakland: 9, Livingston: 1, Genesee: 3) How to properly account for this design in their analyses Why ignoring the design would lead to incorrect confidence intervals and p-values
 
-Step 6: Use Statistical Software
-Recommend analysts use software designed for complex survey designs (e.g., R's survey package, SAS PROC SURVEY procedures, or Stata svy commands). When specifying the design, include:
+Step 6: Use Statistical Software Recommend analysts use software designed for complex survey designs (e.g., R's survey package, SAS PROC SURVEY procedures, or Stata svy commands). When specifying the design, include:
 
-Strata variables (counties)
-PSU variables (block groups)
-Any sampling weights (if applicable)
-Example R code:
+Strata variables (counties) PSU variables (block groups) Any sampling weights (if applicable) Example R code:
 
 ```{r}
 library(survey)
@@ -759,13 +402,8 @@ survey_design <- svydesign(
 svymean(~has_insurance, survey_design)
 ```
 
-
-Step 7: Weighting Considerations
-If analysis focuses on housing units or individuals within block groups, weights may be necessary to account for differences in housing unit counts across sampled block groups. The basic sampling weight would be:
+Step 7: Weighting Considerations If analysis focuses on housing units or individuals within block groups, weights may be necessary to account for differences in housing unit counts across sampled block groups. The basic sampling weight would be:
 
 $$w_h = \frac{N_h}{n_h}$$
 
 For multi-stage designs with subsampling of housing units within block groups, additional weight adjustments would be needed.
-
-
-
