@@ -192,9 +192,39 @@ Within-cluster rate = 0.05 ÷ 0.365 = 0.137 (about 13.7%)
 
 This means we need to sample about 13.7% of housing units in Cluster 2
 
-Cluster 4 (Blocks 7, 8 & 9): Selection probability: 0.64 (64%)
+Cluster 4 (Blocks 7, 8 & 9): Selection probability: 0.64 (64%) \# Define the data cluster_totals \<- c(10,15,5,5,16,8,8,15,9,9,9,10,4,3,11,12,8,4,8,6) n \<- length(cluster_totals) \# Number of sampled hospitals N \<- 189500 \# Total number of hospitals M \<- 20 \# Number of births per hospital total_pop \<- 3790000 \# Total population size
 
-Within-cluster rate = 0.05 ÷ 0.64 = 0.078 (about 7.8%)
+# Basic statistics
+
+mean_per_cluster \<- mean(cluster_totals) sd_clusters \<- sd(cluster_totals)# Calculate the estimate p_hat \<- sum(cluster_totals)/(n\*M)
+
+# Display result
+
+cat("Estimated proportion of children in fragile families:", p_hat, "\n")# Calculate the variance of cluster proportions cluster_props \<- cluster_totals/M var_props \<- var(cluster_props)
+
+# Calculate standard error with finite population correction
+
+fpc \<- sqrt((N-n)/N) se_p \<- sqrt(var_props/n) \* fpc
+
+# Display result
+
+cat("Standard error of the proportion estimate:", se_p, "\n")# Calculate the variance of cluster proportions cluster_props \<- cluster_totals/M var_props \<- var(cluster_props)
+
+# Calculate standard error with finite population correction
+
+fpc \<- sqrt((N-n)/N) se_p \<- sqrt(var_props/n) \* fpc
+
+# Display result
+
+cat("Standard error of the proportion estimate:", se_p, "\n")# Calculate 95% confidence interval t_value \<- qt(0.975, df=n-1) ci_lower \<- p_hat - t_value \* se_p ci_upper \<- p_hat + t_value \* se_p
+
+# Display result
+
+cat("95% confidence interval:", c(ci_lower, ci_upper), "\n")# Calculate estimated total Y_hat \<- N \* M \* p_hat
+
+# Display result
+
+cat("Estimated total number of children in fragile families:", Y_hat, "\n") Within-cluster rate = 0.05 ÷ 0.64 = 0.078 (about 7.8%)
 
 This means we need to sample about 7.8% of housing units in Cluster 4
 

@@ -482,7 +482,7 @@ So the confidence interval: $$\hat{p} \pm t_{5, 0.975} \times SE(\hat{p}) = 0.52
 
 Now the lower and upper bounds: $$CI_{lower} = 0.5217 - 0.0478 = 0.4739$$ $$CI_{upper} = 0.5217 + 0.0478 = 0.5695$$
 
-Therefore: $$CI_95%$= $$(0.4739, 0.5695)\$\$
+Therefore: $$CI_95%$= $$\$$(0.4739, 0.5695)$\$
 
 Based on my analysis of the cholesterol data from this stratified cluster sample, I can say with 95% confidence that the true proportion of individuals with total cholesterol greater than 200 is between 47.4% and 57.0%. My best estimate for this proportion is 52.2%.
 
